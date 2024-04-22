@@ -765,6 +765,9 @@ class View
                                         </thead>
                                         <tbody>
                                             <?php
+                                           
+
+
                                             $programData = $this->program;
                                             foreach ($programData as $programItem => $data) {
                                                 $dateString = $data['date_added'];
@@ -779,10 +782,11 @@ class View
                                                     <td>
                                                         <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
                                                             <div class="dropdown-menu dropdown-menu-end m-0">
-                                                                <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editProgram" href="javascript:0;" class="dropdown-item" onclick="getProgramId('<?= $data['program_id'] ?>')">
+                                                                <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editProgram" href="javascript:0;" class="dropdown-item" onclick="editProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')">
                                                                     <i class="ti ti-edit ms-1"></i>Update
                                                                 </button>
-                                                                <a href="javascript:0;" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</a>
+                                                                <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal"  onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+
                                                             </div>
                                                         </div>
                                                     </td>
@@ -799,7 +803,7 @@ class View
                         <!--/ Content -->
                         <!-- Footer -->
                         <?php $this->navbar(); ?>
-                        
+
                         <!-- / Footer -->
 
                         <div class="content-backdrop fade"></div>
@@ -864,18 +868,21 @@ class View
                         <div class="text-center mb-4">
                             <h3 class="mb-2">Update Program Information</h3>
                         </div>
-                        <form class="row g-3" method="POST">
-                            <input type="text" id="programId">
+                        <form class="row g-3" action="program.action.php" method="POST">
+
+                            <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
+
+                            <input type="text" name="programId" id="programId" readonly>
                             <div class="col-12 col-md-12">
                                 <label class="form-label">Program Name</label>
-                                <input type="text" class="form-control" id="editProgramName" placeholder="Enter program name" required />
+                                <input type="text" class="form-control" name="editProgramName" id="editProgramName" placeholder="Enter program name" required />
                             </div>
                             <div class="col-12 col-md-12">
                                 <label class="form-label">Program Code</label>
-                                <input type="text" class="form-control" id="editProgramCode" placeholder="Enter program code" required />
+                                <input type="text" class="form-control" name="editProgramCode" id="editProgramCode" placeholder="Enter program code" required />
                             </div>
                             <div class="col-12 text-center">
-                                <button type="submit" class="btn btn-success me-sm-3 me-1">Save Changes</button>
+                                <button type="submit" name="edit_program" class="btn btn-success me-sm-3 me-1">Save Changes</button>
                                 <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                             </div>
                         </form>
@@ -884,11 +891,34 @@ class View
             </div>
         </div>
         <!-- Edit Program Modal -->
+        <!-- Archive Program Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure u want to Archived? 
+                        <form action="program.action.php" method="POST">
+                            <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
+                            <input type="text" name="archiveProgramId" id="archiveProgramId" >
+                            <input type="text" name="archiveProgramName" id="archiveProgramName" >
+                            <input type="text" name="archiveProgramCode" id="archiveProgramCode" >
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" name="archive_program" class="btn btn-danger">Archive</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        
+
 <?php
     }
-
-    
 }
 ?>

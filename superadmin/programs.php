@@ -86,11 +86,32 @@ $control = new Control(1, 'program');
     <!-- <script src="assets/js/modal-edit-user.js"></script> -->
 
     <script>
-        function getProgramId(programId) {
-            console.log(programId);
-            document.getElementById('programId').val = programId;
-        }
-    </script>
+    function editProgramDataJS(programData) {
+        console.log(programData);
+
+        // need ko iparse kase naka json state sya dahil inencode ko sya
+        var data = JSON.parse(programData);
+
+        document.getElementById('editProgramName').value = data['program_name'];
+        document.getElementById('editProgramCode').value = data['program_code'];
+        document.getElementById('programId').value = data['program_id'];
+    }
+    function archiveProgramDataJS(programData) {
+    try {
+        var data = JSON.parse(programData);
+        console.log(data);
+        document.getElementById('archiveProgramName').value = data['program_name'] || '';
+        document.getElementById('archiveProgramCode').value = data['program_code'] || '';
+        document.getElementById('archiveProgramId').value = data['program_id'] || '';
+    } catch (error) {
+        console.error('Error parsing JSON:', error);
+        // Optionally, you can display an error message to the user
+    }
+}
+    
+</script>
+
+
 
 </body>
 
