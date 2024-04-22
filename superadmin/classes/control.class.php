@@ -6,18 +6,27 @@ class Control {
     private $model;
     private $import;
 
-    public function __construct($id = null , $page){
+    public function __construct($id = null , $page = null){
         
         $this->model = new Model();
         $data_arr = $this->model->getById($id);
-
-        $this->view = new View($data_arr , $page);
         
+        
+        $programArr = $this->model->getAllProgram();
+        $this->view = new View($data_arr , $page, $programArr);
+         
     }
 
     public function dashboard()
     {
-        $this->view->compose();
+        $this->view->dashboardContent();
     }
+
+    public function program()
+    {
+        $this->view->programsContent();
+    }
+    
+    
 }
 ?>

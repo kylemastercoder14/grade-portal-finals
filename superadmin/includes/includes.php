@@ -5,7 +5,8 @@ spl_autoload_register(function ($class_name) {
         'model' => 'classes/model.class.php',
         'view' => 'classes/view.class.php',
         'import' => 'classes/import.class.php',
-        'control' => 'classes/control.class.php'
+        'control' => 'classes/control.class.php',
+        'action' => 'classes/action.class.php',
         
         // Add more classes to autoload here if needed
     ];

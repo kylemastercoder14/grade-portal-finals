@@ -2,27 +2,34 @@
 include('includes/includes.php');
 class View
 {
-    private $data;
+    private $data, $program;
     public $active_page;
     public $statusDashboard;
     public $statusYearlevel;
     public $statusPrograms;
 
-    public function __construct($data_arr = null,$page){
+    public function __construct($data_arr = null, $page, $program_arr = null)
+    {
         $this->data = $data_arr;
+        $this->program = $program_arr;
         $this->active_page = $page;
 
-        switch($this->active_page){
-            case 'dashboard': $this->statusDashboard = 'active';
-            break;
-            case 'year_level': $this->statusYearlevel = 'active';
-            break;
-            case 'programs': $this->statusPrograms = 'active';
-            break;
+        switch ($this->active_page) {
+            case 'dashboard':
+                $this->statusDashboard = 'active';
+                break;
+            case 'year_level':
+                $this->statusYearlevel = 'active';
+                break;
+            case 'program':
+                $this->statusPrograms = 'active';
+                break;
         }
     }
+
+
     public function header()
-    {     
+    {
 ?>
         <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
             <div class="container-xxl">
@@ -30,7 +37,7 @@ class View
                     <a href="index.php" class="app-brand-link gap-2">
                         <img src="assets/images/logo.png" width="50" alt="" />
                         <span class="app-brand-text menu-text fw-bold">KLD Grades Portal</span>
-                        
+
                     </a>
 
                     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
@@ -270,7 +277,7 @@ class View
                                             </div>
                                             <div class="flex-grow-1">
                                                 <span class="fw-medium d-block"><?php echo $this->data['firstname']; ?></span>
-                                                <small class="text-muted"><?php echo  $this->data['firstname']; ?></small> 
+                                                <small class="text-muted"><?php echo  $this->data['firstname']; ?></small>
                                                 <!-- role dapat  -->
                                             </div>
                                         </div>
@@ -310,11 +317,11 @@ class View
                 </div>
             </div>
         </nav>
-<?php
+    <?php
     }
     public function navbar()
     {
-?>
+    ?>
         <aside id="layout-menu" class="layout-menu-horizontal menu-horizontal menu bg-menu-theme flex-grow-0">
             <div class="container-xxl d-flex h-100">
                 <ul class="menu-inner">
@@ -429,11 +436,11 @@ class View
                 </ul>
             </div>
         </aside>
-<?php
+    <?php
     }
     public function footer()
     {
-?>
+    ?>
         <footer class="content-footer footer bg-footer-theme">
             <div class="container-xxl">
                 <div class="footer-container d-flex align-items-center justify-content-between py-2 flex-md-row flex-column">
@@ -455,12 +462,234 @@ class View
                 </div>
             </div>
         </footer>
-<?php
+    <?php
     }
-    public function compose()
+    public function studentOverview()
     {
-?>
-        <!-- Layout wrapper -->
+    ?>
+        <!-- Student Overview -->
+        <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <small class="d-block mb-1 text-muted">Total Students</small>
+                    </div>
+                    <h4 class="card-title mb-1">4,083</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="d-flex gap-2 align-items-center mb-2">
+                                <span class="badge bg-label-success p-1 rounded"><i class="ti ti-users ti-xs"></i></span>
+                                <p class="mb-0">2022 - 2023</p>
+                            </div>
+                            <h5 class="mb-0 pt-1 text-nowrap">62.2%</h5>
+                            <small class="text-muted">3,260</small>
+                        </div>
+                        <div class="col-4">
+                            <div class="divider divider-vertical">
+                                <div class="divider-text">
+                                    <span class="badge-divider-bg bg-label-secondary">VS</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="d-flex gap-2 justify-content-end align-items-center mb-2">
+                                <p class="mb-0">2023 - 2024</p>
+                                <span class="badge bg-label-success p-1 rounded"><i class="ti ti-users ti-xs"></i></span>
+                            </div>
+                            <h5 class="mb-0 pt-1 text-nowrap ms-lg-n3 ms-xl-0">
+                                25.5%
+                            </h5>
+                            <small class="text-muted">1,489</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mt-4">
+                        <div class="progress w-100" style="height: 8px">
+                            <div class="progress-bar bg-success" style="width: 70%" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Student Overview -->
+    <?php
+    }
+
+    public function studentGradeOverview()
+    {
+    ?>
+        <!-- Student Grades Overview -->
+        <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <small class="d-block mb-1 text-muted">Student Grades</small>
+
+                    </div>
+                    <h4 class="card-title mb-1">4,083</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="d-flex gap-2 align-items-center mb-2">
+                                <span class="badge bg-label-success p-1 rounded"><i class="ti ti-percentage ti-xs"></i></span>
+                                <p class="mb-0">Passed</p>
+                            </div>
+                            <h5 class="mb-0 pt-1 text-nowrap">62.2%</h5>
+                            <small class="text-muted">3,907</small>
+                        </div>
+                        <div class="col-4">
+                            <div class="divider divider-vertical">
+                                <div class="divider-text">
+                                    <span class="badge-divider-bg bg-label-secondary">VS</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="d-flex gap-2 justify-content-end align-items-center mb-2">
+                                <p class="mb-0">Failed</p>
+                                <span class="badge bg-label-danger p-1 rounded"><i class="ti ti-percentage ti-xs"></i></span>
+                            </div>
+                            <h5 class="mb-0 pt-1 text-nowrap ms-lg-n3 ms-xl-0">
+                                25.5%
+                            </h5>
+                            <small class="text-muted">356</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mt-4">
+                        <div class="progress w-100" style="height: 8px">
+                            <div class="progress-bar bg-success" style="width: 90%" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Student Grades Overview -->
+    <?php
+    }
+    public function totalSubmittedGrades()
+    {
+    ?>
+        <!-- Total Submitted Grades -->
+        <div class="col-md-6 col-sm-12 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between pb-0">
+                    <div class="card-title mb-0">
+                        <h5 class="mb-0">Total Submitted Grades</h5>
+                        <small class="text-muted">AY. 2023 - 2024</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-sm-4 col-md-12 col-lg-4">
+                            <div class="mt-lg-4 mt-lg-2 mb-lg-4 mb-2 pt-1">
+                                <h1 class="mb-0">164</h1>
+                                <p class="mb-0">Grade Status</p>
+                            </div>
+                            <ul class="p-0 m-0">
+                                <li class="d-flex gap-3 align-items-center mb-lg-3 pt-2 pb-1">
+                                    <div class="badge rounded bg-label-danger p-1">
+                                        <i class="ti ti-x ti-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 text-nowrap">Not Submitted</h6>
+                                        <small class="text-muted">100</small>
+                                    </div>
+                                </li>
+                                <li class="d-flex gap-3 align-items-center mb-lg-3 pb-1">
+                                    <div class="badge rounded bg-label-success p-1">
+                                        <i class="ti ti-check ti-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 text-nowrap">Submitted</h6>
+                                        <small class="text-muted">64</small>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-12 col-sm-8 col-md-12 col-lg-8">
+                            <div id="supportTracker"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Total Submitted Grades -->
+    <?php
+    }
+    public function totalProgramsOffered()
+    {
+    ?>
+        <!-- Total Programs Offered -->
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="card pb-1">
+                <div class="card-header d-flex justify-content-between">
+                    <div class="card-title mb-0">
+                        <h5 class="mb-0">Programs Offered</h5>
+                        <small class="text-muted">A.Y 2023 - 2024</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="p-0 m-0">
+                        <li class="mb-4 pb-1 d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between w-100 flex-wrap">
+                                <h6 class="mb-0 ms-3">Bachelor of Science in Information System</h6>
+                                <div class="d-flex">
+                                    <p class="mb-0 fw-medium">1,111</p>
+                                    <p class="ms-3 text-warning mb-0">26%</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mb-4 pb-1 d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between w-100 flex-wrap">
+                                <h6 class="mb-0 ms-3">Bachelor of Science in Psychology</h6>
+                                <div class="d-flex">
+                                    <p class="mb-0 fw-medium">3,089</p>
+                                    <p class="ms-3 text-success mb-0">57%%</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mb-4 pb-1 d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between w-100 flex-wrap">
+                                <h6 class="mb-0 ms-3">Bachelor of Science in Nursing</h6>
+                                <div class="d-flex">
+                                    <p class="mb-0 fw-medium">705</p>
+                                    <p class="ms-3 text-warning mb-0">17%</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mb-4 pb-1 d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between w-100 flex-wrap">
+                                <h6 class="mb-0 ms-3">Bachelor of Science in Engineering</h6>
+                                <div class="d-flex">
+                                    <p class="mb-0 fw-medium">624</p>
+                                    <p class="ms-3 text-warning mb-0">15%</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mb-4 pb-1 d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between w-100 flex-wrap">
+                                <h6 class="mb-0 ms-3">Diploma in Midwifery</h6>
+                                <div class="d-flex">
+                                    <p class="mb-0 fw-medium">989</p>
+                                    <p class="ms-3 text-warning mb-0">22%</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--/ Total Programs Offered -->
+    <?php
+    }
+
+    public function dashboardContent()
+    {
+    ?>
         <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
             <div class="layout-container">
                 <!-- Header -->
@@ -473,13 +702,104 @@ class View
                     <div class="content-wrapper">
                         <!-- Navbar -->
                         <?php $this->navbar($this->data); ?>
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <div class="row">
+                                <?php
+                                $this->studentOverview($this->data);
+                                $this->studentGradeOverview($this->data);
+                                $this->totalSubmittedGrades($this->data);
+                                $this->totalProgramsOffered($this->data);
+                                ?>
+                            </div>
+                        </div>
+
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+    <?php
+    }
+
+    public function programsContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header(); ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
                         <!-- / Navbar -->
 
-                            <!-- Content -->
-                                    <?php $this->dashboardContent($this->data); ?>
-                            <!--/ Content -->
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <h5 class="py-2 mb-4">
+                                <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Programs
+                            </h5>
+                            <!-- Program Table -->
+                            <div class="card">
+                                <div class="card-datatable table-responsive">
+                                    <table class="datatables-programs table">
+                                        <thead class="border-top">
+                                            <tr>
+                                                <th>Program ID</th>
+                                                <th>Program Name</th>
+                                                <th>Program Code</th>
+                                                <th>Date Created</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $programData = $this->program;
+                                            foreach ($programData as $programItem => $data) {
+                                                $dateString = $data['date_added'];
+                                                $timestamp = strtotime($dateString);
+                                                $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                            ?>
+                                                <tr>
+                                                    <td><?= $data['program_id'] ?></td>
+                                                    <td><?= $data['program_name'] ?></td>
+                                                    <td><?= $data['program_code'] ?></td>
+                                                    <td><?= $formattedDate ?></td>
+                                                    <td>
+                                                        <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                            <div class="dropdown-menu dropdown-menu-end m-0">
+                                                                <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editProgram" href="javascript:0;" class="dropdown-item" onclick="getProgramId('<?= $data['program_id'] ?>')">
+                                                                    <i class="ti ti-edit ms-1"></i>Update
+                                                                </button>
+                                                                <a href="javascript:0;" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            <?php
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                        </div>
+                        <!--/ Content -->
                         <!-- Footer -->
-                        <?php $this->footer();  ?>
+                        <?php $this->navbar(); ?>
+                        
                         <!-- / Footer -->
 
                         <div class="content-backdrop fade"></div>
@@ -504,387 +824,71 @@ class View
                 <i class="ti ti-headset ti-sm"></i>
             </a>
         </div>
-<?php
-    }
-    public function studentOverview(){
-?>
-    <!-- Student Overview -->
-    <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
-        <div class="card">
-            <div class="card-header">
-                <div class="d-flex justify-content-between">
-                    <small class="d-block mb-1 text-muted">Total Students</small>
-                </div>
-                <h4 class="card-title mb-1">4,083</h4>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-4">
-                        <div class="d-flex gap-2 align-items-center mb-2">
-                            <span class="badge bg-label-success p-1 rounded"><i class="ti ti-users ti-xs"></i></span>
-                            <p class="mb-0">2022 - 2023</p>
-                        </div>
-                        <h5 class="mb-0 pt-1 text-nowrap">62.2%</h5>
-                        <small class="text-muted">3,260</small>
-                    </div>
-                    <div class="col-4">
-                        <div class="divider divider-vertical">
-                            <div class="divider-text">
-                                <span class="badge-divider-bg bg-label-secondary">VS</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-4 text-end">
-                        <div class="d-flex gap-2 justify-content-end align-items-center mb-2">
-                            <p class="mb-0">2023 - 2024</p>
-                            <span class="badge bg-label-success p-1 rounded"><i class="ti ti-users ti-xs"></i></span>
-                        </div>
-                        <h5 class="mb-0 pt-1 text-nowrap ms-lg-n3 ms-xl-0">
-                            25.5%
-                        </h5>
-                        <small class="text-muted">1,489</small>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mt-4">
-                    <div class="progress w-100" style="height: 8px">
-                        <div class="progress-bar bg-success" style="width: 70%" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--/ Student Overview -->
-<?php
-    }
 
-    public function studentGradeOverview(){
-?>
-    <!-- Student Grades Overview -->
-    <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
-        <div class="card">
-            <div class="card-header">
-                <div class="d-flex justify-content-between">
-                    <small class="d-block mb-1 text-muted">Student Grades</small>
+        <!-- Add Program Modal -->
+        <div class="modal fade" id="addProgram" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="mb-2">Add Program Information</h3>
+                        </div>
+                        <form class="row g-3" method="POST" action="program.action.php">
+                            <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Program Name</label>
+                                <input type="text" class="form-control" name="program_name" placeholder="Enter program name" required />
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Program Code</label>
+                                <input type="text" class="form-control" name="program_code" placeholder="Enter program code" required />
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" name="add_program" class="btn btn-success me-sm-3 me-1">Create Program</button>
+                                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Program Modal -->
 
-                </div>
-                <h4 class="card-title mb-1">4,083</h4>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-4">
-                        <div class="d-flex gap-2 align-items-center mb-2">
-                            <span class="badge bg-label-success p-1 rounded"><i class="ti ti-percentage ti-xs"></i></span>
-                            <p class="mb-0">Passed</p>
+        <!-- Edit Program Modal -->
+        <div class="modal fade" id="editProgram" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="mb-2">Update Program Information</h3>
                         </div>
-                        <h5 class="mb-0 pt-1 text-nowrap">62.2%</h5>
-                        <small class="text-muted">3,907</small>
-                    </div>
-                    <div class="col-4">
-                        <div class="divider divider-vertical">
-                            <div class="divider-text">
-                                <span class="badge-divider-bg bg-label-secondary">VS</span>
+                        <form class="row g-3" method="POST">
+                            <input type="text" id="programId">
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Program Name</label>
+                                <input type="text" class="form-control" id="editProgramName" placeholder="Enter program name" required />
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-4 text-end">
-                        <div class="d-flex gap-2 justify-content-end align-items-center mb-2">
-                            <p class="mb-0">Failed</p>
-                            <span class="badge bg-label-danger p-1 rounded"><i class="ti ti-percentage ti-xs"></i></span>
-                        </div>
-                        <h5 class="mb-0 pt-1 text-nowrap ms-lg-n3 ms-xl-0">
-                            25.5%
-                        </h5>
-                        <small class="text-muted">356</small>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center mt-4">
-                    <div class="progress w-100" style="height: 8px">
-                        <div class="progress-bar bg-success" style="width: 90%" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Program Code</label>
+                                <input type="text" class="form-control" id="editProgramCode" placeholder="Enter program code" required />
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-success me-sm-3 me-1">Save Changes</button>
+                                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Student Grades Overview -->
-<?php
-    }
-    public function totalSubmittedGrades(){
-?>
-     <!-- Total Submitted Grades -->
-     <div class="col-md-6 col-sm-12 mb-4">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between pb-0">
-                <div class="card-title mb-0">
-                    <h5 class="mb-0">Total Submitted Grades</h5>
-                    <small class="text-muted">AY. 2023 - 2024</small>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12 col-sm-4 col-md-12 col-lg-4">
-                        <div class="mt-lg-4 mt-lg-2 mb-lg-4 mb-2 pt-1">
-                            <h1 class="mb-0">164</h1>
-                            <p class="mb-0">Grade Status</p>
-                        </div>
-                        <ul class="p-0 m-0">
-                            <li class="d-flex gap-3 align-items-center mb-lg-3 pt-2 pb-1">
-                                <div class="badge rounded bg-label-danger p-1">
-                                    <i class="ti ti-x ti-sm"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 text-nowrap">Not Submitted</h6>
-                                    <small class="text-muted">100</small>
-                                </div>
-                            </li>
-                            <li class="d-flex gap-3 align-items-center mb-lg-3 pb-1">
-                                <div class="badge rounded bg-label-success p-1">
-                                    <i class="ti ti-check ti-sm"></i>
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 text-nowrap">Submitted</h6>
-                                    <small class="text-muted">64</small>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-12 col-sm-8 col-md-12 col-lg-8">
-                        <div id="supportTracker"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--/ Total Submitted Grades -->
-<?php
-    }
-    public function totalProgramsOffered(){
-?>
-     <!-- Total Programs Offered -->
-     <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="card pb-1">
-            <div class="card-header d-flex justify-content-between">
-                <div class="card-title mb-0">
-                    <h5 class="mb-0">Programs Offered</h5>
-                    <small class="text-muted">A.Y 2023 - 2024</small>
-                </div>
-            </div>
-            <div class="card-body">
-                <ul class="p-0 m-0">
-                    <li class="mb-4 pb-1 d-flex justify-content-between align-items-center">
-                        <div class="d-flex justify-content-between w-100 flex-wrap">
-                            <h6 class="mb-0 ms-3">Bachelor of Science in Information System</h6>
-                            <div class="d-flex">
-                                <p class="mb-0 fw-medium">1,111</p>
-                                <p class="ms-3 text-warning mb-0">26%</p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="mb-4 pb-1 d-flex justify-content-between align-items-center">
-                        <div class="d-flex justify-content-between w-100 flex-wrap">
-                            <h6 class="mb-0 ms-3">Bachelor of Science in Psychology</h6>
-                            <div class="d-flex">
-                                <p class="mb-0 fw-medium">3,089</p>
-                                <p class="ms-3 text-success mb-0">57%%</p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="mb-4 pb-1 d-flex justify-content-between align-items-center">
-                        <div class="d-flex justify-content-between w-100 flex-wrap">
-                            <h6 class="mb-0 ms-3">Bachelor of Science in Nursing</h6>
-                            <div class="d-flex">
-                                <p class="mb-0 fw-medium">705</p>
-                                <p class="ms-3 text-warning mb-0">17%</p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="mb-4 pb-1 d-flex justify-content-between align-items-center">
-                        <div class="d-flex justify-content-between w-100 flex-wrap">
-                            <h6 class="mb-0 ms-3">Bachelor of Science in Engineering</h6>
-                            <div class="d-flex">
-                                <p class="mb-0 fw-medium">624</p>
-                                <p class="ms-3 text-warning mb-0">15%</p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="mb-4 pb-1 d-flex justify-content-between align-items-center">
-                        <div class="d-flex justify-content-between w-100 flex-wrap">
-                            <h6 class="mb-0 ms-3">Diploma in Midwifery</h6>
-                            <div class="d-flex">
-                                <p class="mb-0 fw-medium">989</p>
-                                <p class="ms-3 text-warning mb-0">22%</p>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <!--/ Total Programs Offered -->
-<?php 
-    }
+        <!-- Edit Program Modal -->
 
-    public function dashboardContent()
-    {
-?>     
-        <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="row">
-                <?php
-                    $this->studentOverview($this->data);
-                    $this->studentGradeOverview($this->data);
-                    $this->totalSubmittedGrades($this->data);
-                    $this->totalProgramsOffered($this->data);
-                ?>
-            </div>
-         </div>
+        
 <?php
     }
 
-    public function programsContent()
-    {
-?>
-    <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
-        <div class="layout-container">
-            <!-- Header -->
-            <?php $this->header(); ?>
-            <!-- / Header -->
-
-            <!-- Layout container -->
-            <div class="layout-page">
-                <!-- Content wrapper -->
-                <div class="content-wrapper">
-                    <!-- Navbar -->
-                    <?php $this->navbar();  ?>
-                    <!-- / Navbar -->
-                    
-                    <!-- Content -->
-                    <div class="container-xxl flex-grow-1 container-p-y">
-                        <h5 class="py-2 mb-4">
-                            <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Programs
-                        </h5>
-                        <!-- Program Table -->
-                        <div class="card">
-                            <div class="card-datatable table-responsive">
-                                <table class="datatables-programs table">
-                                    <thead class="border-top">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Program Name</th>
-                                            <th>Program Code</th>
-                                            <th>Date Created</th>
-                                            <th>actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Institute of Information and Computing Sciences</td>
-                                            <td>IICS</td>
-                                            <td>April 20, 2024</td>
-                                            <td>
-                                                <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
-                                                    <div class="dropdown-menu dropdown-menu-end m-0">
-                                                        <a data-bs-toggle="modal" data-bs-target="#editProgram" href="javascript:0;" class="dropdown-item"><i class="ti ti-edit ms-1"></i>Update</a>
-                                                        <a href="javascript:0;" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <!-- Program Table -->
-                    </div>
-                    <!--/ Content -->
-                    <!-- Footer -->
-                    <?php $this->navbar(); ?>
-                    <!-- / Footer -->
-
-                    <div class="content-backdrop fade"></div>
-                </div>
-                <!--/ Content wrapper -->
-            </div>
-
-            <!--/ Layout container -->
-        </div>
-    </div>
-
-    <!-- Overlay -->
-    <div class="layout-overlay layout-menu-toggle"></div>
-
-    <!-- Drag Target Area To SlideIn Menu On Small Screens -->
-    <div class="drag-target"></div>
-
-    <!--/ Layout wrapper -->
-
-    <div class="buy-now">
-        <a href="#" class="btn btn-danger btn-buy-now">
-            <i class="ti ti-headset ti-sm"></i>
-        </a>
-    </div>
-
-    <!-- Add Program Modal -->
-    <div class="modal fade" id="addProgram" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
-            <div class="modal-content p-3 p-md-5">
-                <div class="modal-body">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <div class="text-center mb-4">
-                        <h3 class="mb-2">Add Program Information</h3>
-                    </div>
-                    <form class="row g-3" method="POST">
-                        <div class="col-12 col-md-12">
-                            <label class="form-label">Program Name</label>
-                            <input type="text" class="form-control" placeholder="Enter program name" required />
-                        </div>
-                        <div class="col-12 col-md-12">
-                            <label class="form-label">Program Code</label>
-                            <input type="text" class="form-control" placeholder="Enter program code" required />
-                        </div>
-                        <div class="col-12 text-center">
-                            <button type="submit" class="btn btn-success me-sm-3 me-1">Create Program</button>
-                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Add Program Modal -->
-
-    <!-- Edit Program Modal -->
-    <div class="modal fade" id="editProgram" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
-            <div class="modal-content p-3 p-md-5">
-                <div class="modal-body">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <div class="text-center mb-4">
-                        <h3 class="mb-2">Update Program Information</h3>
-                    </div>
-                    <form class="row g-3" method="POST">
-                        <div class="col-12 col-md-12">
-                            <label class="form-label">Program Name</label>
-                            <input type="text" class="form-control" placeholder="Enter program name" required />
-                        </div>
-                        <div class="col-12 col-md-12">
-                            <label class="form-label">Program Code</label>
-                            <input type="text" class="form-control" placeholder="Enter program code" required />
-                        </div>
-                        <div class="col-12 text-center">
-                            <button type="submit" class="btn btn-success me-sm-3 me-1">Save Changes</button>
-                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Edit Program Modal -->
-<?php
-    }
     
 }
 ?>
