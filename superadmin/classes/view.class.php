@@ -2,16 +2,17 @@
 include('includes/includes.php');
 class View
 {
-    private $data, $program;
+    private $data, $program, $archivedProgram;
     public $active_page;
     public $statusDashboard;
     public $statusYearlevel;
     public $statusPrograms;
 
-    public function __construct($data_arr = null, $page, $program_arr = null)
+    public function __construct($data_arr = null, $page, $unarchiveProgram = null, $archivedProgram = null)
     {
         $this->data = $data_arr;
-        $this->program = $program_arr;
+        $this->program = $unarchiveProgram;
+        $this->archivedProgram = $archivedProgram;
         $this->active_page = $page;
 
         switch ($this->active_page) {
@@ -747,9 +748,12 @@ class View
 
                         <!-- Content -->
                         <div class="container-xxl flex-grow-1 container-p-y">
-                            <h5 class="py-2 mb-4">
-                                <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Programs
-                            </h5>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5 class="py-2 mb-4">
+                                    <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Programs
+                                </h5>
+                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#retrieveProgram">Retrieve Program</button>
+                            </div>
                             <!-- Program Table -->
                             <div class="card">
                                 <div class="card-datatable table-responsive">
@@ -765,33 +769,40 @@ class View
                                         </thead>
                                         <tbody>
                                             <?php
-                                           
-
-
                                             $programData = $this->program;
-                                            foreach ($programData as $programItem => $data) {
-                                                $dateString = $data['date_added'];
-                                                $timestamp = strtotime($dateString);
-                                                $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                            if (!$programData) {
                                             ?>
                                                 <tr>
-                                                    <td><?= $data['program_id'] ?></td>
-                                                    <td><?= $data['program_name'] ?></td>
-                                                    <td><?= $data['program_code'] ?></td>
-                                                    <td><?= $formattedDate ?></td>
-                                                    <td>
-                                                        <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
-                                                            <div class="dropdown-menu dropdown-menu-end m-0">
-                                                                <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editProgram" href="javascript:0;" class="dropdown-item" onclick="editProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')">
-                                                                    <i class="ti ti-edit ms-1"></i>Update
-                                                                </button>
-                                                                <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal"  onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
-
-                                                            </div>
-                                                        </div>
+                                                    <td colspan="5">
+                                                        <h4 class="text-center text-danger mt-2">No programs found yet!</h4>
                                                     </td>
                                                 </tr>
+                                                <?php
+                                            } else {
+                                                foreach ($programData as $programItem => $data) {
+                                                    $dateString = $data['date_added'];
+                                                    $timestamp = strtotime($dateString);
+                                                    $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                                ?>
+                                                    <tr>
+                                                        <td><?= $data['program_id'] ?></td>
+                                                        <td><?= $data['program_name'] ?></td>
+                                                        <td><?= $data['program_code'] ?></td>
+                                                        <td><?= $formattedDate ?></td>
+                                                        <td>
+                                                            <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                                <div class="dropdown-menu dropdown-menu-end m-0">
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editProgram" href="javascript:0;" class="dropdown-item" onclick="editProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')">
+                                                                        <i class="ti ti-edit ms-1"></i>Update
+                                                                    </button>
+                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                             <?php
+                                                }
                                             }
                                             ?>
                                         </tbody>
@@ -872,7 +883,7 @@ class View
 
                             <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
 
-                            <input type="text" name="programId" id="programId" readonly>
+                            <input type="hidden" name="programId" id="programId" readonly>
                             <div class="col-12 col-md-12">
                                 <label class="form-label">Program Name</label>
                                 <input type="text" class="form-control" name="editProgramName" id="editProgramName" placeholder="Enter program name" required />
@@ -891,22 +902,23 @@ class View
             </div>
         </div>
         <!-- Edit Program Modal -->
+
         <!-- Archive Program Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Are you sure u want to Archived? 
+                        Are you sure u want to archived this data?
                         <form action="program.action.php" method="POST">
                             <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
-                            <input type="text" name="archiveProgramId" id="archiveProgramId" >
-                            <input type="text" name="archiveProgramName" id="archiveProgramName" >
-                            <input type="text" name="archiveProgramCode" id="archiveProgramCode" >
-                        
+                            <input type="hidden" name="archiveProgramId" id="archiveProgramId">
+                            <input type="hidden" name="archiveProgramName" id="archiveProgramName">
+                            <input type="hidden" name="archiveProgramCode" id="archiveProgramCode">
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -916,7 +928,65 @@ class View
                 </div>
             </div>
         </div>
+        <!-- Archive Program Modal -->
 
+        <!-- Retrieve Program Modal -->
+        <div class="modal fade" id="retrieveProgram" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="mb-2">Retrieve Information</h3>
+                        </div>
+                        <div class="card-datatable table-responsive">
+                            <table class="datatables-programs table">
+                                <thead class="border-top">
+                                    <tr>
+                                        <th>Program Name</th>
+                                        <th>Program Code</th>
+                                        <th>actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $programData = $this->archivedProgram;
+                                    if (!$programData) {
+                                    ?>
+                                        <tr>
+                                            <td colspan="5">
+                                                <h4 class="text-center text-danger mt-2">No programs found yet!</h4>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    } else {
+                                        foreach ($programData as $programItem => $data) {
+                                        ?>
+                                            <tr>
+                                                <td><?= $data['program_name'] ?></td>
+                                                <td><?= $data['program_code'] ?></td>
+                                                <td>
+                                                    <form method="POST" action="program.action.php">
+                                                    <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
+                                                        <input type="hidden" name="program_id" value="<?= $data['program_id'] ?>">
+                                                        <button type="submit" class="btn btn-sm btn-primary" name="unarchive_program">
+                                                            <i class="ti ti-edit ms-1"></i>Retrieve
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                    <?php
+                                        }
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Retrieve Program Modal -->
 
 <?php
     }
