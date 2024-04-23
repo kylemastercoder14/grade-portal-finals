@@ -36,6 +36,16 @@ if(isset($_POST['add_program'])){
     $program_id = $_POST['program_id'];
     
     $model->callUnarchiveProgram($program_id,$currentPage);
+}else if(isset($_POST['add_section'])) {
+    $yearToday = date("Y");
+    $section_id = 'KLD-' . $_POST['program_code'] . "-" . $yearToday . rand();
+    $section_name = $_POST['section_name'];
+    $currentPage = $_POST['current_page'];
+    $data = array(
+        'section_id' => $section_id,
+        'section_name' => $_POST['section_name'],
+    );
+    $model->callInsertSection($data,$currentPage);
 }
 
 ?>

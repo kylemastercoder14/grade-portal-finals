@@ -2,17 +2,26 @@
 include('includes/includes.php');
 class View
 {
-    private $data, $program, $archivedProgram;
+    private $data, $program, $archivedProgram, $section, $archivedSection;
     public $active_page;
     public $statusDashboard;
     public $statusYearlevel;
     public $statusPrograms;
+    public $statusSections;
 
-    public function __construct($data_arr = null, $page, $unarchiveProgram = null, $archivedProgram = null)
-    {
+    public function __construct(
+        $data_arr = null,
+        $page,
+        $unarchiveProgram = null,
+        $archivedProgram = null,
+        $unarchiveSection = null,
+        $archivedSection = null
+    ) {
         $this->data = $data_arr;
         $this->program = $unarchiveProgram;
         $this->archivedProgram = $archivedProgram;
+        $this->section = $archivedSection;
+        $this->archivedSection = $unarchiveSection;
         $this->active_page = $page;
 
         switch ($this->active_page) {
@@ -24,6 +33,9 @@ class View
                 break;
             case 'program':
                 $this->statusPrograms = 'active';
+                break;
+            case 'section':
+                $this->statusSections = 'active';
                 break;
         }
     }
@@ -346,13 +358,13 @@ class View
                                     <div data-i18n="Year Level">Year Level</div>
                                 </a>
                             </li>
-                            <li class="menu-item <?php echo $this->statusPrograms ?> ">
+                            <li class="menu-item <?php echo $this->statusPrograms ?>">
                                 <a href="programs.php" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-layout-sidebar"></i>
                                     <div data-i18n="Programs">Programs</div>
                                 </a>
                             </li>
-                            <li class="menu-item">
+                            <li class="menu-item <?php echo $this->statusSections ?>">
                                 <a href="sections.php" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-table"></i>
                                     <div data-i18n="Sections">Sections</div>
@@ -849,7 +861,7 @@ class View
                         <div class="text-center mb-4">
                             <h3 class="mb-2">Add Program Information</h3>
                         </div>
-                        <form class="row g-3" method="POST" action="program.action.php">
+                        <form class="row g-3" method="POST" action="action.php">
                             <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
                             <div class="col-12 col-md-12">
                                 <label class="form-label">Program Name</label>
@@ -879,7 +891,7 @@ class View
                         <div class="text-center mb-4">
                             <h3 class="mb-2">Update Program Information</h3>
                         </div>
-                        <form class="row g-3" action="program.action.php" method="POST">
+                        <form class="row g-3" action="action.php" method="POST">
 
                             <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
 
@@ -913,7 +925,7 @@ class View
                     </div>
                     <div class="modal-body">
                         Are you sure u want to archived this data?
-                        <form action="program.action.php" method="POST">
+                        <form action="action.php" method="POST">
                             <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
                             <input type="hidden" name="archiveProgramId" id="archiveProgramId">
                             <input type="hidden" name="archiveProgramName" id="archiveProgramName">
@@ -966,8 +978,8 @@ class View
                                                 <td><?= $data['program_name'] ?></td>
                                                 <td><?= $data['program_code'] ?></td>
                                                 <td>
-                                                    <form method="POST" action="program.action.php">
-                                                    <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
+                                                    <form method="POST" action="action.php">
+                                                        <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
                                                         <input type="hidden" name="program_id" value="<?= $data['program_id'] ?>">
                                                         <button type="submit" class="btn btn-sm btn-primary" name="unarchive_program">
                                                             <i class="ti ti-edit ms-1"></i>Retrieve
@@ -988,6 +1000,202 @@ class View
         </div>
         <!-- Retrieve Program Modal -->
 
+    <?php
+    }
+
+    public function sectionContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header(); ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+                        <!-- / Navbar -->
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <h5 class="py-2 mb-4">
+                                <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Sections
+                            </h5>
+                            <!-- Program Table -->
+                            <div class="card">
+                                <div class="card-datatable table-responsive">
+                                    <table class="datatables-section table">
+                                        <thead class="border-top">
+                                            <tr>
+                                                <th>Section ID</th>
+                                                <th>Section</th>
+                                                <th>Date Created</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $sectionData = $this->section;
+                                            if (!$sectionData) {
+                                            ?>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <h4 class="text-center text-danger mt-2">No sections found yet!</h4>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            } else {
+                                                foreach ($sectionData as $sectionItem => $data) {
+                                                    $dateString = $data['date_added'];
+                                                    $timestamp = strtotime($dateString);
+                                                    $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                                ?>
+                                                    <tr>
+                                                        <td><?= $data['section_id'] ?></td>
+                                                        <td><?= $data['section_name'] ?></td>
+                                                        <td><?= $formattedDate ?></td>
+                                                        <td>
+                                                            <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                                <div class="dropdown-menu dropdown-menu-end m-0">
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editProgram" href="javascript:0;" class="dropdown-item" onclick="editProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')">
+                                                                        <i class="ti ti-edit ms-1"></i>Update
+                                                                    </button>
+                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
+
+        <!-- Add Program Modal -->
+        <div class="modal fade" id="addSection" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="mb-2">Add Section Information</h3>
+                        </div>
+                        <form class="row g-3" action="action.php" method="POST">
+                            <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Year Level</label>
+                                <select id="yearLevel" class="form-select">
+                                    <option value="1">1st Year</option>
+                                    <option value="2">2nd Year</option>
+                                    <option value="3">3rd Year</option>
+                                    <option value="4">4th Year</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Program</label>
+                                <select id="program" name="program_code" class="form-select">
+                                    <?php
+                                    $program = $this->program;
+                                    foreach ($program as $programItem => $data) {
+                                    ?>
+                                        <option value="<?= $data['program_code'] ?>"><?= $data['program_name'] ?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Section Number</label>
+                                <input type="text" id="sectionNumber" class="form-control" placeholder="Enter section number">
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Generated Section Name</label>
+                                <input type="text" id="generatedSection" name="section_name" class="form-control" placeholder="Enter generated section name">
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" name="add_section" class="btn btn-success me-sm-3 me-1">Create Section</button>
+                                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Program Modal -->
+
+        <!-- Edit Program Modal -->
+        <div class="modal fade" id="editSection" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="mb-2">Update Section Information</h3>
+                        </div>
+                        <form class="row g-3" method="POST">
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Year Level</label>
+                                <select class="form-select">
+                                    <option value="" selected>Choose year level</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Program</label>
+                                <select class="form-select">
+                                    <option value="" selected>Choose program</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Section</label>
+                                <input type="text" class="form-control" placeholder="Enter section" required />
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-success me-sm-3 me-1">Save Changes</button>
+                                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Edit Program Modal -->
 <?php
     }
 }

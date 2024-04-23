@@ -1,3 +1,12 @@
+<?php
+
+include "includes/includes.php";
+// kailangan parehas ang second argument nito sa table name ng database
+$control = new Control(1, 'section');
+
+?>
+
+
 <!DOCTYPE html>
 
 <html lang="en" class="dark-style layout-compact layout-menu-fixed" data-theme="theme-default" data-template="horizontal-menu-template">
@@ -43,162 +52,8 @@
 </head>
 
 <body>
-    <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
-        <div class="layout-container">
-            <!-- Header -->
-            <?php require "includes/header.php"  ?>
-            <!-- / Header -->
 
-            <!-- Layout container -->
-            <div class="layout-page">
-                <!-- Content wrapper -->
-                <div class="content-wrapper">
-                    <!-- Navbar -->
-                    <?php require "includes/navbar.php";  ?>
-                    <!-- / Navbar -->
-                    <!-- Content -->
-                    <div class="container-xxl flex-grow-1 container-p-y">
-                        <h5 class="py-2 mb-4">
-                            <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Sections
-                        </h5>
-                        <!-- Program Table -->
-                        <div class="card">
-                            <div class="card-datatable table-responsive">
-                                <table class="datatables-section table">
-                                    <thead class="border-top">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Year Level</th>
-                                            <th>Program</th>
-                                            <th>Section</th>
-                                            <th>Date Created</th>
-                                            <th>actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Freshman</td>
-                                            <td>Institute of Information and Computing Sciences</td>
-                                            <td>BSIS305</td>
-                                            <td>April 20, 2024</td>
-                                            <td>
-                                                <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
-                                                    <div class="dropdown-menu dropdown-menu-end m-0">
-                                                        <a data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item"><i class="ti ti-edit ms-1"></i>Update</a>
-                                                        <a href="javascript:0;" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <!-- Program Table -->
-                    </div>
-                    <!--/ Content -->
-                    <!-- Footer -->
-                    <?php require "includes/footer.php";  ?>
-                    <!-- / Footer -->
-
-                    <div class="content-backdrop fade"></div>
-                </div>
-                <!--/ Content wrapper -->
-            </div>
-
-            <!--/ Layout container -->
-        </div>
-    </div>
-
-    <!-- Overlay -->
-    <div class="layout-overlay layout-menu-toggle"></div>
-
-    <!-- Drag Target Area To SlideIn Menu On Small Screens -->
-    <div class="drag-target"></div>
-
-    <!--/ Layout wrapper -->
-
-    <div class="buy-now">
-        <a href="#" class="btn btn-danger btn-buy-now">
-            <i class="ti ti-headset ti-sm"></i>
-        </a>
-    </div>
-
-    <!-- Add Program Modal -->
-    <div class="modal fade" id="addSection" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
-            <div class="modal-content p-3 p-md-5">
-                <div class="modal-body">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <div class="text-center mb-4">
-                        <h3 class="mb-2">Add Section Information</h3>
-                    </div>
-                    <form class="row g-3" method="POST">
-                        <div class="col-12 col-md-12">
-                            <label class="form-label">Year Level</label>
-                            <select class="form-select">
-                                <option value="" selected>Choose year level</option>
-                            </select>
-                        </div>
-                        <div class="col-12 col-md-12">
-                            <label class="form-label">Program</label>
-                            <select class="form-select">
-                                <option value="" selected>Choose program</option>
-                            </select>
-                        </div>
-                        <div class="col-12 col-md-12">
-                            <label class="form-label">Section</label>
-                            <input type="text" class="form-control" placeholder="Enter section" required />
-                        </div>
-                        <div class="col-12 text-center">
-                            <button type="submit" class="btn btn-success me-sm-3 me-1">Create Section</button>
-                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Add Program Modal -->
-
-    <!-- Edit Program Modal -->
-    <div class="modal fade" id="editSection" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
-            <div class="modal-content p-3 p-md-5">
-                <div class="modal-body">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <div class="text-center mb-4">
-                        <h3 class="mb-2">Update Section Information</h3>
-                    </div>
-                    <form class="row g-3" method="POST">
-                        <div class="col-12 col-md-12">
-                            <label class="form-label">Year Level</label>
-                            <select class="form-select">
-                                <option value="" selected>Choose year level</option>
-                            </select>
-                        </div>
-                        <div class="col-12 col-md-12">
-                            <label class="form-label">Program</label>
-                            <select class="form-select">
-                                <option value="" selected>Choose program</option>
-                            </select>
-                        </div>
-                        <div class="col-12 col-md-12">
-                            <label class="form-label">Section</label>
-                            <input type="text" class="form-control" placeholder="Enter section" required />
-                        </div>
-                        <div class="col-12 text-center">
-                            <button type="submit" class="btn btn-success me-sm-3 me-1">Save Changes</button>
-                            <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Edit Program Modal -->
+    <?php $control->section();  ?>
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
@@ -211,6 +66,7 @@
     <script src="assets/vendor/libs/i18n/i18n.js"></script>
     <script src="assets/vendor/libs/typeahead-js/typeahead.js"></script>
     <script src="assets/vendor/js/menu.js"></script>
+    <link rel="stylesheet" href="assets/css/toastify.min.css" />
 
     <!-- endbuild -->
 
@@ -224,13 +80,63 @@
     <script src="assets/vendor/libs/%40form-validation/bootstrap5.js"></script>
     <script src="assets/vendor/libs/%40form-validation/auto-focus.js"></script>
     <script src="assets/vendor/libs/bs-stepper/bs-stepper.js"></script>
+    <script src="assets/js/toastify.min.js"></script>
 
     <!-- Main JS -->
     <script src="assets/js/main.js"></script>
 
     <!-- Page JS -->
     <script src="assets/js/app-section.js"></script>
-    <!-- <script src="assets/js/modal-edit-user.js"></script> -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var yearLevel = document.getElementById("yearLevel");
+            var program = document.getElementById("program");
+            var sectionNumber = document.getElementById("sectionNumber");
+            var generatedSection = document.getElementById("generatedSection");
+
+            yearLevel.addEventListener("change", function() {
+                updateGeneratedSection();
+            });
+
+            program.addEventListener("change", function() {
+                updateGeneratedSection();
+            });
+
+            sectionNumber.addEventListener("input", function() {
+                updateGeneratedSection();
+            });
+
+            function updateGeneratedSection() {
+                var yearLevelValue = yearLevel.value;
+                var programValue = program.value;
+                var sectionNumberValue = sectionNumber.value;
+
+                if(sectionNumberValue < 10) {
+                    generatedSection.value = programValue + yearLevelValue + "0" + sectionNumberValue;
+                }else {
+                    generatedSection.value = programValue + yearLevelValue + sectionNumberValue;
+                }
+            }
+        });
+    </script>
+
+<script>
+        Toastify({
+            text: "<?= $_SESSION['message'] ?>",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            stopOnFocus: true,
+            style: {
+                background: "<?= $_SESSION['status'] ?>",
+            },
+            onClick: function() {}
+        }).showToast();
+
+        // Unset the session after displaying the message
+        <?php unset($_SESSION['message']); ?>
+    </script>
 </body>
 
 </html>

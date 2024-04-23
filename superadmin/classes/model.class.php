@@ -48,6 +48,31 @@ class Model extends Dbconfig
     public function callInsertProgram($data, $currentPage){
         $this->insertProgram($data, $currentPage);
     }
+
+    // pang-protekta ng insert query kasama ang sanitation
+    protected function insertSection($data, $currentPage){
+        $section_name = $data['section_name'];
+        $sql = "SELECT * FROM section_tbl WHERE section_name = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$section_name]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            $_SESSION['message'] = "Section already exist!";
+            $_SESSION['status'] = "#bb2124";
+            header("Location: sections.php");
+        } else {
+            $this->insert($data, $currentPage);
+            $_SESSION['message'] = "Section inserted successfully!";
+            $_SESSION['status'] = "#22bb33";
+            header("Location: sections.php");
+        }
+    }
+
+    public function callInsertSection($data, $currentPage){
+        $this->insertSection($data, $currentPage);
+    }
+
     protected function readProgram($condition){
         $sql = "SELECT * FROM program_tbl WHERE is_archive = ?";
         $stmt = $this->db()->prepare($sql);
@@ -59,6 +84,19 @@ class Model extends Dbconfig
     
     public function getAllProgram($condition){
         return $this->readProgram($condition);
+    }
+
+    protected function readSection($condition){
+        $sql = "SELECT * FROM section_tbl WHERE is_archive = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$condition]); // 0 is NOT  archive
+        $data = $stmt->fetchAll();
+
+        return $data;
+    }
+    
+    public function getAllSection($condition){
+        return $this->readSection($condition);
     }
 
     protected function insert($data, $currentPage){
