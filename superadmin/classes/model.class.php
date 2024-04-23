@@ -1,10 +1,11 @@
 <?php
 
+session_start();
+
 class Model extends Dbconfig
 {
 
-    protected function read()
-    {
+    protected function read(){
         $sql = "SELECT * FROM student_tbl";
         $stmt = $this->db()->prepare($sql);
         $stmt->execute();
@@ -12,9 +13,7 @@ class Model extends Dbconfig
 
         return $data;
     }
-
-    protected function readById($id)
-    {
+    protected function readById($id){
         $sql = "SELECT * FROM student_tbl WHERE student_id = ?";
         $stmt = $this->db()->prepare($sql);
         $stmt->execute([$id]);
@@ -22,15 +21,11 @@ class Model extends Dbconfig
 
         return $data;
     }
-
-    public function getById($id)
-    {
+    public function getById($id){
         return $this->readById($id);
     }
-
     // pang-protekta ng insert query kasama ang sanitation
-    protected function insertProgram($data, $currentPage)
-    {
+    protected function insertProgram($data, $currentPage){
         $program_name = $data['program_name'];
         $program_code = $data['program_code'];
         $sql = "SELECT * FROM program_tbl WHERE program_name = ? OR program_code = ?";
@@ -39,77 +34,105 @@ class Model extends Dbconfig
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($result) {
-            echo "<script>alert('EXISTING DATA!!!')</script>";
+            $_SESSION['message'] = "Progam already exist!";
+            $_SESSION['status'] = "#bb2124";
+            header("Location: programs.php");
         } else {
-            $this->insertSample($data, $currentPage);
+            $this->insert($data, $currentPage);
+            $_SESSION['message'] = "Program inserted successfully!";
+            $_SESSION['status'] = "#22bb33";
+            header("Location: programs.php");
         }
     }
-
     // call sa action
-    public function callInsertProgram($data, $currentPage)
-    {
+    public function callInsertProgram($data, $currentPage){
         $this->insertProgram($data, $currentPage);
     }
-
-    protected function readProgram()
-    {
-        $sql = "SELECT * FROM program_tbl";
+    protected function readProgram($condition){
+        $sql = "SELECT * FROM program_tbl WHERE is_archive = ?";
         $stmt = $this->db()->prepare($sql);
-        $stmt->execute([]);
+        $stmt->execute([$condition]); // 0 is NOT  archive
         $data = $stmt->fetchAll();
 
         return $data;
     }
-
-    public function getAllProgram()
-    {
-        return $this->readProgram();
-    }
-
-    protected function insertSample($data, $currentPage)
-{
-    // function para sa cipher encryption
-    $cipherTexts = $this->encryptor($data);
-    $columns = implode(', ', array_keys($data));
-    $placeholders = implode(', ', array_fill(0, count($data), '?'));
-
-    $tableName = $currentPage . '_tbl';
-
-    $sql = "INSERT INTO $tableName ($columns) VALUES ($placeholders)";
-
-    // Assuming $db is your database connection object
-    $stmt = $this->db()->prepare($sql);
-    $stmt->execute($cipherTexts);
-}
-
-protected function encryptor($data)
-{
-    $shift = 14;
-    $cipherTexts = [];
-
-    foreach ($data as $item) {
-        $cipherText = "";
-        for ($i = 0; $i < strlen($item); $i++) {
-            $char = $item[$i];
-            // Check if character is a letter
-            if (ctype_alpha($char)) {
-                $isUpperCase = ctype_upper($char);
-                $offset = $isUpperCase ? ord('A') : ord('a');
-                $cipherChar = chr(($shift + ord($char) - $offset) % 26 + $offset);
-                $cipherText .= $cipherChar;
-            } else {
-                // For non-alphabetic characters, just keep them unchanged
-                $cipherText .= $char;
-            }
-        }
-        $cipherTexts[] = $cipherText;
-    }
-
-    return $cipherTexts;
-}
-
-protected function decryptor(){
     
-}
+    public function getAllProgram($condition){
+        return $this->readProgram($condition);
+    }
 
+    protected function insert($data, $currentPage){
+        $columns = implode(', ', array_keys($data));
+        $placeholders = implode(', ', array_fill(0, count($data), '?'));
+
+        $tableName = $currentPage . '_tbl';
+
+        $sql = "INSERT INTO $tableName ($columns) VALUES ($placeholders)";
+
+        $stmt = $this->db()->prepare($sql);
+
+        // Bind values to placeholders
+        $i = 1;
+        foreach ($data as $value) {
+            $stmt->bindValue($i++, $value);
+        }
+
+        $stmt->execute();
+
+        return;
+    }
+
+    public function callEditProgram($data, $currentPage){
+        $this->editProgram($data, $currentPage);
+    }
+
+    protected function editProgram($data, $currentPage){
+        $tableName = $currentPage . '_tbl';
+        $sql1 = "SELECT * FROM $tableName WHERE program_id = ?";
+        $stmt = $this->db()->prepare($sql1);
+        $stmt->execute([$data['program_id']]);
+        $result = $stmt->fetch();
+
+        if($result){
+            $sql2 = "UPDATE $tableName SET `program_name`= ? ,`program_code`= ? WHERE program_id = ?";
+            $stmt = $this->db()->prepare($sql2);
+            $stmt->execute([$data['program_name'],$data['program_code'],$data['program_id']]);
+
+            $_SESSION['message'] = "Program updated successfully!";
+            $_SESSION['status'] = "#22bb33";
+            header("Location: programs.php");
+            
+        }else{
+            $_SESSION['message'] = "Error updating program!";
+            $_SESSION['status'] = "#bb2124";
+            header("Location: programs.php");
+        }
+    }
+    public function callArchiveProgram($data, $currentPage){
+        $this->archiveProgram($data, $currentPage);
+    }
+    protected function unarchiveProgram($program_id, $currentPage){
+        $tableName = $currentPage . '_tbl';
+        $sql = "UPDATE $tableName SET `is_archive` = ? WHERE `program_id` = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([0, $program_id]); // 1 is archived, 0 is NOT
+
+        $_SESSION['message'] = "Program retrieved successfully!";
+        $_SESSION['status'] = "#22bb33";
+        header('Location: programs.php');
+    }
+    
+    public function callUnarchiveProgram($program_id,$currentPage) {
+        $this->unarchiveProgram($program_id, $currentPage);
+    }
+    protected function archiveProgram($data, $currentPage){
+        $tableName = $currentPage . '_tbl';
+        $sql = "UPDATE $tableName SET `is_archive` = ? WHERE `program_id` = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([1, $data['program_id']]); // 1 is archived, 0 is NOT
+
+        $_SESSION['message'] = "Program archived successfully!";
+        $_SESSION['status'] = "#22bb33";
+        header('Location: programs.php');
+    }
 }

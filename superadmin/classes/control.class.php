@@ -7,14 +7,13 @@ class Control {
     private $import;
 
     public function __construct($id = null , $page = null){
-        
         $this->model = new Model();
         $data_arr = $this->model->getById($id);
         
         
-        $programArr = $this->model->getAllProgram();
-        $this->view = new View($data_arr , $page, $programArr);
-         
+        $programUnarchiveArr = $this->model->getAllProgram(0);
+        $programArchiveArr = $this->model->getAllProgram(1);
+        $this->view = new View($data_arr , $page, $programUnarchiveArr,$programArchiveArr );
     }
 
     public function dashboard()
