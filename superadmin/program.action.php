@@ -31,7 +31,13 @@ if(isset($_POST['add_program'])){
         'program_code' => $_POST['archiveProgramCode'],
     );
     $model->callArchiveProgram($data,$currentPage);
+}else if(isset($_POST['unarchive_program'])){
+    $currentPage = $_POST['current_page'];
+    $program_id = $_POST['program_id'];
+    
+    $model->callUnarchiveProgram($program_id,$currentPage);
 }
+
 
 
 
