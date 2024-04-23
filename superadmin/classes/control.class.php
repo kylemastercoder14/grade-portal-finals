@@ -17,6 +17,9 @@ class Control {
         //section view
         $sectionUnarchiveArr = $this->model->getAllSection(0);
         $sectionArchiveArr = $this->model->getAllSection(1);
+
+        // subject view
+
         $this->view = new View(
             $data_arr, 
             $page, 
@@ -41,6 +44,11 @@ class Control {
     public function section()
     {
         $this->view->sectionContent();
+    }
+
+    public function subject()
+    {
+        $this->view->subjectContent();
     }
     
     
