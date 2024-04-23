@@ -50,7 +50,15 @@ class Control {
     {
         $this->view->subjectContent();
     }
+
+    public function student()
+    {
+        $this->view->studentContent();
+    }
     
-    
+    public function teacher()
+    {
+        $this->view->teacherContent();
+    }
 }
 ?>

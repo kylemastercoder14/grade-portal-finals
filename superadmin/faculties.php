@@ -2,7 +2,7 @@
 
 include "includes/includes.php";
 // kailangan parehas ang second argument nito sa table name ng database
-$control = new Control(1, 'student');
+$control = new Control(1, 'advisor');
 
 ?>
 
@@ -54,7 +54,7 @@ $control = new Control(1, 'student');
 
 <body>
 
-    <?php $control->student();  ?>
+    <?php $control->teacher();  ?>
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
@@ -87,8 +87,8 @@ $control = new Control(1, 'student');
     <script src="assets/js/main.js"></script>
 
     <!-- Page JS -->
-    <script src="assets/js/app-student.js"></script>
-    <script src="assets/js/modal-create-student.js"></script>
+    <script src="assets/js/app-teacher.js"></script>
+    <script src="assets/js/modal-create-teacher.js"></script>
     <script src="assets/js/forms-pickers.js"></script>
     <script src="assets/js/forms-extras.js"></script>
     <!-- <script src="assets/js/modal-edit-user.js"></script> -->
