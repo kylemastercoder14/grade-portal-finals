@@ -44,6 +44,7 @@ $control = new Control(1, 'program');
     <link rel="stylesheet" href="assets/vendor/libs/select2/select2.css" />
     <link rel="stylesheet" href="assets/vendor/libs/%40form-validation/form-validation.css" />
     <link rel="stylesheet" href="assets/vendor/libs/bs-stepper/bs-stepper.css" />
+    <link rel="stylesheet" href="assets/css/toastify.min.css" />
 
     <!-- Helpers -->
     <script src="assets/vendor/js/helpers.js"></script>
@@ -73,10 +74,11 @@ $control = new Control(1, 'program');
     <script src="assets/vendor/libs/cleavejs/cleave.js"></script>
     <script src="assets/vendor/libs/cleavejs/cleave-phone.js"></script>
     <script src="assets/vendor/libs/select2/select2.js"></script>
-    <script src="assets/vendor/libs/%40form-validation/popular.js"></script>
-    <script src="assets/vendor/libs/%40form-validation/bootstrap5.js"></script>
-    <script src="assets/vendor/libs/%40form-validation/auto-focus.js"></script>
+    <script src="assets/vendor/libs/@form-validation/popular.js"></script>
+    <script src="assets/vendor/libs/@form-validation/bootstrap5.js"></script>
+    <script src="assets/vendor/libs/@form-validation/auto-focus.js"></script>
     <script src="assets/vendor/libs/bs-stepper/bs-stepper.js"></script>
+    <script src="assets/js/toastify.min.js"></script>
 
     <!-- Main JS -->
     <script src="assets/js/main.js"></script>
@@ -86,32 +88,47 @@ $control = new Control(1, 'program');
     <!-- <script src="assets/js/modal-edit-user.js"></script> -->
 
     <script>
-    function editProgramDataJS(programData) {
-        console.log(programData);
+        function editProgramDataJS(programData) {
+            console.log(programData);
 
-        // need ko iparse kase naka json state sya dahil inencode ko sya
-        var data = JSON.parse(programData);
+            // need ko iparse kase naka json state sya dahil inencode ko sya
+            var data = JSON.parse(programData);
 
-        document.getElementById('editProgramName').value = data['program_name'];
-        document.getElementById('editProgramCode').value = data['program_code'];
-        document.getElementById('programId').value = data['program_id'];
-    }
-    function archiveProgramDataJS(programData) {
-    try {
-        var data = JSON.parse(programData);
-        console.log(data);
-        document.getElementById('archiveProgramName').value = data['program_name'] || '';
-        document.getElementById('archiveProgramCode').value = data['program_code'] || '';
-        document.getElementById('archiveProgramId').value = data['program_id'] || '';
-    } catch (error) {
-        console.error('Error parsing JSON:', error);
-        // Optionally, you can display an error message to the user
-    }
-}
-    
-</script>
+            document.getElementById('editProgramName').value = data['program_name'];
+            document.getElementById('editProgramCode').value = data['program_code'];
+            document.getElementById('programId').value = data['program_id'];
+        }
 
+        function archiveProgramDataJS(programData) {
+            try {
+                var data = JSON.parse(programData);
+                console.log(data);
+                document.getElementById('archiveProgramName').value = data['program_name'] || '';
+                document.getElementById('archiveProgramCode').value = data['program_code'] || '';
+                document.getElementById('archiveProgramId').value = data['program_id'] || '';
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+                // Optionally, you can display an error message to the user
+            }
+        }
+    </script>
 
+    <script>
+        Toastify({
+            text: "<?= $_SESSION['message'] ?>",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            stopOnFocus: true,
+            style: {
+                background: "<?= $_SESSION['status'] ?>",
+            },
+            onClick: function() {}
+        }).showToast();
+
+        // Unset the session after displaying the message
+        <?php unset($_SESSION['message']); ?>
+    </script>
 
 </body>
 
