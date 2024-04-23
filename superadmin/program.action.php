@@ -38,9 +38,4 @@ if(isset($_POST['add_program'])){
     $model->callUnarchiveProgram($program_id,$currentPage);
 }
 
-
-
-
-
-
 ?>
