@@ -944,7 +944,7 @@ class View
 
         <!-- Retrieve Program Modal -->
         <div class="modal fade" id="retrieveProgram" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
+            <div class="modal-dialog modal-xl modal-simple modal-edit-user modal-dialog-centered">
                 <div class="modal-content p-3 p-md-5">
                     <div class="modal-body">
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1061,7 +1061,7 @@ class View
                                                         <td>
                                                             <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
                                                                 <div class="dropdown-menu dropdown-menu-end m-0">
-                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editProgram" href="javascript:0;" class="dropdown-item" onclick="editProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')">
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')">
                                                                         <i class="ti ti-edit ms-1"></i>Update
                                                                     </button>
                                                                     <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
@@ -1169,25 +1169,41 @@ class View
                         <div class="text-center mb-4">
                             <h3 class="mb-2">Update Section Information</h3>
                         </div>
-                        <form class="row g-3" method="POST">
+                        <form class="row g-3" action="action.php" method="POST">
+                            <input type="text" value="<?= $this->active_page ?>" name="current_page">
+                            <input type="text" name="programId" id="sectionId" readonly>
                             <div class="col-12 col-md-12">
                                 <label class="form-label">Year Level</label>
-                                <select class="form-select">
-                                    <option value="" selected>Choose year level</option>
+                                <select id="editYearLevel" class="form-select">
+                                    <option value="1">1st Year</option>
+                                    <option value="2">2nd Year</option>
+                                    <option value="3">3rd Year</option>
+                                    <option value="4">4th Year</option>
                                 </select>
                             </div>
                             <div class="col-12 col-md-12">
                                 <label class="form-label">Program</label>
-                                <select class="form-select">
-                                    <option value="" selected>Choose program</option>
+                                <select id="editProgram" name="program_code" class="form-select">
+                                    <?php
+                                    $program = $this->program;
+                                    foreach ($program as $programItem => $data) {
+                                    ?>
+                                        <option value="<?= $data['program_code'] ?>"><?= $data['program_name'] ?></option>
+                                    <?php
+                                    }
+                                    ?>
                                 </select>
                             </div>
                             <div class="col-12 col-md-12">
-                                <label class="form-label">Section</label>
-                                <input type="text" class="form-control" placeholder="Enter section" required />
+                                <label class="form-label">Section Number</label>
+                                <input type="text" id="editSectionNumber" class="form-control" placeholder="Enter section number">
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Generated Section Name</label>
+                                <input type="text" id="editGeneratedSection" name="section_name" class="form-control" placeholder="Enter generated section name">
                             </div>
                             <div class="col-12 text-center">
-                                <button type="submit" class="btn btn-success me-sm-3 me-1">Save Changes</button>
+                                <button type="submit" name="update_section" class="btn btn-success me-sm-3 me-1">Save Changes</button>
                                 <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                             </div>
                         </form>
