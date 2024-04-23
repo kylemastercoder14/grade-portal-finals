@@ -967,7 +967,7 @@ class View
                                                 <td><?= $data['program_code'] ?></td>
                                                 <td>
                                                     <form method="POST" action="program.action.php">
-                                                        <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
+                                                    <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
                                                         <input type="hidden" name="program_id" value="<?= $data['program_id'] ?>">
                                                         <button type="submit" class="btn btn-sm btn-primary" name="unarchive_program">
                                                             <i class="ti ti-edit ms-1"></i>Retrieve

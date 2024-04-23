@@ -13,7 +13,7 @@ class Control {
         
         $programUnarchiveArr = $this->model->getAllProgram(0);
         $programArchiveArr = $this->model->getAllProgram(1);
-        $this->view = new View($data_arr , $page, $programUnarchiveArr,$programArchiveArr );
+        $this->view = new View($data_arr , $page, $programUnarchiveArr,$programArchiveArr);
     }
 
     public function dashboard()
