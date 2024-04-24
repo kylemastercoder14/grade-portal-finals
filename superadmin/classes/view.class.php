@@ -2,12 +2,22 @@
 include('includes/includes.php');
 class View
 {
+<<<<<<< HEAD
     private $data, $program, $archivedProgram, $section, $archivedSection;
+=======
+    private $data, $program, $archivedProgram, $section, $archivedSection, $subject, $archivedSubject;
+>>>>>>> datatable
     public $active_page;
     public $statusDashboard;
     public $statusYearlevel;
     public $statusPrograms;
     public $statusSections;
+<<<<<<< HEAD
+=======
+    public $statusSubjects;
+    public $statusStudents;
+    public $statusTeacher;
+>>>>>>> datatable
 
     public function __construct(
         $data_arr = null,
@@ -15,13 +25,26 @@ class View
         $unarchiveProgram = null,
         $archivedProgram = null,
         $unarchiveSection = null,
+<<<<<<< HEAD
         $archivedSection = null
+=======
+        $archivedSection = null,
+        $unarchiveSubject = null,
+        $archivedSubject = null,
+>>>>>>> datatable
     ) {
         $this->data = $data_arr;
         $this->program = $unarchiveProgram;
         $this->archivedProgram = $archivedProgram;
+<<<<<<< HEAD
         $this->section = $archivedSection;
         $this->archivedSection = $unarchiveSection;
+=======
+        $this->section = $unarchiveSection;
+        $this->archivedSection = $archivedSection;
+        $this->subject = $unarchiveSubject;
+        $this->archivedSubject = $archivedSubject;
+>>>>>>> datatable
         $this->active_page = $page;
 
         switch ($this->active_page) {
@@ -37,9 +60,20 @@ class View
             case 'section':
                 $this->statusSections = 'active';
                 break;
+<<<<<<< HEAD
+=======
+            case 'course': //subject
+                $this->statusSubjects = 'active';
+                break;
+            case 'student':
+                $this->statusStudents = 'active';
+                break;
+            case 'advisor':
+                $this->statusTeacher = 'active';
+                break;
+>>>>>>> datatable
         }
     }
-
 
     public function header()
     {
@@ -370,7 +404,7 @@ class View
                                     <div data-i18n="Sections">Sections</div>
                                 </a>
                             </li>
-                            <li class="menu-item">
+                            <li class="menu-item <?php echo $this->statusSubjects ?>">
                                 <a href="subjects.php" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-book"></i>
                                     <div data-i18n="Subjects">Subjects</div>
@@ -385,14 +419,14 @@ class View
                         </ul>
                     </li>
 
-                    <li class="menu-item">
+                    <li class="menu-item <?php echo $this->statusStudents ?>">
                         <a href="students.php" class="menu-link">
                             <i class="menu-icon tf-icons ti ti-users"></i>
                             <div data-i18n="Students">Students</div>
                         </a>
                     </li>
 
-                    <li class="menu-item">
+                    <li class="menu-item <?php echo $this->statusTeacher ?>">
                         <a href="faculties.php" class="menu-link">
                             <i class="menu-icon tf-icons ti ti-id"></i>
                             <div data-i18n="Faculties">Faculties</div>
@@ -739,7 +773,6 @@ class View
         </div>
     <?php
     }
-
     public function programsContent()
     {
     ?>
@@ -764,13 +797,22 @@ class View
                                 <h5 class="py-2 mb-4">
                                     <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Programs
                                 </h5>
-                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#retrieveProgram">Retrieve Program</button>
+                                <div class="d-flex align-items-center gap-3">
+                                    <button class="btn btn-primary d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#retrieveProgram">
+                                        <i class="ti ti-edit"></i>
+                                        <span>Retrieve Program</span>
+                                    </button>
+                                    <button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#addProgram">
+                                        <i class="ti ti-plus"></i>
+                                        <span>Add Program</span>
+                                    </button>
+                                </div>
                             </div>
                             <!-- Program Table -->
                             <div class="card">
-                                <div class="card-datatable table-responsive">
-                                    <table class="datatables-programs table">
-                                        <thead class="border-top">
+                                <div class="card-body table-responsive">
+                                    <table id="programDatatable" class="table display compact">
+                                        <thead>
                                             <tr>
                                                 <th>Program ID</th>
                                                 <th>Program Name</th>
@@ -944,7 +986,7 @@ class View
 
         <!-- Retrieve Program Modal -->
         <div class="modal fade" id="retrieveProgram" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
+            <div class="modal-dialog modal-xl modal-simple modal-edit-user modal-dialog-centered">
                 <div class="modal-content p-3 p-md-5">
                     <div class="modal-body">
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1061,7 +1103,11 @@ class View
                                                         <td>
                                                             <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
                                                                 <div class="dropdown-menu dropdown-menu-end m-0">
+<<<<<<< HEAD
                                                                     <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editProgram" href="javascript:0;" class="dropdown-item" onclick="editProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')">
+=======
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')">
+>>>>>>> datatable
                                                                         <i class="ti ti-edit ms-1"></i>Update
                                                                     </button>
                                                                     <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
@@ -1169,6 +1215,482 @@ class View
                         <div class="text-center mb-4">
                             <h3 class="mb-2">Update Section Information</h3>
                         </div>
+<<<<<<< HEAD
+=======
+                        <form class="row g-3" action="action.php" method="POST">
+                            <input type="text" value="<?= $this->active_page ?>" name="current_page">
+                            <input type="text" name="programId" id="sectionId" readonly>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Year Level</label>
+                                <select id="editYearLevel" class="form-select">
+                                    <option value="1">1st Year</option>
+                                    <option value="2">2nd Year</option>
+                                    <option value="3">3rd Year</option>
+                                    <option value="4">4th Year</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Program</label>
+                                <select id="editProgram" name="program_code" class="form-select">
+                                    <?php
+                                    $program = $this->program;
+                                    foreach ($program as $programItem => $data) {
+                                    ?>
+                                        <option value="<?= $data['program_code'] ?>"><?= $data['program_name'] ?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Section Number</label>
+                                <input type="text" id="editSectionNumber" class="form-control" placeholder="Enter section number">
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Generated Section Name</label>
+                                <input type="text" id="editGeneratedSection" name="section_name" class="form-control" placeholder="Enter generated section name">
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" name="update_section" class="btn btn-success me-sm-3 me-1">Save Changes</button>
+                                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Edit Program Modal -->
+    <?php
+    }
+    public function subjectContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header();  ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+                        <!-- / Navbar -->
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <h5 class="py-2 mb-4">
+                                <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Subjects
+                            </h5>
+                            <!-- Program Table -->
+                            <div class="card">
+                                <div class="card-datatable table-responsive">
+                                    <table class="datatables-subject table">
+                                        <thead class="border-top">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Year Level</th>
+                                                <th>Program</th>
+                                                <th>Subject</th>
+                                                <th>Pre-requisite Subject</th>
+                                                <th>Date Created</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>Freshman</td>
+                                                <td>Institute of Information and Computing Sciences</td>
+                                                <td>Evaluation of Business Performance</td>
+                                                <td>N/A</td>
+                                                <td>April 20, 2024</td>
+                                                <td>
+                                                    <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                        <div class="dropdown-menu dropdown-menu-end m-0">
+                                                            <a data-bs-toggle="modal" data-bs-target="#editSubject" href="javascript:0;" class="dropdown-item"><i class="ti ti-edit ms-1"></i>Update</a>
+                                                            <a href="javascript:0;" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
+
+        <!-- Add Subject Modal -->
+        <div class="modal fade" id="addSubject" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="mb-2">Add Subject Information</h3>
+                        </div>
+                        <form class="row g-3" method="POST">
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Course Name</label>
+                                <input type="text" class="form-control" placeholder="Enter course name" required />
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Course Code</label>
+                                <input type="text" class="form-control" placeholder="Enter course code" required />
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Course Unit</label>
+                                <input type="text" class="form-control" placeholder="Enter course unit" required />
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Pre-requisite Subject <a href="#" class="text-danger fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="If there is no prerequisite, leave it blank">(?)</a></label>
+                                <input type="text" class="form-control" placeholder="Enter pre-requisite subject" required />
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-success me-sm-3 me-1">Create Subject</button>
+                                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Subject Modal -->
+
+        <!-- Edit Subject Modal -->
+        <div class="modal fade" id="editSubject" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="mb-2">Update Section Information</h3>
+                        </div>
+                        <form class="row g-3" method="POST">
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Year Level</label>
+                                <select class="form-select">
+                                    <option value="" selected>Choose year level</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Program</label>
+                                <select class="form-select">
+                                    <option value="" selected>Choose program</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Subject</label>
+                                <input type="text" class="form-control" placeholder="Enter subject" required />
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Pre-requisite Subject <a href="#" class="text-danger fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="If there is no prerequisite, leave it blank">(?)</a></label>
+                                <input type="text" class="form-control" placeholder="Enter pre-requisite subject" required />
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-success me-sm-3 me-1">Save Changes</button>
+                                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Edit Subject Modal -->
+    <?php
+    }
+
+    public function studentContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header();  ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+                        <!-- / Navbar -->
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <h5 class="py-2 mb-4">
+                                <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Students
+                            </h5>
+                            <!-- Program Table -->
+                            <div class="card">
+                                <div class="card-datatable table-responsive">
+                                    <table class="datatables-student table">
+                                        <thead class="border-top">
+                                            <tr>
+                                                <th>Student Number</th>
+                                                <th>Name</th>
+                                                <th>Year Level</th>
+                                                <th>Program</th>
+                                                <th>Section</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>KLD-21-000209</td>
+                                                <td>Kyle Andre D. Lim</td>
+                                                <td>Junior</td>
+                                                <td>Institute of Information and Computing Sciences</td>
+                                                <td>BSIS305</td>
+                                                <td>
+                                                    <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                        <div class="dropdown-menu dropdown-menu-end m-0">
+                                                            <a data-bs-toggle="modal" data-bs-target="#editStudent" href="javascript:0;" class="dropdown-item"><i class="ti ti-edit ms-1"></i>Update</a>
+                                                            <a href="javascript:0;" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
+
+        <!-- Add Student Modal -->
+        <div class="modal fade" id="addStudent" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-simple modal-upgrade-plan">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body p-2">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center">
+                            <h3 class="mb-2">Add Student Information</h3>
+                        </div>
+                        <div id="wizard-create-app" class="bs-stepper vertical mt-2 shadow-none">
+                            <div class="bs-stepper-header border-0 p-1">
+                                <div class="step" data-target="#personal">
+                                    <button type="button" class="step-trigger">
+                                        <span class="bs-stepper-circle"><i class="ti ti-user ti-sm"></i></span>
+                                        <span class="bs-stepper-label">
+                                            <span class="bs-stepper-title text-uppercase">Personal</span>
+                                        </span>
+                                    </button>
+                                </div>
+                                <div class="line"></div>
+                                <div class="step" data-target="#educational">
+                                    <button type="button" class="step-trigger">
+                                        <span class="bs-stepper-circle"><i class="ti ti-notebook ti-sm"></i></span>
+                                        <span class="bs-stepper-label">
+                                            <span class="bs-stepper-title text-uppercase">Educational</span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="bs-stepper-content p-1">
+                                <form onSubmit="return false">
+                                    <!-- Personal -->
+                                    <div id="personal" class="content pt-3 pt-lg-0">
+                                        <div class="row">
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">First Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter first name" required />
+                                            </div>
+                                            <div class="col-md-2 mb-2">
+                                                <label class="form-label">Middle Initial</label>
+                                                <input type="text" class="form-control" placeholder="MI" />
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter last name" required />
+                                            </div>
+                                            <div class="col-md-2 mb-2">
+                                                <label class="form-label">Suffix</label>
+                                                <input type="text" class="form-control" placeholder="JR, SR, III" />
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="flatpickr-date" placeholder="YYYY-MM-DD" required />
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Age <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter age" required />
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Gender <span class="text-danger">*</span></label>
+                                                <select class="form-select" required>
+                                                    <option value="" selected>Choose gender</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Civil Status <span class="text-danger">*</span></label>
+                                                <select class="form-select" required>
+                                                    <option value="" selected>Choose civil status</option>
+                                                    <option value="Single">Single</option>
+                                                    <option value="Married">Married</option>
+                                                    <option value="Widowed">Widowed</option>
+                                                    <option value="Separated">Separated</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Contact Number <span class="text-danger">*</span></label>
+                                                <input type="text" id="prefix-mask" class="form-control prefix-mask" name="contactNumber" placeholder="Enter contact number" required />
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Province <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="province" required></select>
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">City <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="city" required></select>
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Barangay <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="barangay" required></select>
+                                            </div>
+                                            <div class="col-md-9 mb-2">
+                                                <label class="form-label">House No./Unit/Bldg/Street <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="House No./Unit/Bldg/Street" required />
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Zip Code <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter zip code" required />
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-between mt-4">
+                                                <button class="btn btn-label-secondary btn-prev" disabled> <i class="ti ti-arrow-left ti-xs me-sm-1 me-0"></i>
+                                                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                                </button>
+                                                <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right ti-xs"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Educational -->
+                                    <div id="educational" class="content pt-3 pt-lg-0">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-2">
+                                                <label class="form-label">Student Number <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter student number" required />
+                                            </div>
+                                            <div class="col-md-12 mb-2">
+                                                <label class="form-label">KLD Email <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter KLD email" required />
+                                            </div>
+                                            <div class="col-md-12 mb-2">
+                                                <label class="form-label">Year Level <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter year level" required />
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Program <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter program" required />
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Section <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter section" required />
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Elementary School <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter elementary school" required />
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">High School <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter high school" required />
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-between mt-4">
+                                                <button class="btn btn-success"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- submit -->
+                                    <div id="submit" class="content text-center pt-3 pt-lg-0">
+                                        <h5 class="mb-2 mt-3">Submit</h5>
+                                        <p>Submit to kick start your project.</p>
+                                        <!-- image -->
+                                        <img src="../../assets/img/illustrations/girl-with-laptop.png" class="img-fluid" alt="Create App img" width="175">
+                                        <div class="col-12 d-flex justify-content-between mt-4 pt-2">
+                                            <button class="btn btn-success btn-next btn-submit" data-bs-dismiss="modal" aria-label="Close"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span> <i class="ti ti-check ti-xs"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Student Modal -->
+
+        <!-- Edit Student Modal -->
+        <div class="modal fade" id="editSection" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="mb-2">Update Section Information</h3>
+                        </div>
+>>>>>>> datatable
                         <form class="row g-3" method="POST">
                             <div class="col-12 col-md-12">
                                 <label class="form-label">Year Level</label>
@@ -1195,8 +1717,300 @@ class View
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
         <!-- Edit Program Modal -->
+=======
+        <!-- Edit Student Modal -->
+>>>>>>> datatable
 <?php
+    }
+
+    public function teacherContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header();  ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+                        <!-- / Navbar -->
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <h5 class="py-2 mb-4">
+                                <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Instructors
+                            </h5>
+                            <!-- Program Table -->
+                            <div class="card">
+                                <div class="card-datatable table-responsive">
+                                    <table class="datatables-teacher table">
+                                        <thead class="border-top">
+                                            <tr>
+                                                <th>Student Number</th>
+                                                <th>Name</th>
+                                                <th>Year Level</th>
+                                                <th>Program</th>
+                                                <th>Section</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>KLD-21-000209</td>
+                                                <td>Kyle Andre D. Lim</td>
+                                                <td>Junior</td>
+                                                <td>Institute of Information and Computing Sciences</td>
+                                                <td>BSIS305</td>
+                                                <td>
+                                                    <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                        <div class="dropdown-menu dropdown-menu-end m-0">
+                                                            <a data-bs-toggle="modal" data-bs-target="#editStudent" href="javascript:0;" class="dropdown-item"><i class="ti ti-edit ms-1"></i>Update</a>
+                                                            <a href="javascript:0;" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
+
+        <!-- Add Instructor Modal -->
+        <div class="modal fade" id="addInstructor" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-simple modal-upgrade-plan">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body p-2">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center">
+                            <h3 class="mb-2">Add Instructor Information</h3>
+                        </div>
+                        <div id="wizard-create-app" class="bs-stepper vertical mt-2 shadow-none">
+                            <div class="bs-stepper-header border-0 p-1">
+                                <div class="step" data-target="#personal">
+                                    <button type="button" class="step-trigger">
+                                        <span class="bs-stepper-circle"><i class="ti ti-user ti-sm"></i></span>
+                                        <span class="bs-stepper-label">
+                                            <span class="bs-stepper-title text-uppercase">Personal</span>
+                                        </span>
+                                    </button>
+                                </div>
+                                <div class="line"></div>
+                                <div class="step" data-target="#educational">
+                                    <button type="button" class="step-trigger">
+                                        <span class="bs-stepper-circle"><i class="ti ti-notebook ti-sm"></i></span>
+                                        <span class="bs-stepper-label">
+                                            <span class="bs-stepper-title text-uppercase">Educational</span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="bs-stepper-content p-1">
+                                <form onSubmit="return false">
+                                    <!-- Personal -->
+                                    <div id="personal" class="content pt-3 pt-lg-0">
+                                        <div class="row">
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">First Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter first name" required />
+                                            </div>
+                                            <div class="col-md-2 mb-2">
+                                                <label class="form-label">Middle Initial</label>
+                                                <input type="text" class="form-control" placeholder="MI" />
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter last name" required />
+                                            </div>
+                                            <div class="col-md-2 mb-2">
+                                                <label class="form-label">Suffix</label>
+                                                <input type="text" class="form-control" placeholder="JR, SR, III" />
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="flatpickr-date" placeholder="YYYY-MM-DD" required />
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Age <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter age" required />
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Gender <span class="text-danger">*</span></label>
+                                                <select class="form-select" required>
+                                                    <option value="" selected>Choose gender</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Civil Status <span class="text-danger">*</span></label>
+                                                <select class="form-select" required>
+                                                    <option value="" selected>Choose civil status</option>
+                                                    <option value="Single">Single</option>
+                                                    <option value="Married">Married</option>
+                                                    <option value="Widowed">Widowed</option>
+                                                    <option value="Separated">Separated</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Contact Number <span class="text-danger">*</span></label>
+                                                <input type="text" id="prefix-mask" class="form-control prefix-mask" name="contactNumber" placeholder="Enter contact number" required />
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Province <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="province" required></select>
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">City <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="city" required></select>
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Barangay <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="barangay" required></select>
+                                            </div>
+                                            <div class="col-md-9 mb-2">
+                                                <label class="form-label">House No./Unit/Bldg/Street <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="House No./Unit/Bldg/Street" required />
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Zip Code <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter zip code" required />
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-between mt-4">
+                                                <button class="btn btn-label-secondary btn-prev" disabled> <i class="ti ti-arrow-left ti-xs me-sm-1 me-0"></i>
+                                                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                                </button>
+                                                <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right ti-xs"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Educational -->
+                                    <div id="educational" class="content pt-3 pt-lg-0">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-2">
+                                                <label class="form-label">Employee Number <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter employee number" required />
+                                            </div>
+                                            <div class="col-md-12 mb-2">
+                                                <label class="form-label">KLD Email <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter KLD email" required />
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Elementary School <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter elementary school" required />
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">High School <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter high school" required />
+                                            </div>
+                                            <div class="col-md-12 mb-2">
+                                                <label class="form-label">College School <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter college school" required />
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-between mt-4">
+                                                <button class="btn btn-success"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- submit -->
+                                    <div id="submit" class="content text-center pt-3 pt-lg-0">
+                                        <h5 class="mb-2 mt-3">Submit</h5>
+                                        <p>Submit to kick start your project.</p>
+                                        <!-- image -->
+                                        <img src="../../assets/img/illustrations/girl-with-laptop.png" class="img-fluid" alt="Create App img" width="175">
+                                        <div class="col-12 d-flex justify-content-between mt-4 pt-2">
+                                            <button class="btn btn-success btn-next btn-submit" data-bs-dismiss="modal" aria-label="Close"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span> <i class="ti ti-check ti-xs"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Instructor Modal -->
+
+        <!-- Edit Instructor Modal -->
+        <div class="modal fade" id="editSection" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="mb-2">Update Section Information</h3>
+                        </div>
+                        <form class="row g-3" method="POST">
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Year Level</label>
+                                <select class="form-select">
+                                    <option value="" selected>Choose year level</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Program</label>
+                                <select class="form-select">
+                                    <option value="" selected>Choose program</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Section</label>
+                                <input type="text" class="form-control" placeholder="Enter section" required />
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-success me-sm-3 me-1">Save Changes</button>
+                                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Edit Instructor Modal -->
+<?php
+    }
+    
+    public function classListContent(){
+        ?>
+
+        <?php
     }
 }
 ?>
