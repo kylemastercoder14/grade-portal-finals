@@ -2,7 +2,7 @@
 include('includes/includes.php');
 class View
 {
-    private $data, $program, $archivedProgram, $section, $archivedSection, $subject, $archivedSubject, $student, $archivedStudent, $advisor, $archivedAdvisor;
+    private $data, $program, $archivedProgram, $section, $archivedSection, $subject, $archivedSubject, $student, $archivedStudent, $advisor, $archivedAdvisor, $filterStudent;
     public $active_page;
     public $statusDashboard;
     public $statusYearlevel;
@@ -24,7 +24,8 @@ class View
         $unarchiveStudent = null,
         $archivedStudent = null,
         $unarchiveAdvisor = null,
-        $archivedAdvisor = null
+        $archivedAdvisor = null,
+        $filterStudent = null
     ) {
         $this->data = $data_arr;
         $this->program = $unarchiveProgram;
@@ -37,6 +38,7 @@ class View
         $this->archivedStudent = $archivedStudent;
         $this->advisor = $unarchiveAdvisor;
         $this->archivedAdvisor = $archivedAdvisor;
+        $this->$filterStudent = $filterStudent;
         $this->active_page = $page;
 
         switch ($this->active_page) {
@@ -455,10 +457,12 @@ class View
                     </li>
 
                     <li class="menu-item">
-                        <a href="backup-database.php" class="menu-link">
-                            <i class="menu-icon tf-icons ti ti-database"></i>
-                            <div data-i18n="Back-up & Restore">Back-up & Restore</div>
-                        </a>
+                        <form action="action.php" method="POST">
+                            <button type="submit" name="backup" class="menu-link btn btn-primary text-white">
+                                <i class="menu-icon tf-icons ti ti-database"></i>
+                                <div data-i18n="Back-up & Restore">Back-up & Restore</div>
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </div>
@@ -1498,9 +1502,9 @@ class View
                                                     <tr>
                                                         <td><?= $data['student_id'] ?></td>
                                                         <td><?= $fullname ?></td>
-                                                        <td><?= $data['year_level'] ?></td>
+                                                        <td><?= $data['year_level'] == "" || null ? "N/A" : $data['year_level'] ?></td>
                                                         <td><?= $data['program_code'] ?></td>
-                                                        <td><?= $data['section_name'] ?></td>
+                                                        <td><?= $data['section_name'] == "" || null ? "N/A" : $data['section_name'] ?></td>
                                                         <td><?= $formattedDate ?></td>
                                                         <td>
                                                             <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
@@ -1588,6 +1592,19 @@ class View
                                     <div id="personal" class="content pt-3 pt-lg-0">
                                         <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
                                         <div class="row">
+                                            <div class="col-md-12 mb-2">
+                                                <label class="form-label">Curriculum <span class="text-danger">*</span></label>
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <input id="oldCurriculum" type="checkbox" class="form-check" value="Old" checked />
+                                                        <span>Old</span>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <input id="newCurriculum" type="checkbox" class="form-check" value="New" />
+                                                        <span>New</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="col-md-3 mb-2">
                                                 <label class="form-label">First Name <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" name="firstname" placeholder="Enter first name" required />
@@ -1677,7 +1694,7 @@ class View
                                                 <label class="form-label">KLD Email <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" name="kld_email" placeholder="Enter KLD email" required />
                                             </div>
-                                            <div class="col-md-12 mb-2">
+                                            <div class="col-md-12 mb-2" id="hideYearlevel">
                                                 <label class="form-label">Year Level <span class="text-danger">*</span></label>
                                                 <select class="form-select" id="yearLevel" name="year_level" onchange="getSections()">
                                                     <option value="1st Year">1st Year</option>
@@ -1686,7 +1703,7 @@ class View
                                                     <option value="4th Year">4th Year</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-6 mb-2">
+                                            <div id="programFull" class="col-md-6 mb-2">
                                                 <label class="form-label">Program <span class="text-danger">*</span></label>
                                                 <select id="programId" class="form-select" name="program_id" onchange="getSections()">
                                                     <?php
@@ -1699,9 +1716,10 @@ class View
                                                     ?>
                                                 </select>
                                             </div>
-                                            <div class="col-md-6 mb-2">
+                                            <div class="col-md-6 mb-2" id="hideSection">
                                                 <label class="form-label">Section <span class="text-danger">*</span></label>
                                                 <select id="sectionId" class="form-select" name="section_id">
+                                                    <option value="">Choose a section</option>
                                                     <?php
                                                     $sections = $this->section;
                                                     foreach ($sections as $section => $data) {
@@ -2103,7 +2121,375 @@ class View
     public function classListContent()
     {
     ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header();  ?>
+                <!-- / Header -->
 
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+                        <!-- / Navbar -->
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <h5 class="py-2 mb-4">
+                                <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Class List
+                            </h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="card-title">Filter Student:</div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="form-label">Year Level <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="filterYearLevel" name="year_level" onchange="filterStudent()">
+                                                <option value="1st Year">1st Year</option>
+                                                <option value="2nd Year">2nd Year</option>
+                                                <option value="3rd Year">3rd Year</option>
+                                                <option value="4th Year">4th Year</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Program <span class="text-danger">*</span></label>
+                                            <select id="filterProgramId" class="form-select" name="program_id" onchange="filterStudent()">
+                                                <?php
+                                                $programs = $this->program;
+                                                foreach ($programs as $program => $data) {
+                                                ?>
+                                                    <option value="<?= $data['program_id'] ?>"><?= $data['program_name'] ?></option>
+                                                <?php
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Section <span class="text-danger">*</span></label>
+                                            <select id="filterSectionId" class="form-select" name="section_id" onchange="filterStudent()">
+                                                <option value="">Choose a section</option>
+                                                <?php
+                                                $sections = $this->section;
+                                                foreach ($sections as $section => $data) {
+                                                ?>
+                                                    <option value="<?= $data['section_id'] ?>"><?= $data['section_name'] ?></option>
+                                                <?php
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                            <div class="card">
+                                <div class="card-datatable table-responsive">
+                                    <table class="datatables-student table">
+                                        <thead class="border-top">
+                                            <tr>
+                                                <th><input type="checkbox"></th>
+                                                <th>Name</th>
+                                                <th>Year Level</th>
+                                                <th>Program</th>
+                                                <th>Section</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $programId = $_GET['program_id'] ?? null;
+                                            $yearLevel = $_GET['year_level'] ?? null;
+                                            $sectionId = $_GET['section_id'] ?? null;
+                                            $filterStudents = $this->filterStudent;
+                                            foreach($filterStudents as $filterStudent => $data) {
+                                                ?>
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox">
+                                                </td>
+                                                <td><?= $data['lastname'] ?></td>
+                                                <td><?= $data['year_level'] ?></td>
+                                                <td>Program</td>
+                                                <td>Section</td>
+                                                <td>actions</td>
+                                            </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
+
+        <!-- Add Student Modal -->
+        <div class="modal fade" id="addStudent" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-simple modal-upgrade-plan">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body p-2">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center">
+                            <h3 class="mb-2">Add Student Information</h3>
+                        </div>
+                        <div id="wizard-create-app" class="bs-stepper vertical mt-2 shadow-none">
+                            <div class="bs-stepper-header border-0 p-1">
+                                <div class="step" data-target="#personal">
+                                    <button type="button" class="step-trigger">
+                                        <span class="bs-stepper-circle"><i class="ti ti-user ti-sm"></i></span>
+                                        <span class="bs-stepper-label">
+                                            <span class="bs-stepper-title text-uppercase">Personal</span>
+                                        </span>
+                                    </button>
+                                </div>
+                                <div class="line"></div>
+                                <div class="step" data-target="#educational">
+                                    <button type="button" class="step-trigger">
+                                        <span class="bs-stepper-circle"><i class="ti ti-notebook ti-sm"></i></span>
+                                        <span class="bs-stepper-label">
+                                            <span class="bs-stepper-title text-uppercase">Educational</span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="bs-stepper-content p-1">
+                                <form method="POST" action="action.php">
+                                    <!-- Personal -->
+                                    <div id="personal" class="content pt-3 pt-lg-0">
+                                        <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-2">
+                                                <label class="form-label">Curriculum <span class="text-danger">*</span></label>
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <input id="oldCurriculum" type="checkbox" class="form-check" value="Old" checked />
+                                                        <span>Old</span>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <input id="newCurriculum" type="checkbox" class="form-check" value="New" />
+                                                        <span>New</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">First Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="firstname" placeholder="Enter first name" required />
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Middle Name</label>
+                                                <input type="text" class="form-control" placeholder="Enter middle name" name="middlename" />
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter last name" name="lastname" required />
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Suffix</label>
+                                                <input type="text" class="form-control" name="suffix" placeholder="JR, SR, III" />
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="birthdate" id="flatpickr-date" placeholder="YYYY-MM-DD" required />
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Age <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="age" placeholder="Enter age" required />
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Gender <span class="text-danger">*</span></label>
+                                                <select class="form-select" name="gender" required>
+                                                    <option value="" selected>Choose gender</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Civil Status <span class="text-danger">*</span></label>
+                                                <select class="form-select" name="civil_status" required>
+                                                    <option value="" selected>Choose civil status</option>
+                                                    <option value="Single">Single</option>
+                                                    <option value="Married">Married</option>
+                                                    <option value="Widowed">Widowed</option>
+                                                    <option value="Separated">Separated</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Contact Number <span class="text-danger">*</span></label>
+                                                <input type="text" id="prefix-mask" class="form-control prefix-mask" name="contact_number" placeholder="Enter contact number" required />
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Province <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="province" required></select>
+                                                <input type="hidden" id="provinceName" name="province">
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">City <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="city" required></select>
+                                                <input type="hidden" id="cityName" name="city">
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label class="form-label">Barangay <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="barangay" required></select>
+                                                <input type="hidden" id="barangayName" name="barangay">
+                                            </div>
+                                            <div class="col-md-9 mb-2">
+                                                <label class="form-label">House No./Unit/Bldg/Street <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="house_no" placeholder="House No./Unit/Bldg/Street" required />
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Zip Code <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="zip_code" placeholder="Enter zip code" required />
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-between mt-4">
+                                                <button class="btn btn-label-secondary btn-prev" disabled> <i class="ti ti-arrow-left ti-xs me-sm-1 me-0"></i>
+                                                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                                                </button>
+                                                <button class="btn btn-primary btn-next"><span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right ti-xs"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Educational -->
+                                    <div id="educational" class="content pt-3 pt-lg-0">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-2">
+                                                <label class="form-label">Student Number <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="student_id" placeholder="Enter student number" required />
+                                            </div>
+                                            <div class="col-md-12 mb-2">
+                                                <label class="form-label">KLD Email <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="kld_email" placeholder="Enter KLD email" required />
+                                            </div>
+                                            <div class="col-md-12 mb-2" id="hideYearlevel">
+                                                <label class="form-label">Year Level <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="yearLevel" name="year_level" onchange="getSections()">
+                                                    <option value="1st Year">1st Year</option>
+                                                    <option value="2nd Year">2nd Year</option>
+                                                    <option value="3rd Year">3rd Year</option>
+                                                    <option value="4th Year">4th Year</option>
+                                                </select>
+                                            </div>
+                                            <div id="programFull" class="col-md-6 mb-2">
+                                                <label class="form-label">Program <span class="text-danger">*</span></label>
+                                                <select id="programId" class="form-select" name="program_id" onchange="getSections()">
+                                                    <?php
+                                                    $programs = $this->program;
+                                                    foreach ($programs as $program => $data) {
+                                                    ?>
+                                                        <option value="<?= $data['program_id'] ?>"><?= $data['program_name'] ?></option>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mb-2" id="hideSection">
+                                                <label class="form-label">Section <span class="text-danger">*</span></label>
+                                                <select id="sectionId" class="form-select" name="section_id">
+                                                    <option value="">Choose a section</option>
+                                                    <?php
+                                                    $sections = $this->section;
+                                                    foreach ($sections as $section => $data) {
+                                                    ?>
+                                                        <option value="<?= $data['section_id'] ?>"><?= $data['section_name'] ?></option>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Elementary School <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="elementary" placeholder="Enter elementary school" required />
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">High School <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="highschool" placeholder="Enter high school" required />
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-between mt-4">
+                                                <button class="btn btn-success" type="submit" name="add_student"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Student Modal -->
+
+        <!-- Edit Student Modal -->
+        <div class="modal fade" id="editSection" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center mb-4">
+                            <h3 class="mb-2">Update Section Information</h3>
+                        </div>
+
+                        <form class="row g-3" method="POST">
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Year Level</label>
+                                <select class="form-select">
+                                    <option value="" selected>Choose year level</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Program</label>
+                                <select class="form-select">
+                                    <option value="" selected>Choose program</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <label class="form-label">Section</label>
+                                <input type="text" class="form-control" placeholder="Enter section" required />
+                            </div>
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-success me-sm-3 me-1">Save Changes</button>
+                                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Program Modal -->
+
+        <!-- Edit Student Modal -->
+
+        <!-- Edit Student Modal -->
 <?php
     }
 }

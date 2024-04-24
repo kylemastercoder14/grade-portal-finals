@@ -113,4 +113,8 @@ if (isset($_POST['add_program'])) {
     );
 
     $model->callInsertAdvisor($data, $currentPage);
+}else if(isset($_POST['backup'])) {
+    $db = new Dbconfig();
+    $db->backupDatabase();
+    header("Location: index.php");
 }

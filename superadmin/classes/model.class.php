@@ -203,18 +203,22 @@ class Model extends Dbconfig
 
     protected function readStudent($condition)
     {
-        $sql = "SELECT *
-        FROM student_tbl
-        INNER JOIN program_tbl ON student_tbl.program_id = program_tbl.program_id
-        INNER JOIN section_tbl ON student_tbl.section_id = section_tbl.section_id
-        WHERE student_tbl.is_archive = ?
-        ";
+        $sql = "SELECT 
+                student_tbl.*,
+                program_tbl.program_code,
+                section_tbl.section_name
+            FROM student_tbl
+            LEFT JOIN program_tbl ON student_tbl.program_id = program_tbl.program_id
+            LEFT JOIN section_tbl ON student_tbl.section_id = section_tbl.section_id
+            WHERE student_tbl.is_archive = ?
+            ";
         $stmt = $this->db()->prepare($sql);
-        $stmt->execute([$condition]); // 0 is NOT  archive
+        $stmt->execute([$condition]); // 0 is NOT archive
         $data = $stmt->fetchAll();
 
         return $data;
     }
+
 
     public function getAllStudent($condition)
     {
@@ -349,6 +353,7 @@ class Model extends Dbconfig
         $sections = $stmt->fetchAll();
 
         if ($sections) {
+            echo "<option value=''>Choose a section</option>";
             // Output options for section dropdown
             foreach ($sections as $section) {
                 echo "<option value='" . $section['section_id'] . "'>" . $section['section_name'] . "</option>";
@@ -373,5 +378,43 @@ class Model extends Dbconfig
     public function callHelperFilter()
     {
         $this->callFilterSectionByProgram();
+    }
+
+    protected function filterStudents($program_id, $year_level, $section_id)
+    {
+
+        $sql = "SELECT * FROM student_tbl WHERE program_id = ? AND year_level = ? AND section_id = ? ORDER BY lastname ASC";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$program_id, $year_level, $section_id]);
+
+        $sections = $stmt->fetchAll();
+
+        if ($sections) {
+            echo "<option value=''>Choose a section</option>";
+            // Output options for section dropdown
+            foreach ($sections as $section) {
+                echo "<option value='" . $section['section_id'] . "'>" . $section['lastname'] . "</option>";
+            }
+        } else {
+            echo "<option value=''>No sections found</option>";
+        }
+    }
+
+    protected function callFilterStudents()
+    {
+        if (isset($_GET['program_id'], $_GET['year_level'], $_GET['section_id'])) {
+            $program_id = $_GET['program_id'];
+            $year_level = $_GET['year_level'];
+            $section_id = $_GET['section_id'];
+            $this->filterStudents($program_id, $year_level, $section_id);
+        } else {
+            // Handle case where program_id is not provided
+            echo "<option value=''>Select a program and year level first</option>";
+        }
+    }
+
+    public function callHelperFilterStudents()
+    {
+        $this->callFilterStudents();
     }
 }

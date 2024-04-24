@@ -189,6 +189,40 @@ $control = new Control(1, 'student');
     </script>
 
     <script>
+        var oldCheckbox = document.getElementById("oldCurriculum");
+        var newCheckbox = document.getElementById("newCurriculum");
+        var hideSection = document.getElementById("hideSection");
+        var programFull = document.getElementById("programFull");
+        var hideYearlevel = document.getElementById("hideYearlevel");
+
+        oldCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                newCheckbox.checked = false;
+                hideSection.style.display = "block";
+                hideYearlevel.style.display = "block";
+                programFull.classList.add("col-md-6");
+            }else {
+                hideSection.style.display = "none";
+                hideYearlevel.style.display = "none";
+                programFull.classList.add("col-md-12");
+            }
+        });
+
+        newCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                oldCheckbox.checked = false;
+                hideSection.style.display = "none";
+                hideYearlevel.style.display = "none";
+                programFull.classList.add("col-md-12");
+            }else {
+                hideSection.style.display = "block";
+                hideYearlevel.style.display = "block";
+                programFull.classList.add("col-md-6");
+            }
+        });
+    </script>
+
+    <script>
         Toastify({
             text: "<?= $_SESSION['message'] ?>",
             duration: 3000,
