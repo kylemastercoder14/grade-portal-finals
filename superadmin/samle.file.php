@@ -1,1 +1,0 @@
-sige, push ka pre 
