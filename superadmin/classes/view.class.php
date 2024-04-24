@@ -779,7 +779,7 @@ class View
                         <!-- Content -->
                         <div class="container-xxl flex-grow-1 container-p-y">
                             <div class="d-flex align-items-center justify-content-between">
-                                <h5 class="py-2 mb-4">
+                                <h5 class="py-2 mt-4">
                                     <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Programs
                                 </h5>
                                 <div class="d-flex align-items-center gap-3">
@@ -1463,14 +1463,70 @@ class View
                         <!-- / Navbar -->
                         <!-- Content -->
                         <div class="container-xxl flex-grow-1 container-p-y">
-                            <h5 class="py-2 mb-4">
-                                <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Students
-                            </h5>
-                            <!-- Program Table -->
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5>
+                                    <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Students
+                                </h5>
+                                <div class="d-flex align-items-center gap-3 mb-4">
+                                    <button class="btn btn-primary d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#retrieveStudent">
+                                        <i class="ti ti-edit"></i>
+                                        <span>Retrieve Student</span>
+                                    </button>
+                                    <button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#addStudent">
+                                        <i class="ti ti-plus"></i>
+                                        <span>Add Student</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Student Table -->
                             <div class="card">
-                                <div class="card-datatable table-responsive">
-                                    <table class="datatables-student table">
-                                        <thead class="border-top">
+                                <div class="card-body table-responsive">
+                                    <div class="card-title">Assign Section (this is for new enrolled students only):</div>
+                                    <form method="GET" action="action.php" class="row mb-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Year Level <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="yearLevel" name="year_level" onchange="getSections()">
+                                                <option value="1st Year">1st Year</option>
+                                                <option value="2nd Year">2nd Year</option>
+                                                <option value="3rd Year">3rd Year</option>
+                                                <option value="4th Year">4th Year</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Program <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="programId" name="program_id" onchange="getSections()">
+                                                <?php
+                                                $programs = $this->program;
+                                                foreach ($programs as $program => $data) {
+                                                ?>
+                                                    <option value="<?= $data['program_id'] ?>"><?= $data['program_name'] ?></option>
+                                                <?php
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Section <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="sectionId" name="section_id">
+                                                <?php
+                                                $sections = $this->section;
+                                                foreach ($sections as $section => $data) {
+                                                ?>
+                                                    <option value="<?= $data['section_id'] ?>"><?= $data['section_name'] ?></option>
+                                                <?php
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 mt-4">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <button type="submit" name="filter_class" class="btn btn-success w-100">Filter</button>
+                                                <button type="reset" class="btn btn-secondary w-100">Reset</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <table id="studentDatatable" class="display compact table">
+                                        <thead>
                                             <tr>
                                                 <th>Student Number</th>
                                                 <th>Name</th>
@@ -2140,22 +2196,22 @@ class View
                             <h5 class="py-2 mb-4">
                                 <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Class List
                             </h5>
+                            <!-- Program Table -->
                             <div class="card">
-                                <div class="card-body">
-                                    <div class="card-title">Filter Student:</div>
-                                    <div class="row">
-                                        <div class="col-md-4">
+                                <div class="card-body table-responsive">
+                                    <form method="POST" class="row mb-3">
+                                        <div class="col-md-3">
                                             <label class="form-label">Year Level <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="filterYearLevel" name="year_level" onchange="filterStudent()">
+                                            <select class="form-select" id="yearLevel" name="year_level" onchange="getSections()">
                                                 <option value="1st Year">1st Year</option>
                                                 <option value="2nd Year">2nd Year</option>
                                                 <option value="3rd Year">3rd Year</option>
                                                 <option value="4th Year">4th Year</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label class="form-label">Program <span class="text-danger">*</span></label>
-                                            <select id="filterProgramId" class="form-select" name="program_id" onchange="filterStudent()">
+                                            <select class="form-select" id="programId" name="program_id" onchange="getSections()">
                                                 <?php
                                                 $programs = $this->program;
                                                 foreach ($programs as $program => $data) {
@@ -2166,10 +2222,9 @@ class View
                                                 ?>
                                             </select>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label class="form-label">Section <span class="text-danger">*</span></label>
-                                            <select id="filterSectionId" class="form-select" name="section_id" onchange="filterStudent()">
-                                                <option value="">Choose a section</option>
+                                            <select class="form-select" id="sectionId" name="section_id">
                                                 <?php
                                                 $sections = $this->section;
                                                 foreach ($sections as $section => $data) {
@@ -2180,14 +2235,15 @@ class View
                                                 ?>
                                             </select>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Program Table -->
-                            <div class="card">
-                                <div class="card-datatable table-responsive">
-                                    <table class="datatables-student table">
-                                        <thead class="border-top">
+                                        <div class="col-md-3 mt-4">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <a href="" class="btn btn-success w-100">Filter</a>
+                                                <button type="reset" class="btn btn-secondary w-100">Reset</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <table id="studentDatatable" class="table display compact">
+                                        <thead>
                                             <tr>
                                                 <th><input type="checkbox"></th>
                                                 <th>Name</th>
@@ -2199,26 +2255,23 @@ class View
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $programId = $_GET['program_id'] ?? null;
-                                            $yearLevel = $_GET['year_level'] ?? null;
-                                            $sectionId = $_GET['section_id'] ?? null;
-                                            $filterStudents = $this->filterStudent;
-                                            foreach($filterStudents as $filterStudent => $data) {
-                                                ?>
-                                            <tr>
-                                                <td>
-                                                    <input type="checkbox">
-                                                </td>
-                                                <td><?= $data['lastname'] ?></td>
-                                                <td><?= $data['year_level'] ?></td>
-                                                <td>Program</td>
-                                                <td>Section</td>
-                                                <td>actions</td>
-                                            </tr>
-                                                <?php
+                                            $students = $this->student;
+                                            foreach ($students as $student => $data) {
+                                            ?>
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox">
+                                                    </td>
+                                                    <td><?= $data['lastname'] ?></td>
+                                                    <td><?= $data['year_level'] ?></td>
+                                                    <td>Program</td>
+                                                    <td>Section</td>
+                                                    <td>actions</td>
+                                                </tr>
+                                            <?php
                                             }
                                             ?>
-                                            
+
                                         </tbody>
                                     </table>
                                 </div>

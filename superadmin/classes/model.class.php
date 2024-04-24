@@ -353,7 +353,6 @@ class Model extends Dbconfig
         $sections = $stmt->fetchAll();
 
         if ($sections) {
-            echo "<option value=''>Choose a section</option>";
             // Output options for section dropdown
             foreach ($sections as $section) {
                 echo "<option value='" . $section['section_id'] . "'>" . $section['section_name'] . "</option>";
@@ -383,38 +382,23 @@ class Model extends Dbconfig
     protected function filterStudents($program_id, $year_level, $section_id)
     {
 
-        $sql = "SELECT * FROM student_tbl WHERE program_id = ? AND year_level = ? AND section_id = ? ORDER BY lastname ASC";
+        $sql = "SELECT * FROM student_tbl WHERE program_id = ? AND year_level = ? ORDER BY lastname ASC";
         $stmt = $this->db()->prepare($sql);
-        $stmt->execute([$program_id, $year_level, $section_id]);
+        $stmt->execute([$program_id, $year_level]);
 
         $sections = $stmt->fetchAll();
-
-        if ($sections) {
-            echo "<option value=''>Choose a section</option>";
-            // Output options for section dropdown
-            foreach ($sections as $section) {
-                echo "<option value='" . $section['section_id'] . "'>" . $section['lastname'] . "</option>";
-            }
-        } else {
-            echo "<option value=''>No sections found</option>";
-        }
+        return $sections;
     }
 
-    protected function callFilterStudents()
+    public function callFilterStudents()
     {
-        if (isset($_GET['program_id'], $_GET['year_level'], $_GET['section_id'])) {
-            $program_id = $_GET['program_id'];
-            $year_level = $_GET['year_level'];
-            $section_id = $_GET['section_id'];
+        $program_id = $_GET["program_id"];
+        $year_level = $_GET["year_level"];
+        $section_id = $_GET["section_id"];
+        if (isset($program_id, $year_level, $section_id)) {
             $this->filterStudents($program_id, $year_level, $section_id);
         } else {
-            // Handle case where program_id is not provided
-            echo "<option value=''>Select a program and year level first</option>";
+            header("Location: students.php");
         }
-    }
-
-    public function callHelperFilterStudents()
-    {
-        $this->callFilterStudents();
     }
 }

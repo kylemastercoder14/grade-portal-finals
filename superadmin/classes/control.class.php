@@ -25,7 +25,6 @@ class Control {
         //student view
         $studentUnarchiveArr = $this->model->getAllStudent(0);
         $studentArchiveArr = $this->model->getAllStudent(1);
-        $filterStudent = $this->model->callHelperFilterStudents();
 
         //advisor view
         $advisorUnarchiveArr = $this->model->getAllAdvisor(0);
@@ -44,7 +43,6 @@ class Control {
             $studentArchiveArr,
             $advisorUnarchiveArr,
             $advisorArchiveArr,
-            $filterStudent
         );
 
     }
@@ -86,10 +84,6 @@ class Control {
 
     public function controlCallHelper() {
         $this->model->callHelperFilter();
-    }
-
-    public function controlCallHelperFilterStudents() {
-        $this->model->callHelperFilterStudents();
     }
 }
 ?>

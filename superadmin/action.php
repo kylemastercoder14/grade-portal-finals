@@ -117,4 +117,10 @@ if (isset($_POST['add_program'])) {
     $db = new Dbconfig();
     $db->backupDatabase();
     header("Location: index.php");
+}else if(isset($_GET['filter_class'])) {
+    $year_level = $_GET['year_level'];
+    $program_id = $_GET['program_id'];
+    $section_id = $_GET['section_id'];
+
+    header("Location: class-list.php?year_level=$year_level&program_id=$program_id&section_id=$section_id");
 }

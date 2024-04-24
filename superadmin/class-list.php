@@ -47,6 +47,7 @@ $control = new Control(1, 'advises');
     <link rel="stylesheet" href="assets/vendor/libs/flatpickr/flatpickr.css" />
     <link rel="stylesheet" href="assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css" />
     <link rel="stylesheet" href="assets/css/toastify.min.css" />
+    <link rel="stylesheet" href="assets/css/dataTables.bootstrap5.css" />
 
     <!-- Helpers -->
     <script src="assets/vendor/js/helpers.js"></script>
@@ -88,28 +89,37 @@ $control = new Control(1, 'advises');
     <script src="assets/js/main.js"></script>
 
     <!-- Page JS -->
-    <script src="assets/js/app-student.js"></script>
     <script src="assets/js/modal-create-student.js"></script>
     <script src="assets/js/forms-pickers.js"></script>
     <script src="assets/js/forms-extras.js"></script>
     <script src="assets/js/toastify.min.js"></script>
-    <!-- <script src="assets/js/modal-edit-user.js"></script> -->
+    <script src="assets/js/dataTables.bootstrap5.js"></script>
+    <script src="assets/js/dataTables.js"></script>
 
     <script>
-        function filterStudent() {
-            var programId = document.getElementById("filterProgramId").value;
-            var yearLevel = document.getElementById("filterYearLevel").value;
-            var sectionId = document.getElementById("filterSectionId").value;
+        new DataTable('#studentDatatable', {
+            lengthMenu: [
+                [5, 10, 25, 50, -1],
+                [5, 10, 25, 50, 'All']
+            ],
+            paging: true
+        });
+    </script>
+
+    <script>
+        function getSections() {
+            var programId = document.getElementById("programId").value;
+            var yearLevel = document.getElementById("yearLevel").value;
 
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                    // Update the table body with new student data
-                    var tbody = document.querySelector(".datatables-student tbody");
-                    tbody.innerHTML = this.responseText;
+                    // Update the section dropdown with new options
+                    var sectionDropdown = document.getElementById("sectionId");
+                    sectionDropdown.innerHTML = this.responseText;
                 }
             };
-            xhttp.open("GET", "filter_students.php?program_id=" + programId + "&year_level=" + yearLevel + "&section_id=" + sectionId, true);
+            xhttp.open("GET", "fetch_sections.php?program_id=" + programId + "&year_level=" + yearLevel, true);
             xhttp.send();
         }
     </script>
