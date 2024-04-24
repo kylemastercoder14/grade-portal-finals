@@ -25,8 +25,9 @@ class Control {
             $page, 
             $programUnarchiveArr,
             $programArchiveArr,
-            $sectionArchiveArr,
-            $sectionUnarchiveArr
+            $sectionUnarchiveArr,
+            $sectionArchiveArr
+            
         );
 
     }

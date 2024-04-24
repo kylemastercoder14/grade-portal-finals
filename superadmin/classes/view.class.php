@@ -1084,15 +1084,12 @@ class View
                                                         <td>
                                                             <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
                                                                 <div class="dropdown-menu dropdown-menu-end m-0">
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editProgram" href="javascript:0;" class="dropdown-item" onclick="editProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')">
-=======
+
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editProgram" href="javascript:0;" class="dropdown-item" onclick="editProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')
                                                                     <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')">
->>>>>>> datatable
-=======
+
                                                                     <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')">
->>>>>>> studentFaculty
+
                                                                         <i class="ti ti-edit ms-1"></i>Update
                                                                     </button>
                                                                     <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
@@ -1200,11 +1197,7 @@ class View
                         <div class="text-center mb-4">
                             <h3 class="mb-2">Update Section Information</h3>
                         </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> studentFaculty
+
                         <form class="row g-3" action="action.php" method="POST">
                             <input type="text" value="<?= $this->active_page ?>" name="current_page">
                             <input type="text" name="programId" id="sectionId" readonly>
