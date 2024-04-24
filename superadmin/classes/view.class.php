@@ -2,7 +2,7 @@
 include('includes/includes.php');
 class View
 {
-    private $data, $program, $archivedProgram, $section, $archivedSection, $subject, $archivedSubject;
+    private $data, $program, $archivedProgram, $section, $archivedSection, $subject, $archivedSubject, $student, $archivedStudent, $advisor, $archivedAdvisor;
     public $active_page;
     public $statusDashboard;
     public $statusYearlevel;
@@ -11,7 +11,7 @@ class View
     public $statusSubjects;
     public $statusStudents;
     public $statusTeacher;
-    
+
     public function __construct(
         $data_arr = null,
         $page,
@@ -20,7 +20,11 @@ class View
         $unarchiveSection = null,
         $archivedSection = null,
         $unarchiveSubject = null,
-        $archivedSubject = null
+        $archivedSubject = null,
+        $unarchiveStudent = null,
+        $archivedStudent = null,
+        $unarchiveAdvisor = null,
+        $archivedAdvisor = null
     ) {
         $this->data = $data_arr;
         $this->program = $unarchiveProgram;
@@ -29,14 +33,15 @@ class View
         $this->archivedSection = $archivedSection;
         $this->subject = $unarchiveSubject;
         $this->archivedSubject = $archivedSubject;
+        $this->student = $unarchiveStudent;
+        $this->archivedStudent = $archivedStudent;
+        $this->advisor = $unarchiveAdvisor;
+        $this->archivedAdvisor = $archivedAdvisor;
         $this->active_page = $page;
-    
+
         switch ($this->active_page) {
             case 'dashboard':
                 $this->statusDashboard = 'active';
-                break;
-            case 'year_level':
-                $this->statusYearlevel = 'active';
                 break;
             case 'program':
                 $this->statusPrograms = 'active';
@@ -55,7 +60,7 @@ class View
                 break;
         }
     }
-    
+
     public function header()
     {
 ?>
@@ -367,12 +372,6 @@ class View
                             <div data-i18n="General">General</div>
                         </a>
                         <ul class="menu-sub">
-                            <li class="menu-item <?php echo $this->statusYearlevel ?>">
-                                <a href="year-level.php" class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-layout-kanban"></i>
-                                    <div data-i18n="Year Level">Year Level</div>
-                                </a>
-                            </li>
                             <li class="menu-item <?php echo $this->statusPrograms ?>">
                                 <a href="programs.php" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-layout-sidebar"></i>
@@ -754,6 +753,7 @@ class View
         </div>
     <?php
     }
+
     public function programsContent()
     {
     ?>
@@ -1055,6 +1055,7 @@ class View
                                         <thead class="border-top">
                                             <tr>
                                                 <th>Section ID</th>
+                                                <th>Program</th>
                                                 <th>Section</th>
                                                 <th>Date Created</th>
                                                 <th>actions</th>
@@ -1079,6 +1080,7 @@ class View
                                                 ?>
                                                     <tr>
                                                         <td><?= $data['section_id'] ?></td>
+                                                        <td><?= $data['program_id'] ?></td>
                                                         <td><?= $data['section_name'] ?></td>
                                                         <td><?= $formattedDate ?></td>
                                                         <td>
@@ -1145,33 +1147,29 @@ class View
                             <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
                             <div class="col-12 col-md-12">
                                 <label class="form-label">Year Level</label>
-                                <select id="yearLevel" class="form-select">
-                                    <option value="1">1st Year</option>
-                                    <option value="2">2nd Year</option>
-                                    <option value="3">3rd Year</option>
-                                    <option value="4">4th Year</option>
+                                <select class="form-select" name="year_level">
+                                    <option value="1st year">1st Year</option>
+                                    <option value="2nd Year">2nd Year</option>
+                                    <option value="3rd Year">3rd Year</option>
+                                    <option value="4th Year">4th Year</option>
                                 </select>
                             </div>
                             <div class="col-12 col-md-12">
                                 <label class="form-label">Program</label>
-                                <select id="program" name="program_code" class="form-select">
+                                <select name="program_id" class="form-select">
                                     <?php
                                     $program = $this->program;
                                     foreach ($program as $programItem => $data) {
                                     ?>
-                                        <option value="<?= $data['program_code'] ?>"><?= $data['program_name'] ?></option>
+                                        <option value="<?= $data['program_id'] ?>"><?= $data['program_name'] ?></option>
                                     <?php
                                     }
                                     ?>
                                 </select>
                             </div>
                             <div class="col-12 col-md-12">
-                                <label class="form-label">Section Number</label>
-                                <input type="text" id="sectionNumber" class="form-control" placeholder="Enter section number">
-                            </div>
-                            <div class="col-12 col-md-12">
-                                <label class="form-label">Generated Section Name</label>
-                                <input type="text" id="generatedSection" name="section_name" class="form-control" placeholder="Enter generated section name">
+                                <label class="form-label">Section Name</label>
+                                <input type="text" name="section_name" class="form-control" placeholder="Enter section name">
                             </div>
                             <div class="col-12 text-center">
                                 <button type="submit" name="add_section" class="btn btn-success me-sm-3 me-1">Create Section</button>
@@ -1195,37 +1193,37 @@ class View
                         </div>
 
                         <form class="row g-3" action="action.php" method="POST">
-                            <input type="text" value="<?= $this->active_page ?>" name="current_page">
-                            <input type="text" name="programId" id="sectionId" readonly>
+                            <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
+                            <input type="hidden" name="editSectionId" id="editSectionId" readonly>
                             <div class="col-12 col-md-12">
                                 <label class="form-label">Year Level</label>
-                                <select id="editYearLevel" class="form-select">
-                                    <option value="1">1st Year</option>
-                                    <option value="2">2nd Year</option>
-                                    <option value="3">3rd Year</option>
-                                    <option value="4">4th Year</option>
-                                </select>
-                            </div>
-                            <div class="col-12 col-md-12">
-                                <label class="form-label">Program</label>
-                                <select id="editProgram" name="program_code" class="form-select">
+                                <select id="editSectionId" class="form-select" name="editSectionId">
                                     <?php
-                                    $program = $this->program;
-                                    foreach ($program as $programItem => $data) {
+                                    $section = $this->section;
+                                    foreach ($section as $sectionItem => $sectionData) {
                                     ?>
-                                        <option value="<?= $data['program_code'] ?>"><?= $data['program_name'] ?></option>
+                                        <option value="<?= $sectionData['year_level'] ?>"><?= $sectionData['year_level'] ?></option>
                                     <?php
                                     }
                                     ?>
                                 </select>
                             </div>
                             <div class="col-12 col-md-12">
-                                <label class="form-label">Section Number</label>
-                                <input type="text" id="editSectionNumber" class="form-control" placeholder="Enter section number">
+                                <label class="form-label">Program</label>
+                                <select id="editProgramCode" name="editProgramCode" class="form-select">
+                                    <?php
+                                    $program = $this->program;
+                                    foreach ($program as $programItem => $data) {
+                                    ?>
+                                        <option value="<?= $data['program_code'] ?>"><?= $data['program_code'] ?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                </select>
                             </div>
                             <div class="col-12 col-md-12">
-                                <label class="form-label">Generated Section Name</label>
-                                <input type="text" id="editGeneratedSection" name="section_name" class="form-control" placeholder="Enter generated section name">
+                                <label class="form-label">Section Name</label>
+                                <input type="text" id="editSectionName" name="editSectionName" class="form-control" placeholder="Enter generated section name">
                             </div>
                             <div class="col-12 text-center">
                                 <button type="submit" name="update_section" class="btn btn-success me-sm-3 me-1">Save Changes</button>
@@ -1236,9 +1234,10 @@ class View
                 </div>
             </div>
         </div>
-        <!-- Edit Section Modal -->
+        <!-- Edit Program Modal -->
     <?php
     }
+
     public function subjectContent()
     {
     ?>
@@ -1267,32 +1266,56 @@ class View
                                     <table class="datatables-subject table">
                                         <thead class="border-top">
                                             <tr>
-                                                <th>#</th>
-                                                <th>Year Level</th>
-                                                <th>Program</th>
-                                                <th>Subject</th>
+                                                <th>Course ID</th>
+                                                <th>Course Name</th>
+                                                <th>Course Code</th>
+                                                <th>Course Unit</th>
                                                 <th>Pre-requisite Subject</th>
                                                 <th>Date Created</th>
                                                 <th>actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Freshman</td>
-                                                <td>Institute of Information and Computing Sciences</td>
-                                                <td>Evaluation of Business Performance</td>
-                                                <td>N/A</td>
-                                                <td>April 20, 2024</td>
-                                                <td>
-                                                    <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
-                                                        <div class="dropdown-menu dropdown-menu-end m-0">
-                                                            <a data-bs-toggle="modal" data-bs-target="#editSubject" href="javascript:0;" class="dropdown-item"><i class="ti ti-edit ms-1"></i>Update</a>
-                                                            <a href="javascript:0;" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            <?php
+                                            $subjectData = $this->subject;
+                                            if (!$subjectData) {
+                                            ?>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <h4 class="text-center text-danger mt-2">No course found yet!</h4>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            } else {
+                                                foreach ($subjectData as $SubjectItem => $data) {
+                                                    $dateString = $data['date_added'];
+                                                    $timestamp = strtotime($dateString);
+                                                    $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                                ?>
+                                                    <tr>
+                                                        <td><?= $data['course_id'] ?></td>
+                                                        <td><?= $data['course_name'] ?></td>
+                                                        <td><?= $data['course_code'] ?></td>
+                                                        <td><?= $data['course_unit'] ?></td>
+                                                        <td><?= $data['pre_requisite'] === "" ? "N/A" : $data['pre_requisite'] ?></td>
+                                                        <td><?= $formattedDate ?></td>
+                                                        <td>
+                                                            <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                                <div class="dropdown-menu dropdown-menu-end m-0">
+
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')"><i class="ti ti-edit ms-1"></i>Update
+                                                                    </button>
+
+                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -1336,25 +1359,35 @@ class View
                         <div class="text-center mb-4">
                             <h3 class="mb-2">Add Subject Information</h3>
                         </div>
-                        <form class="row g-3" method="POST">
+                        <form class="row g-3" action="action.php" method="POST">
+                            <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
                             <div class="col-12 col-md-12">
                                 <label class="form-label">Course Name</label>
-                                <input type="text" class="form-control" placeholder="Enter course name" required />
+                                <input type="text" class="form-control" name="course_name" placeholder="Enter course name" required />
                             </div>
                             <div class="col-12 col-md-12">
                                 <label class="form-label">Course Code</label>
-                                <input type="text" class="form-control" placeholder="Enter course code" required />
+                                <input type="text" class="form-control" name="course_code" placeholder="Enter course code" required />
                             </div>
                             <div class="col-12 col-md-12">
                                 <label class="form-label">Course Unit</label>
-                                <input type="text" class="form-control" placeholder="Enter course unit" required />
+                                <input type="number" class="form-control" name="course_unit" placeholder="Enter course unit" required />
                             </div>
                             <div class="col-12 col-md-12">
-                                <label class="form-label">Pre-requisite Subject <a href="#" class="text-danger fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="If there is no prerequisite, leave it blank">(?)</a></label>
-                                <input type="text" class="form-control" placeholder="Enter pre-requisite subject" required />
+                                <label class="form-label">Pre-requisite Subject (optional) <a href="#" class="text-danger fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="If there is no prerequisite, leave it blank">(?)</a></label>
+                                <select name="pre_requisite" class="form-select">
+                                    <?php
+                                    $subjectSelect = $this->subject;
+                                    foreach ($subjectSelect as $subjectItem => $data) {
+                                    ?>
+                                        <option value="<?= $data['course_name'] ?>"><?= $data['course_name'] ?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                </select>
                             </div>
                             <div class="col-12 text-center">
-                                <button type="submit" class="btn btn-success me-sm-3 me-1">Create Subject</button>
+                                <button type="submit" name="add_subject" class="btn btn-success me-sm-3 me-1">Create Subject</button>
                                 <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                             </div>
                         </form>
@@ -1440,25 +1473,52 @@ class View
                                                 <th>Year Level</th>
                                                 <th>Program</th>
                                                 <th>Section</th>
+                                                <th>Date Created</th>
                                                 <th>actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>KLD-21-000209</td>
-                                                <td>Kyle Andre D. Lim</td>
-                                                <td>Junior</td>
-                                                <td>Institute of Information and Computing Sciences</td>
-                                                <td>BSIS305</td>
-                                                <td>
-                                                    <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
-                                                        <div class="dropdown-menu dropdown-menu-end m-0">
-                                                            <a data-bs-toggle="modal" data-bs-target="#editStudent" href="javascript:0;" class="dropdown-item"><i class="ti ti-edit ms-1"></i>Update</a>
-                                                            <a href="javascript:0;" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            <?php
+                                            $studentData = $this->student;
+                                            if (!$studentData) {
+                                            ?>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <h4 class="text-center text-danger mt-2">No student found yet!</h4>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            } else {
+                                                foreach ($studentData as $studentItem => $data) {
+                                                    $dateString = $data['date_added'];
+                                                    $timestamp = strtotime($dateString);
+                                                    $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                                    $fullname = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'];
+                                                ?>
+                                                    <tr>
+                                                        <td><?= $data['student_id'] ?></td>
+                                                        <td><?= $fullname ?></td>
+                                                        <td><?= $data['year_level'] ?></td>
+                                                        <td><?= $data['program_code'] ?></td>
+                                                        <td><?= $data['section_name'] ?></td>
+                                                        <td><?= $formattedDate ?></td>
+                                                        <td>
+                                                            <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                                <div class="dropdown-menu dropdown-menu-end m-0">
+
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')"><i class="ti ti-edit ms-1"></i>Update
+                                                                    </button>
+
+                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -1523,37 +1583,38 @@ class View
                                 </div>
                             </div>
                             <div class="bs-stepper-content p-1">
-                                <form onSubmit="return false">
+                                <form method="POST" action="action.php">
                                     <!-- Personal -->
                                     <div id="personal" class="content pt-3 pt-lg-0">
+                                        <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
                                         <div class="row">
-                                            <div class="col-md-4 mb-2">
+                                            <div class="col-md-3 mb-2">
                                                 <label class="form-label">First Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter first name" required />
+                                                <input type="text" class="form-control" name="firstname" placeholder="Enter first name" required />
                                             </div>
-                                            <div class="col-md-2 mb-2">
-                                                <label class="form-label">Middle Initial</label>
-                                                <input type="text" class="form-control" placeholder="MI" />
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Middle Name</label>
+                                                <input type="text" class="form-control" placeholder="Enter middle name" name="middlename" />
                                             </div>
-                                            <div class="col-md-4 mb-2">
+                                            <div class="col-md-3 mb-2">
                                                 <label class="form-label">Last Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter last name" required />
+                                                <input type="text" class="form-control" placeholder="Enter last name" name="lastname" required />
                                             </div>
-                                            <div class="col-md-2 mb-2">
+                                            <div class="col-md-3 mb-2">
                                                 <label class="form-label">Suffix</label>
-                                                <input type="text" class="form-control" placeholder="JR, SR, III" />
+                                                <input type="text" class="form-control" name="suffix" placeholder="JR, SR, III" />
                                             </div>
                                             <div class="col-md-6 mb-2">
                                                 <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="flatpickr-date" placeholder="YYYY-MM-DD" required />
+                                                <input type="text" class="form-control" name="birthdate" id="flatpickr-date" placeholder="YYYY-MM-DD" required />
                                             </div>
                                             <div class="col-md-6 mb-2">
                                                 <label class="form-label">Age <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter age" required />
+                                                <input type="text" class="form-control" name="age" placeholder="Enter age" required />
                                             </div>
                                             <div class="col-md-4 mb-2">
                                                 <label class="form-label">Gender <span class="text-danger">*</span></label>
-                                                <select class="form-select" required>
+                                                <select class="form-select" name="gender" required>
                                                     <option value="" selected>Choose gender</option>
                                                     <option value="Male">Male</option>
                                                     <option value="Female">Female</option>
@@ -1561,7 +1622,7 @@ class View
                                             </div>
                                             <div class="col-md-4 mb-2">
                                                 <label class="form-label">Civil Status <span class="text-danger">*</span></label>
-                                                <select class="form-select" required>
+                                                <select class="form-select" name="civil_status" required>
                                                     <option value="" selected>Choose civil status</option>
                                                     <option value="Single">Single</option>
                                                     <option value="Married">Married</option>
@@ -1571,33 +1632,36 @@ class View
                                             </div>
                                             <div class="col-md-4 mb-2">
                                                 <label class="form-label">Contact Number <span class="text-danger">*</span></label>
-                                                <input type="text" id="prefix-mask" class="form-control prefix-mask" name="contactNumber" placeholder="Enter contact number" required />
+                                                <input type="text" id="prefix-mask" class="form-control prefix-mask" name="contact_number" placeholder="Enter contact number" required />
                                             </div>
                                             <div class="col-md-4 mb-2">
                                                 <label class="form-label">Province <span class="text-danger">*</span></label>
                                                 <select class="form-select" id="province" required></select>
+                                                <input type="hidden" id="provinceName" name="province">
                                             </div>
                                             <div class="col-md-4 mb-2">
                                                 <label class="form-label">City <span class="text-danger">*</span></label>
                                                 <select class="form-select" id="city" required></select>
+                                                <input type="hidden" id="cityName" name="city">
                                             </div>
                                             <div class="col-md-4 mb-2">
                                                 <label class="form-label">Barangay <span class="text-danger">*</span></label>
                                                 <select class="form-select" id="barangay" required></select>
+                                                <input type="hidden" id="barangayName" name="barangay">
                                             </div>
                                             <div class="col-md-9 mb-2">
                                                 <label class="form-label">House No./Unit/Bldg/Street <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="House No./Unit/Bldg/Street" required />
+                                                <input type="text" class="form-control" name="house_no" placeholder="House No./Unit/Bldg/Street" required />
                                             </div>
                                             <div class="col-md-3 mb-2">
                                                 <label class="form-label">Zip Code <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter zip code" required />
+                                                <input type="text" class="form-control" name="zip_code" placeholder="Enter zip code" required />
                                             </div>
                                             <div class="col-12 d-flex justify-content-between mt-4">
                                                 <button class="btn btn-label-secondary btn-prev" disabled> <i class="ti ti-arrow-left ti-xs me-sm-1 me-0"></i>
                                                     <span class="align-middle d-sm-inline-block d-none">Previous</span>
                                                 </button>
-                                                <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right ti-xs"></i></button>
+                                                <button class="btn btn-primary btn-next"><span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right ti-xs"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -1607,46 +1671,58 @@ class View
                                         <div class="row">
                                             <div class="col-md-12 mb-2">
                                                 <label class="form-label">Student Number <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter student number" required />
+                                                <input type="text" class="form-control" name="student_id" placeholder="Enter student number" required />
                                             </div>
                                             <div class="col-md-12 mb-2">
                                                 <label class="form-label">KLD Email <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter KLD email" required />
+                                                <input type="text" class="form-control" name="kld_email" placeholder="Enter KLD email" required />
                                             </div>
                                             <div class="col-md-12 mb-2">
                                                 <label class="form-label">Year Level <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter year level" required />
+                                                <select class="form-select" id="yearLevel" name="year_level" onchange="getSections()">
+                                                    <option value="1st Year">1st Year</option>
+                                                    <option value="2nd Year">2nd Year</option>
+                                                    <option value="3rd Year">3rd Year</option>
+                                                    <option value="4th Year">4th Year</option>
+                                                </select>
                                             </div>
                                             <div class="col-md-6 mb-2">
                                                 <label class="form-label">Program <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter program" required />
+                                                <select id="programId" class="form-select" name="program_id" onchange="getSections()">
+                                                    <?php
+                                                    $programs = $this->program;
+                                                    foreach ($programs as $program => $data) {
+                                                    ?>
+                                                        <option value="<?= $data['program_id'] ?>"><?= $data['program_name'] ?></option>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </select>
                                             </div>
                                             <div class="col-md-6 mb-2">
                                                 <label class="form-label">Section <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter section" required />
+                                                <select id="sectionId" class="form-select" name="section_id">
+                                                    <?php
+                                                    $sections = $this->section;
+                                                    foreach ($sections as $section => $data) {
+                                                    ?>
+                                                        <option value="<?= $data['section_id'] ?>"><?= $data['section_name'] ?></option>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </select>
                                             </div>
                                             <div class="col-md-6 mb-2">
                                                 <label class="form-label">Elementary School <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter elementary school" required />
+                                                <input type="text" class="form-control" name="elementary" placeholder="Enter elementary school" required />
                                             </div>
                                             <div class="col-md-6 mb-2">
                                                 <label class="form-label">High School <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter high school" required />
+                                                <input type="text" class="form-control" name="highschool" placeholder="Enter high school" required />
                                             </div>
                                             <div class="col-12 d-flex justify-content-between mt-4">
-                                                <button class="btn btn-success"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span></button>
+                                                <button class="btn btn-success" type="submit" name="add_student"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span></button>
                                             </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- submit -->
-                                    <div id="submit" class="content text-center pt-3 pt-lg-0">
-                                        <h5 class="mb-2 mt-3">Submit</h5>
-                                        <p>Submit to kick start your project.</p>
-                                        <!-- image -->
-                                        <img src="../../assets/img/illustrations/girl-with-laptop.png" class="img-fluid" alt="Create App img" width="175">
-                                        <div class="col-12 d-flex justify-content-between mt-4 pt-2">
-                                            <button class="btn btn-success btn-next btn-submit" data-bs-dismiss="modal" aria-label="Close"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span> <i class="ti ti-check ti-xs"></i></button>
                                         </div>
                                     </div>
                                 </form>
@@ -1700,7 +1776,7 @@ class View
         <!-- Edit Student Modal -->
 
         <!-- Edit Student Modal -->
-<?php
+    <?php
     }
 
 
@@ -1733,30 +1809,55 @@ class View
                                     <table class="datatables-teacher table">
                                         <thead class="border-top">
                                             <tr>
-                                                <th>Student Number</th>
+                                                <th>Advisor Number</th>
                                                 <th>Name</th>
-                                                <th>Year Level</th>
-                                                <th>Program</th>
-                                                <th>Section</th>
+                                                <th>Position</th>
+                                                <th>Department</th>
+                                                <th>Date Created</th>
                                                 <th>actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>KLD-21-000209</td>
-                                                <td>Kyle Andre D. Lim</td>
-                                                <td>Junior</td>
-                                                <td>Institute of Information and Computing Sciences</td>
-                                                <td>BSIS305</td>
-                                                <td>
-                                                    <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
-                                                        <div class="dropdown-menu dropdown-menu-end m-0">
-                                                            <a data-bs-toggle="modal" data-bs-target="#editStudent" href="javascript:0;" class="dropdown-item"><i class="ti ti-edit ms-1"></i>Update</a>
-                                                            <a href="javascript:0;" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            <?php
+                                            $advisorData = $this->advisor;
+                                            if (!$advisorData) {
+                                            ?>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <h4 class="text-center text-danger mt-2">No student found yet!</h4>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            } else {
+                                                foreach ($advisorData as $advisorItem => $data) {
+                                                    $dateString = $data['date_added'];
+                                                    $timestamp = strtotime($dateString);
+                                                    $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                                    $fullname = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'] . ", " . $data['title'];
+                                                ?>
+                                                    <tr>
+                                                        <td><?= $data['advisor_id'] ?></td>
+                                                        <td><?= $fullname ?></td>
+                                                        <td><?= $data['position'] ?></td>
+                                                        <td><?= $data['program_code'] ?></td>
+                                                        <td><?= $formattedDate ?></td>
+                                                        <td>
+                                                            <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                                <div class="dropdown-menu dropdown-menu-end m-0">
+
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')"><i class="ti ti-edit ms-1"></i>Update
+                                                                    </button>
+
+                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -1821,37 +1922,55 @@ class View
                                 </div>
                             </div>
                             <div class="bs-stepper-content p-1">
-                                <form onSubmit="return false">
+                                <form method="POST" action="action.php">
                                     <!-- Personal -->
                                     <div id="personal" class="content pt-3 pt-lg-0">
+                                        <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
                                         <div class="row">
-                                            <div class="col-md-4 mb-2">
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Title <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="firstname" placeholder="MIT, MIEE, LPT" required />
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Position <span class="text-danger">*</span></label>
+                                                <select name="" class="form-select">
+                                                    <option value="Professor I">Professor I</option>
+                                                    <option value="Professor II">Professor II</option>
+                                                    <option value="Professor III">Professor III</option>
+                                                    <option value="Professor IV">Professor IV</option>
+                                                    <option value="Assistant Professor">Assistant Professor</option>
+                                                    <option value="Program Chair">Program Chair</option>
+                                                    <option value="Associate Dean">Associate Dean</option>
+                                                    <option value="Dean">Dean</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
                                                 <label class="form-label">First Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter first name" required />
+                                                <input type="text" class="form-control" name="firstname" placeholder="Enter first name" required />
                                             </div>
-                                            <div class="col-md-2 mb-2">
-                                                <label class="form-label">Middle Initial</label>
-                                                <input type="text" class="form-control" placeholder="MI" />
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Middle Name</label>
+                                                <input type="text" class="form-control" placeholder="Enter middle name" name="middlename" />
                                             </div>
-                                            <div class="col-md-4 mb-2">
+                                            <div class="col-md-3 mb-2">
                                                 <label class="form-label">Last Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter last name" required />
+                                                <input type="text" class="form-control" placeholder="Enter last name" name="lastname" required />
                                             </div>
-                                            <div class="col-md-2 mb-2">
+                                            <div class="col-md-3 mb-2">
                                                 <label class="form-label">Suffix</label>
-                                                <input type="text" class="form-control" placeholder="JR, SR, III" />
+                                                <input type="text" class="form-control" name="suffix" placeholder="JR, SR, III" />
                                             </div>
                                             <div class="col-md-6 mb-2">
                                                 <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="flatpickr-date" placeholder="YYYY-MM-DD" required />
+                                                <input type="text" class="form-control" name="birthdate" id="flatpickr-date" placeholder="YYYY-MM-DD" required />
                                             </div>
                                             <div class="col-md-6 mb-2">
                                                 <label class="form-label">Age <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter age" required />
+                                                <input type="text" class="form-control" name="age" placeholder="Enter age" required />
                                             </div>
                                             <div class="col-md-4 mb-2">
                                                 <label class="form-label">Gender <span class="text-danger">*</span></label>
-                                                <select class="form-select" required>
+                                                <select class="form-select" name="gender" required>
                                                     <option value="" selected>Choose gender</option>
                                                     <option value="Male">Male</option>
                                                     <option value="Female">Female</option>
@@ -1859,7 +1978,7 @@ class View
                                             </div>
                                             <div class="col-md-4 mb-2">
                                                 <label class="form-label">Civil Status <span class="text-danger">*</span></label>
-                                                <select class="form-select" required>
+                                                <select class="form-select" name="civil_status" required>
                                                     <option value="" selected>Choose civil status</option>
                                                     <option value="Single">Single</option>
                                                     <option value="Married">Married</option>
@@ -1869,33 +1988,36 @@ class View
                                             </div>
                                             <div class="col-md-4 mb-2">
                                                 <label class="form-label">Contact Number <span class="text-danger">*</span></label>
-                                                <input type="text" id="prefix-mask" class="form-control prefix-mask" name="contactNumber" placeholder="Enter contact number" required />
+                                                <input type="text" id="prefix-mask" class="form-control prefix-mask" name="contact_number" placeholder="Enter contact number" required />
                                             </div>
                                             <div class="col-md-4 mb-2">
                                                 <label class="form-label">Province <span class="text-danger">*</span></label>
                                                 <select class="form-select" id="province" required></select>
+                                                <input type="hidden" id="provinceName" name="province">
                                             </div>
                                             <div class="col-md-4 mb-2">
                                                 <label class="form-label">City <span class="text-danger">*</span></label>
                                                 <select class="form-select" id="city" required></select>
+                                                <input type="hidden" id="cityName" name="city">
                                             </div>
                                             <div class="col-md-4 mb-2">
                                                 <label class="form-label">Barangay <span class="text-danger">*</span></label>
                                                 <select class="form-select" id="barangay" required></select>
+                                                <input type="hidden" id="barangayName" name="barangay">
                                             </div>
                                             <div class="col-md-9 mb-2">
                                                 <label class="form-label">House No./Unit/Bldg/Street <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="House No./Unit/Bldg/Street" required />
+                                                <input type="text" class="form-control" name="house_no" placeholder="House No./Unit/Bldg/Street" required />
                                             </div>
                                             <div class="col-md-3 mb-2">
                                                 <label class="form-label">Zip Code <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter zip code" required />
+                                                <input type="text" class="form-control" name="zip_code" placeholder="Enter zip code" required />
                                             </div>
                                             <div class="col-12 d-flex justify-content-between mt-4">
                                                 <button class="btn btn-label-secondary btn-prev" disabled> <i class="ti ti-arrow-left ti-xs me-sm-1 me-0"></i>
                                                     <span class="align-middle d-sm-inline-block d-none">Previous</span>
                                                 </button>
-                                                <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right ti-xs"></i></button>
+                                                <button class="btn btn-primary btn-next"><span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right ti-xs"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -1905,38 +2027,29 @@ class View
                                         <div class="row">
                                             <div class="col-md-12 mb-2">
                                                 <label class="form-label">Employee Number <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter employee number" required />
+                                                <input type="text" class="form-control" name="advisor_id" placeholder="Enter employee number" required />
                                             </div>
                                             <div class="col-md-12 mb-2">
                                                 <label class="form-label">KLD Email <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter KLD email" required />
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <label class="form-label">Elementary School <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter elementary school" required />
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <label class="form-label">High School <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter high school" required />
+                                                <input type="text" class="form-control" name="kld_email" placeholder="Enter KLD email" required />
                                             </div>
                                             <div class="col-md-12 mb-2">
-                                                <label class="form-label">College School <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter college school" required />
+                                                <label class="form-label">Department <span class="text-danger">*</span></label>
+                                                <select class="form-select" name="program_id" required>
+                                                    <option value="" selected>Choose a department</option>
+                                                    <?php
+                                                    $programs = $this->program;
+                                                    foreach ($programs as $program => $data) {
+                                                    ?>
+                                                        <option value="<?= $data['program_id'] ?>"><?= $data['program_name'] ?></option>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </select>
                                             </div>
                                             <div class="col-12 d-flex justify-content-between mt-4">
-                                                <button class="btn btn-success"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span></button>
+                                                <button class="btn btn-success" type="submit" name="add_advisor"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span></button>
                                             </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- submit -->
-                                    <div id="submit" class="content text-center pt-3 pt-lg-0">
-                                        <h5 class="mb-2 mt-3">Submit</h5>
-                                        <p>Submit to kick start your project.</p>
-                                        <!-- image -->
-                                        <img src="../../assets/img/illustrations/girl-with-laptop.png" class="img-fluid" alt="Create App img" width="175">
-                                        <div class="col-12 d-flex justify-content-between mt-4 pt-2">
-                                            <button class="btn btn-success btn-next btn-submit" data-bs-dismiss="modal" aria-label="Close"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span> <i class="ti ti-check ti-xs"></i></button>
                                         </div>
                                     </div>
                                 </form>
@@ -1984,13 +2097,14 @@ class View
             </div>
         </div>
         <!-- Edit Instructor Modal -->
-<?php
+    <?php
     }
-    
-    public function classListContent(){
-        ?>
 
-        <?php
+    public function classListContent()
+    {
+    ?>
+
+<?php
     }
 }
 ?>

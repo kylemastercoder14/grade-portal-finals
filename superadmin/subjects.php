@@ -44,6 +44,7 @@ $control = new Control(1, 'course');
     <link rel="stylesheet" href="assets/vendor/libs/select2/select2.css" />
     <link rel="stylesheet" href="assets/vendor/libs/%40form-validation/form-validation.css" />
     <link rel="stylesheet" href="assets/vendor/libs/bs-stepper/bs-stepper.css" />
+    <link rel="stylesheet" href="assets/css/toastify.min.css" />
 
     <!-- Helpers -->
     <script src="assets/vendor/js/helpers.js"></script>
@@ -78,6 +79,7 @@ $control = new Control(1, 'course');
     <script src="assets/vendor/libs/%40form-validation/bootstrap5.js"></script>
     <script src="assets/vendor/libs/%40form-validation/auto-focus.js"></script>
     <script src="assets/vendor/libs/bs-stepper/bs-stepper.js"></script>
+    <script src="assets/js/toastify.min.js"></script>
 
     <!-- Main JS -->
     <script src="assets/js/main.js"></script>
@@ -85,6 +87,23 @@ $control = new Control(1, 'course');
     <!-- Page JS -->
     <script src="assets/js/app-subject.js"></script>
     <!-- <script src="assets/js/modal-edit-user.js"></script> -->
+
+    <script>
+        Toastify({
+            text: "<?= $_SESSION['message'] ?>",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            stopOnFocus: true,
+            style: {
+                background: "<?= $_SESSION['status'] ?>",
+            },
+            onClick: function() {}
+        }).showToast();
+
+        // Unset the session after displaying the message
+        <?php unset($_SESSION['message']); ?>
+    </script>
 </body>
 
 </html>

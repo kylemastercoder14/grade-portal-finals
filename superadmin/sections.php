@@ -95,9 +95,10 @@ $control = new Control(1, 'section');
             // need ko iparse kase naka json state sya dahil inencode ko sya
             var data = JSON.parse(sectionData);
 
-            document.getElementById('editGeneratedSection').value = data['section_ame'];
+            document.getElementById('editSectionName').value = data['section_name'];
+            document.getElementById('editSectionId').value = data['section_id'];
+            document.getElementById('editYearLevel').value = data['year_level'];
             document.getElementById('editProgramCode').value = data['program_code'];
-            document.getElementById('sectionId').value = data['section_id'];
         }
 
         function archiveProgramDataJS(programData) {
@@ -146,6 +147,7 @@ $control = new Control(1, 'section');
             }
         });
     </script>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var editYearLevel = document.getElementById("editYearLevel");

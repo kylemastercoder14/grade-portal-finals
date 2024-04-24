@@ -18,7 +18,17 @@ class Control {
         $sectionUnarchiveArr = $this->model->getAllSection(0);
         $sectionArchiveArr = $this->model->getAllSection(1);
 
-        // subject view
+        //subject view
+        $subjectUnarchiveArr = $this->model->getAllSubject(0);
+        $subjectArchiveArr = $this->model->getAllSubject(1);
+
+        //student view
+        $studentUnarchiveArr = $this->model->getAllStudent(0);
+        $studentArchiveArr = $this->model->getAllStudent(1);
+
+        //advisor view
+        $advisorUnarchiveArr = $this->model->getAllAdvisor(0);
+        $advisorArchiveArr = $this->model->getAllAdvisor(1);
 
         $this->view = new View(
             $data_arr, 
@@ -26,8 +36,13 @@ class Control {
             $programUnarchiveArr,
             $programArchiveArr,
             $sectionUnarchiveArr,
-            $sectionArchiveArr
-            
+            $sectionArchiveArr,
+            $subjectUnarchiveArr,
+            $subjectArchiveArr,
+            $studentUnarchiveArr,
+            $studentArchiveArr,
+            $advisorUnarchiveArr,
+            $advisorArchiveArr,
         );
 
     }
@@ -60,6 +75,10 @@ class Control {
     public function teacher()
     {
         $this->view->teacherContent();
+    }
+
+    public function controlCallHelper() {
+        $this->model->callHelperFilter();
     }
 }
 ?>

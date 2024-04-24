@@ -46,6 +46,7 @@ $control = new Control(1, 'student');
     <link rel="stylesheet" href="assets/vendor/libs/bs-stepper/bs-stepper.css" />
     <link rel="stylesheet" href="assets/vendor/libs/flatpickr/flatpickr.css" />
     <link rel="stylesheet" href="assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css" />
+    <link rel="stylesheet" href="assets/css/toastify.min.css" />
 
     <!-- Helpers -->
     <script src="assets/vendor/js/helpers.js"></script>
@@ -91,6 +92,7 @@ $control = new Control(1, 'student');
     <script src="assets/js/modal-create-student.js"></script>
     <script src="assets/js/forms-pickers.js"></script>
     <script src="assets/js/forms-extras.js"></script>
+    <script src="assets/js/toastify.min.js"></script>
     <!-- <script src="assets/js/modal-edit-user.js"></script> -->
 
     <script>
@@ -101,7 +103,7 @@ $control = new Control(1, 'student');
                 // Loop through the data and append options to the city dropdown
                 $.each(data, function(index, city) {
                     $('#city').append($('<option>', {
-                        value: city.code,
+                        value: city.code, // Use city code as value
                         text: city.name
                     }));
                 });
@@ -118,7 +120,7 @@ $control = new Control(1, 'student');
                 // Loop through the data and append options to the barangay dropdown
                 $.each(data, function(index, barangay) {
                     $('#barangay').append($('<option>', {
-                        value: barangay.code,
+                        value: barangay.code, // Use barangay code as value
                         text: barangay.name
                     }));
                 });
@@ -135,37 +137,72 @@ $control = new Control(1, 'student');
                 // Loop through the data and append options to the province dropdown
                 $.each(data, function(index, province) {
                     $('#province').append($('<option>', {
-                        value: province.code,
+                        value: province.code, // Use province code as value
                         text: province.name
                     }));
                 });
 
                 // Trigger change event for the province dropdown to fetch cities for the initially selected province
                 $('#province').change(function() {
-                    var selectedProvinceCode = $(this).val();
+                    var selectedProvinceCode = $(this).val(); // Use province code
                     fetchCities(selectedProvinceCode);
                     var selectedProvinceName = $(this).find('option:selected').text();
-                    $('#provinceName').val(selectedProvinceName);
+                    $('#provinceName').val(selectedProvinceName); // Set hidden input with province name
                 }).change(); // Trigger change event initially
 
                 // Trigger change event for the city dropdown to fetch barangays for the initially selected city
                 $('#city').change(function() {
-                    var selectedCityCode = $(this).val();
+                    var selectedCityCode = $(this).val(); // Use city code
                     fetchBarangays(selectedCityCode);
                     var selectedCityName = $(this).find('option:selected').text();
-                    $('#cityName').val(selectedCityName);
+                    $('#cityName').val(selectedCityName); // Set hidden input with city name
                 }).change(); // Trigger change event initially
 
                 // Trigger change event for the barangay dropdown to populate the barangay name input
                 $('#barangay').change(function() {
                     var selectedBarangayName = $(this).find('option:selected').text();
-                    $('#barangayName').val(selectedBarangayName);
+                    $('#barangayName').val(selectedBarangayName); // Set hidden input with barangay name
                 });
             }).fail(function(jqxhr, textStatus, error) {
                 var err = textStatus + ", " + error;
                 console.log("Request Failed: " + err);
             });
         });
+    </script>
+
+    <script>
+        function getSections() {
+            var programId = document.getElementById("programId").value;
+            var yearLevel = document.getElementById("yearLevel").value;
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    // Update the section dropdown with new options
+                    var sectionDropdown = document.getElementById("sectionId");
+                    sectionDropdown.innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "fetch_sections.php?program_id=" + programId + "&year_level=" + yearLevel, true);
+            xhttp.send();
+        }
+    </script>
+
+    <script>
+        Toastify({
+            text: "<?= $_SESSION['message'] ?>",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            stopOnFocus: true,
+            style: {
+                background: "<?= $_SESSION['status'] ?>",
+            },
+            onClick: function() {}
+        }).showToast();
+
+        // Unset the session after displaying the message
+        <?php unset($_SESSION['message']); ?>
     </script>
 </body>
 
