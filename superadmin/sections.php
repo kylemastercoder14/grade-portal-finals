@@ -89,6 +89,32 @@ $control = new Control(1, 'section');
     <script src="assets/js/app-section.js"></script>
 
     <script>
+        function editSectionDataJS(sectionData) {
+            console.log(sectionData);
+
+            // need ko iparse kase naka json state sya dahil inencode ko sya
+            var data = JSON.parse(sectionData);
+
+            document.getElementById('editGeneratedSection').value = data['section_ame'];
+            document.getElementById('editProgramCode').value = data['program_code'];
+            document.getElementById('sectionId').value = data['section_id'];
+        }
+
+        function archiveProgramDataJS(programData) {
+            try {
+                var data = JSON.parse(programData);
+                console.log(data);
+                document.getElementById('archiveProgramName').value = data['program_name'] || '';
+                document.getElementById('archiveProgramCode').value = data['program_code'] || '';
+                document.getElementById('archiveProgramId').value = data['program_id'] || '';
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+                // Optionally, you can display an error message to the user
+            }
+        }
+    </script>
+
+    <script>
         document.addEventListener("DOMContentLoaded", function() {
             var yearLevel = document.getElementById("yearLevel");
             var program = document.getElementById("program");
@@ -112,16 +138,16 @@ $control = new Control(1, 'section');
                 var programValue = program.value;
                 var sectionNumberValue = sectionNumber.value;
 
-                if(sectionNumberValue < 10) {
+                if (sectionNumberValue < 10) {
                     generatedSection.value = programValue + yearLevelValue + "0" + sectionNumberValue;
-                }else {
+                } else {
                     generatedSection.value = programValue + yearLevelValue + sectionNumberValue;
                 }
             }
         });
     </script>
 
-<script>
+    <script>
         Toastify({
             text: "<?= $_SESSION['message'] ?>",
             duration: 3000,
