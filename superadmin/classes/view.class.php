@@ -1085,13 +1085,9 @@ class View
                                                             <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
                                                                 <div class="dropdown-menu dropdown-menu-end m-0">
 
-                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editProgram" href="javascript:0;" class="dropdown-item" onclick="editProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')
-                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')">
-
-                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')">
-
-                                                                        <i class="ti ti-edit ms-1"></i>Update
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')"><i class="ti ti-edit ms-1"></i>Update
                                                                     </button>
+
                                                                     <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
 
                                                                 </div>
@@ -1186,9 +1182,9 @@ class View
                 </div>
             </div>
         </div>
-        <!-- Add Program Modal -->
+        <!-- Add Section Modal -->
 
-        <!-- Edit Program Modal -->
+        <!-- Edit Section Modal -->
         <div class="modal fade" id="editSection" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
                 <div class="modal-content p-3 p-md-5">
@@ -1240,7 +1236,7 @@ class View
                 </div>
             </div>
         </div>
-        <!-- Edit Program Modal -->
+        <!-- Edit Section Modal -->
     <?php
     }
     public function subjectContent()

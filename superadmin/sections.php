@@ -146,6 +146,53 @@ $control = new Control(1, 'section');
             }
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var editYearLevel = document.getElementById("editYearLevel");
+            var editProgram = document.getElementById("editProgram");
+            var editSectionNumber = document.getElementById("editSectionNumber");
+            var editGeneratedSection = document.getElementById("editGeneratedSection");
+
+            editGeneratedSection.addEventListener("input", function() {
+                var generatedValue = editGeneratedSection.value;
+                var programValue = generatedValue.substring(0, 2);
+                var yearLevelValue = generatedValue.substring(2, 4);
+                var sectionNumberValue = generatedValue.substring(4);
+
+                editProgram.value = programValue;
+                editYearLevel.value = yearLevelValue;
+
+                // Remove leading zeros if present
+                sectionNumberValue = sectionNumberValue.replace(/^0+/, '');
+                editSectionNumber.value = sectionNumberValue;
+            });
+
+            editYearLevel.addEventListener("change", function() {
+                updateGeneratedSection();
+            });
+
+            editProgram.addEventListener("change", function() {
+                updateGeneratedSection();
+            });
+
+            editSectionNumber.addEventListener("input", function() {
+                updateGeneratedSection();
+            });
+
+            function updateGeneratedSection() {
+                var yearLevelValue = editYearLevel.value;
+                var programValue = editProgram.value;
+                var sectionNumberValue = editSectionNumber.value;
+
+                if (sectionNumberValue < 10) {
+                    editGeneratedSection.value = programValue + yearLevelValue + "0" + sectionNumberValue;
+                } else {
+                    editGeneratedSection.value = programValue + yearLevelValue + sectionNumberValue;
+                }
+            }
+        });
+        s
+    </script>
 
     <script>
         Toastify({
