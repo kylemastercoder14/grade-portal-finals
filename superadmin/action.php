@@ -130,5 +130,12 @@ if (isset($_POST['add_program'])) {
     $studentIds = $_POST['studentIds'];
 
     $model->callAssignStudentSection($section_id, $year_level, $program_id, $studentIds);
+}else if(isset($_POST['assign_course'])) {
+    $current_page = $_POST['current_page'];
+    $advisor_id = $_POST['advisor_id'];
+    $course_ids = $_POST['course_ids'];
+
+    $model->callAssignCourseTeacher($advisor_id, $course_ids);
+    // header("Location: http://localhost/grade-portal-finals/superadmin/subject-taught.php?advisor=$advisor_id&course=$course_ids");
 }
 ?>

@@ -380,7 +380,7 @@ class Model extends Dbconfig
         $this->callFilterSectionByProgram();
     }
 
-    public function filterStudents($program_id = null, $year_level = null, $section_id = null)
+    protected function filterStudents($program_id = null, $year_level = null, $section_id = null)
     {
         if ($section_id == null) {
             $sql = "SELECT 
@@ -425,8 +425,9 @@ class Model extends Dbconfig
         }
     }
 
-    public function callFilterStudents($program_id, $year_level, $section_id) {
-       return $this->filterStudents($program_id, $year_level, $section_id);
+    public function callFilterStudents($program_id, $year_level, $section_id)
+    {
+        return $this->filterStudents($program_id, $year_level, $section_id);
     }
 
     protected function assignStudentSection($section_id, $year_level, $program_id, $studentIds)
@@ -450,8 +451,53 @@ class Model extends Dbconfig
         header('Location: class-list.php');
     }
 
-    public function callAssignStudentSection($section_id, $year_level, $program_id, $studentIds) {
+    public function callAssignStudentSection($section_id, $year_level, $program_id, $studentIds)
+    {
         $this->assignStudentSection($section_id, $year_level, $program_id, $studentIds);
     }
-    
+
+    protected function assignCourseTeacher($advisor_id, $course_ids)
+    {
+        $courseIdsArray = explode(",", $course_ids);
+
+        // Check if $course_ids is an array
+        if (is_array($courseIdsArray)) {
+            // Use placeholders in the SQL query to prevent SQL injection
+            $sqlSelect = "SELECT * FROM subject_taught_tbl WHERE advisor_id = ? AND course_id = ?";
+            $sqlInsert = "INSERT INTO subject_taught_tbl (advisor_id, course_id) VALUES (?, ?)";
+
+            // Prepare the select and insert statements
+            $stmtSelect = $this->db()->prepare($sqlSelect);
+            $stmtInsert = $this->db()->prepare($sqlInsert);
+
+            foreach ($courseIdsArray as $courseId) {
+                // Execute the select query for each courseId
+                $stmtSelect->execute([$advisor_id, $courseId]);
+
+                // Fetch the result for each execution
+                $result = $stmtSelect->fetch(PDO::FETCH_ASSOC);
+
+                // Check if a result is found
+                if (!$result) {
+                    // If no data exists, insert the course_id
+                    $stmtInsert->execute([$advisor_id, $courseId]);
+                    // Set success message
+                    $_SESSION['message'] = "Course instructor assigned successfully!";
+                    $_SESSION['status'] = "#22bb33";
+                }else {
+                    // Set success message
+                    $_SESSION['message'] = "Course instructor already assigned!";
+                    $_SESSION['status'] = "#bb2124";
+                }
+            }
+        }
+
+        // Redirect to subject-taught.php after processing all courses
+        header("Location: subject-taught.php");
+    }
+
+    public function callAssignCourseTeacher($advisor_id, $course_ids)
+    {
+        $this->assignCourseTeacher($advisor_id, $course_ids);
+    }
 }

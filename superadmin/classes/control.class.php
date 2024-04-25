@@ -95,6 +95,11 @@ class Control {
         $this->view->classListContent();
     }
 
+    public function subjectTaught()
+    {
+        $this->view->subjectTaughtContent();
+    }
+
     public function controlCallHelper() {
         $this->model->callHelperFilter();
     }

@@ -2,7 +2,7 @@
 
 include "includes/includes.php";
 // kailangan parehas ang second argument nito sa table name ng database
-$control = new Control(1, 'class_list');
+$control = new Control(1, 'subject_taught');
 
 ?>
 
@@ -47,7 +47,7 @@ $control = new Control(1, 'class_list');
     <link rel="stylesheet" href="assets/vendor/libs/flatpickr/flatpickr.css" />
     <link rel="stylesheet" href="assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css" />
     <link rel="stylesheet" href="assets/css/toastify.min.css" />
-    <link rel="stylesheet" href="assets/css/dataTables.bootstrap5.css" />
+    <link rel="stylesheet" href="assets/css/virtual-select.min.css">
 
     <!-- Helpers -->
     <script src="assets/vendor/js/helpers.js"></script>
@@ -56,7 +56,7 @@ $control = new Control(1, 'class_list');
 
 <body>
 
-    <?php $control->classList();  ?>
+    <?php $control->subjectTaught();  ?>
 
 
     <!-- Core JS -->
@@ -85,6 +85,7 @@ $control = new Control(1, 'class_list');
     <script src="assets/vendor/libs/bs-stepper/bs-stepper.js"></script>
     <script src="assets/vendor/libs/flatpickr/flatpickr.js"></script>
     <script src="assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+    <script src="assets/js/virtual-select.min.js"></script>
 
     <!-- Main JS -->
     <script src="assets/js/main.js"></script>
@@ -98,6 +99,12 @@ $control = new Control(1, 'class_list');
     <script src="assets/js/dataTables.js"></script>
 
     <script>
+        VirtualSelect.init({
+            ele: '#multiple-select'
+        });
+    </script>
+
+    <script>
         new DataTable('#studentDatatable', {
             lengthMenu: [
                 [5, 10, 25, 50, -1],
@@ -105,119 +112,6 @@ $control = new Control(1, 'class_list');
             ],
             paging: true
         });
-    </script>
-
-    <script>
-        function getSections() {
-            var programId = document.getElementById("programId").value;
-            var yearLevel = document.getElementById("yearLevel").value;
-
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    // Update the section dropdown with new options
-                    var sectionDropdown = document.getElementById("sectionId");
-                    sectionDropdown.innerHTML = this.responseText;
-                }
-            };
-            xhttp.open("GET", "fetch_sections.php?program_id=" + programId + "&year_level=" + yearLevel, true);
-            xhttp.send();
-        }
-
-        function getSections2() {
-            var programId2 = document.getElementById("programId2").value;
-            var yearLevel2 = document.getElementById("yearLevel2").value;
-
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    // Update the section dropdown with new options
-                    var sectionDropdown2 = document.getElementById("sectionId2");
-                    sectionDropdown2.innerHTML = this.responseText;
-                }
-            };
-            xhttp.open("GET", "fetch_sections.php?program_id=" + programId2 + "&year_level=" + yearLevel2, true);
-            xhttp.send();
-        }
-    </script>
-
-    <script>
-        // Array to store selected student IDs
-        let selectedStudentIds = [];
-
-        // Select the header checkbox
-        const headerCheckbox = document.querySelector('#studentDatatable thead input[type="checkbox"]');
-
-        // Select all checkboxes in tbody
-        const checkboxes = document.querySelectorAll('#studentDatatable tbody input[type="checkbox"]');
-
-        // Function to update the student IDs in the text field
-        function updateStudentIdsField() {
-            document.getElementById("studentIds").value = selectedStudentIds.join(",");
-        }
-
-        // Function to handle checkbox change event
-        function handleCheckboxChange(event) {
-            // If the clicked checkbox is in the header
-            if (event.target === headerCheckbox) {
-                // Loop through all checkboxes in tbody and set their checked state to be the same as headerCheckbox
-                checkboxes.forEach((checkbox) => {
-                    checkbox.checked = headerCheckbox.checked;
-                    if (checkbox.checked) {
-                        // Add student ID to selectedStudentIds array if checkbox is checked
-                        selectedStudentIds.push(checkbox.parentNode.nextElementSibling.textContent.trim());
-                    } else {
-                        // Remove student ID from selectedStudentIds array if checkbox is unchecked
-                        selectedStudentIds = selectedStudentIds.filter(id => id !== checkbox.parentNode.nextElementSibling.textContent.trim());
-                    }
-                });
-            } else {
-                // If the clicked checkbox is in the tbody
-                // Check if all checkboxes in tbody are checked and update the headerCheckbox accordingly
-                let allChecked = true;
-                checkboxes.forEach((checkbox) => {
-                    if (!checkbox.checked) {
-                        allChecked = false;
-                    }
-                });
-                headerCheckbox.checked = allChecked;
-
-                // Update selectedStudentIds array based on checkbox state
-                if (event.target.checked) {
-                    // Add student ID to selectedStudentIds array if checkbox is checked
-                    selectedStudentIds.push(event.target.parentNode.nextElementSibling.textContent.trim());
-                } else {
-                    // Remove student ID from selectedStudentIds array if checkbox is unchecked
-                    selectedStudentIds = selectedStudentIds.filter(id => id !== event.target.parentNode.nextElementSibling.textContent.trim());
-                }
-            }
-
-            // Log selected student IDs
-            console.log(selectedStudentIds);
-
-            // Update the text field with selected student IDs
-            updateStudentIdsField();
-        }
-
-        // Add event listener to header checkbox
-        headerCheckbox.addEventListener('change', handleCheckboxChange);
-
-        // Add event listener to each checkbox in tbody
-        checkboxes.forEach((checkbox) => {
-            checkbox.addEventListener('change', handleCheckboxChange);
-        });
-
-        // Function to handle modal show event
-        function handleModalShow() {
-            // Update the text field with selected student IDs
-            updateStudentIdsField();
-        }
-
-        // Select the modal element
-        const assignSectionModal = document.querySelector('#assignSectionModal');
-
-        // Add event listener for modal show event
-        assignSectionModal.addEventListener('show.bs.modal', handleModalShow);
     </script>
 
     <script>

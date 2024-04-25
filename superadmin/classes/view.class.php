@@ -11,6 +11,8 @@ class View
     public $statusSubjects;
     public $statusStudents;
     public $statusTeacher;
+    public $statusClassList;
+    public $statusSubjectTaught;
 
     public function __construct(
         $data_arr = null,
@@ -59,6 +61,12 @@ class View
                 break;
             case 'advisor':
                 $this->statusTeacher = 'active';
+                break;
+            case 'class_list':
+                $this->statusClassList = 'active';
+                break;
+            case 'subject_taught':
+                $this->statusSubjectTaught = 'active';
                 break;
         }
     }
@@ -392,7 +400,7 @@ class View
                                     <div data-i18n="Subjects">Subjects</div>
                                 </a>
                             </li>
-                            <li class="menu-item">
+                            <li class="menu-item <?php echo $this->statusClassList ?>">
                                 <a href="class-list.php" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-folder"></i>
                                     <div data-i18n="Class List">Class List</div>
@@ -408,11 +416,25 @@ class View
                         </a>
                     </li>
 
-                    <li class="menu-item <?php echo $this->statusTeacher ?>">
-                        <a href="faculties.php" class="menu-link">
+                    <li class="menu-item">
+                        <a href="javascript:void(0)" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons ti ti-id"></i>
                             <div data-i18n="Faculties">Faculties</div>
                         </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item <?php echo $this->statusTeacher ?>">
+                                <a href="faculties.php" class="menu-link">
+                                    <i class="menu-icon tf-icons ti ti-users"></i>
+                                    <div data-i18n="Instructor">Instructors</div>
+                                </a>
+                            </li>
+                            <li class="menu-item <?php echo $this->statusSubjectTaught ?>">
+                                <a href="subject-taught.php" class="menu-link">
+                                    <i class="menu-icon tf-icons ti ti-notebook"></i>
+                                    <div data-i18n="Subject Taught">Subject Taught</div>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
 
                     <li class="menu-item">
@@ -495,6 +517,7 @@ class View
         </footer>
     <?php
     }
+
     public function studentOverview()
     {
     ?>
@@ -601,6 +624,7 @@ class View
         <!-- Student Grades Overview -->
     <?php
     }
+
     public function totalSubmittedGrades()
     {
     ?>
@@ -651,6 +675,7 @@ class View
         <!--/ Total Submitted Grades -->
     <?php
     }
+
     public function totalProgramsOffered()
     {
     ?>
@@ -1875,8 +1900,6 @@ class View
     <?php
     }
 
-
-
     public function teacherContent()
     {
     ?>
@@ -2678,6 +2701,144 @@ class View
         <!-- Edit Student Modal -->
 
         <!-- Edit Student Modal -->
+    <?php
+    }
+
+    public function subjectTaughtContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header();  ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+
+                        <!-- / Navbar -->
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5>
+                                    <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Subject Taught
+                                </h5>
+                                <div class="d-flex align-items-center gap-3 mb-4">
+                                    <button class="btn btn-primary d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#retrieveStudent">
+                                        <i class="ti ti-edit"></i>
+                                        <span>Retrieve Data</span>
+                                    </button>
+                                    <button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#assignSubjectTeacher">
+                                        <i class="ti ti-plus"></i>
+                                        <span>Assign Course Teacher</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Student Table -->
+                            <div class="card">
+                                <div class="card-body table-responsive">
+
+                                    <table id="studentDatatable" class="display compact table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Course Name</th>
+                                                <th>Course Teacher</th>
+                                                <th>Date Created</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
+
+        <!-- Add Student Modal -->
+        <div class="modal fade" id="assignSubjectTeacher" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-simple modal-upgrade-plan">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body p-2">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center">
+                            <h3 class="mb-2">Assign Course Teacher</h3>
+                        </div>
+                        <form action="action.php" method="POST">
+                            <div class="row">
+                                <div class="col-12 col-md-12 mb-3">
+                                    <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
+                                    <label class="form-label">Instructor</label>
+                                    <select name="advisor_id" class="form-select" required>
+                                        <?php
+                                        $teachers = $this->advisor;
+                                        foreach ($teachers as $teacher => $data) {
+                                            $fullname = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'] . ", " . $data['title'];
+                                        ?>
+                                            <option value="<?= $data['advisor_id'] ?>"><?= $fullname ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-12">
+                                    <label class="form-label">Course Name</label>
+                                    <br>
+                                    <select id="multiple-select" multiple name="course_ids" placeholder="Select Course Name" data-search="true" data-silent-initial-value-set="true">
+                                        <?php
+                                        $courses = $this->subject;
+                                        foreach ($courses as $course => $data) {
+                                        ?>
+                                            <option value="<?= $data['course_id'] ?>"><?= $data['course_name'] ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-12 d-flex justify-content-end mt-4">
+                                    <button class="btn btn-success" type="submit" name="assign_course"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Student Modal -->
 <?php
     }
 }
