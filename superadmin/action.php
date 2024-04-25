@@ -123,4 +123,12 @@ if (isset($_POST['add_program'])) {
     $section_id = $_GET['section_id'];
 
     header("Location: class-list.php?year_level=$year_level&program_id=$program_id&section_id=$section_id");
+}else if(isset($_POST['assign_section'])) {
+    $section_id = $_POST['section_id2'];
+    $year_level = $_POST['year_level2'];
+    $program_id = $_POST['program_id2'];
+    $studentIds = $_POST['studentIds'];
+
+    $model->callAssignStudentSection($section_id, $year_level, $program_id, $studentIds);
 }
+?>

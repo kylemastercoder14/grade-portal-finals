@@ -5,6 +5,7 @@ class Control {
     private $view;
     private $model;
     private $import;
+   
 
     public function __construct($id = null , $page = null){
         $this->model = new Model();
@@ -30,6 +31,16 @@ class Control {
         $advisorUnarchiveArr = $this->model->getAllAdvisor(0);
         $advisorArchiveArr = $this->model->getAllAdvisor(1);
 
+        $program_arr = null;
+        
+        
+        if(isset($_GET['program_id'], $_GET['year_level'], $_GET['section_id'])){
+            $program_id = $_GET['program_id'];
+            $year_level = $_GET['year_level'];
+            $section_id = $_GET['section_id'];
+            $program_arr = $this->model->callFilterStudents($program_id, $year_level, $section_id);
+        }
+
         $this->view = new View(
             $data_arr, 
             $page, 
@@ -43,6 +54,8 @@ class Control {
             $studentArchiveArr,
             $advisorUnarchiveArr,
             $advisorArchiveArr,
+            $program_arr,
+            
         );
 
     }

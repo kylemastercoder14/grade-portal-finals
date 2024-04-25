@@ -353,6 +353,7 @@ class Model extends Dbconfig
         $sections = $stmt->fetchAll();
 
         if ($sections) {
+            echo '<option value=""></option>';
             // Output options for section dropdown
             foreach ($sections as $section) {
                 echo "<option value='" . $section['section_id'] . "'>" . $section['section_name'] . "</option>";
@@ -379,26 +380,78 @@ class Model extends Dbconfig
         $this->callFilterSectionByProgram();
     }
 
-    protected function filterStudents($program_id, $year_level, $section_id)
+    public function filterStudents($program_id = null, $year_level = null, $section_id = null)
     {
+        if ($section_id == null) {
+            $sql = "SELECT 
+            student_tbl.*,
+            program_tbl.program_code,
+            section_tbl.section_name
+            FROM student_tbl
+            LEFT JOIN program_tbl ON student_tbl.program_id = program_tbl.program_id
+            LEFT JOIN section_tbl ON student_tbl.section_id = section_tbl.section_id
+            WHERE student_tbl.program_id = ? AND student_tbl.year_level = ? ORDER BY lastname ASC";
+            $stmt = $this->db()->prepare($sql);
+            $stmt->execute([$program_id, $year_level]);
+            $result = $stmt->fetchAll();
 
-        $sql = "SELECT * FROM student_tbl WHERE program_id = ? AND year_level = ? ORDER BY lastname ASC";
-        $stmt = $this->db()->prepare($sql);
-        $stmt->execute([$program_id, $year_level]);
-
-        $sections = $stmt->fetchAll();
-        return $sections;
-    }
-
-    public function callFilterStudents()
-    {
-        $program_id = $_GET["program_id"];
-        $year_level = $_GET["year_level"];
-        $section_id = $_GET["section_id"];
-        if (isset($program_id, $year_level, $section_id)) {
-            $this->filterStudents($program_id, $year_level, $section_id);
+            // Check if any rows were returned
+            if ($result) {
+                return $result;
+            } else {
+                // Handle case where no rows were returned
+                return []; // Return an empty array
+            }
         } else {
-            header("Location: students.php");
+            $sql = "SELECT 
+        student_tbl.*,
+        program_tbl.program_code,
+        section_tbl.section_name
+        FROM student_tbl
+        LEFT JOIN program_tbl ON student_tbl.program_id = program_tbl.program_id
+        LEFT JOIN section_tbl ON student_tbl.section_id = section_tbl.section_id
+        WHERE student_tbl.program_id = ? AND student_tbl.year_level = ? AND student_tbl.section_id = ? ORDER BY lastname ASC";
+            $stmt = $this->db()->prepare($sql);
+            $stmt->execute([$program_id, $year_level, $section_id]);
+            $result = $stmt->fetchAll();
+
+            // Check if any rows were returned
+            if ($result) {
+                return $result;
+            } else {
+                // Handle case where no rows were returned
+                return []; // Return an empty array
+            }
         }
     }
+
+    public function callFilterStudents($program_id, $year_level, $section_id) {
+       return $this->filterStudents($program_id, $year_level, $section_id);
+    }
+
+    protected function assignStudentSection($section_id, $year_level, $program_id, $studentIds)
+    {
+        // Ensure $studentIds is a string
+        if (is_array($studentIds)) {
+            $studentIds = implode(",", $studentIds);
+        }
+
+        // Proceed with the rest of the function
+        $studentIdsArray = explode(",", $studentIds);
+        $sql = "UPDATE student_tbl SET section_id = ?, year_level = ?, program_id = ? WHERE student_id = ?";
+        $stmt = $this->db()->prepare($sql);
+
+        foreach ($studentIdsArray as $studentId) {
+            $stmt->execute([$section_id, $year_level, $program_id, $studentId]);
+        }
+
+        $_SESSION['message'] = "Student's section updated successfully!";
+        $_SESSION['status'] = "#22bb33";
+        header('Location: class-list.php');
+    }
+
+    public function callAssignStudentSection($section_id, $year_level, $program_id, $studentIds) {
+        $this->assignStudentSection($section_id, $year_level, $program_id, $studentIds);
+    }
+    
 }

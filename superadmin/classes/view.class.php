@@ -38,7 +38,7 @@ class View
         $this->archivedStudent = $archivedStudent;
         $this->advisor = $unarchiveAdvisor;
         $this->archivedAdvisor = $archivedAdvisor;
-        $this->$filterStudent = $filterStudent;
+        $this->filterStudent = $filterStudent;
         $this->active_page = $page;
 
         switch ($this->active_page) {
@@ -1482,7 +1482,7 @@ class View
                             <div class="card">
                                 <div class="card-body table-responsive">
                                     <div class="card-title">Assign Section (this is for new enrolled students only):</div>
-                                    <form method="GET" action="action.php" class="row mb-3">
+                                    <form method="GET" action="?year_level=$year_level&program_id=$program_id&section_id=$section_id" class="row mb-3">
                                         <div class="col-md-3">
                                             <label class="form-label">Year Level <span class="text-danger">*</span></label>
                                             <select class="form-select" id="yearLevel" name="year_level" onchange="getSections()">
@@ -1521,7 +1521,7 @@ class View
                                         <div class="col-md-3 mt-4">
                                             <div class="d-flex align-items-center gap-2">
                                                 <button type="submit" name="filter_class" class="btn btn-success w-100">Filter</button>
-                                                <button type="reset" class="btn btn-secondary w-100">Reset</button>
+                                                <a href="students.php" class="btn btn-secondary w-100">Reset</a>
                                             </div>
                                         </div>
                                     </form>
@@ -1540,16 +1540,38 @@ class View
                                         <tbody>
                                             <?php
                                             $studentData = $this->student;
-                                            if (!$studentData) {
-                                            ?>
-                                                <tr>
-                                                    <td colspan="5">
-                                                        <h4 class="text-center text-danger mt-2">No student found yet!</h4>
-                                                    </td>
-                                                </tr>
-                                                <?php
-                                            } else {
+                                            $filterStudent = $this->filterStudent;
+                                            if ($filterStudent == null) {
                                                 foreach ($studentData as $studentItem => $data) {
+                                                    $dateString = $data['date_added'];
+                                                    $timestamp = strtotime($dateString);
+                                                    $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                                    $fullname = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'];
+                                            ?>
+                                                    <tr>
+                                                        <td><?= $data['student_id'] ?></td>
+                                                        <td><?= $fullname ?></td>
+                                                        <td><?= $data['year_level'] == "" || null ? "N/A" : $data['year_level'] ?></td>
+                                                        <td><?= $data['program_code'] ?></td>
+                                                        <td><?= $data['section_name'] == "" || null ? "N/A" : $data['section_name'] ?></td>
+                                                        <td><?= $formattedDate ?></td>
+                                                        <td>
+                                                            <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                                <div class="dropdown-menu dropdown-menu-end m-0">
+
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')"><i class="ti ti-edit ms-1"></i>Update
+                                                                    </button>
+
+                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                <?php
+                                                }
+                                            } else {
+                                                foreach ($filterStudent as $studentItem => $data) {
                                                     $dateString = $data['date_added'];
                                                     $timestamp = strtotime($dateString);
                                                     $formattedDate = date("F j, Y, g:i a", $timestamp);
@@ -2190,16 +2212,20 @@ class View
                     <div class="content-wrapper">
                         <!-- Navbar -->
                         <?php $this->navbar();  ?>
+
                         <!-- / Navbar -->
                         <!-- Content -->
                         <div class="container-xxl flex-grow-1 container-p-y">
-                            <h5 class="py-2 mb-4">
-                                <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Class List
-                            </h5>
-                            <!-- Program Table -->
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5>
+                                    <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Class List
+                                </h5>
+                            </div>
+                            <!-- Student Table -->
                             <div class="card">
                                 <div class="card-body table-responsive">
-                                    <form method="POST" class="row mb-3">
+                                    <div class="card-title"><span class="text-danger">Note: </span>Filter first before you can assign a section to each student.</div>
+                                    <form method="GET" action="?year_level=$year_level&program_id=$program_id&section_id=$section_id" class="row mb-3">
                                         <div class="col-md-3">
                                             <label class="form-label">Year Level <span class="text-danger">*</span></label>
                                             <select class="form-select" id="yearLevel" name="year_level" onchange="getSections()">
@@ -2237,43 +2263,92 @@ class View
                                         </div>
                                         <div class="col-md-3 mt-4">
                                             <div class="d-flex align-items-center gap-2">
-                                                <a href="" class="btn btn-success w-100">Filter</a>
-                                                <button type="reset" class="btn btn-secondary w-100">Reset</button>
+                                                <button type="submit" name="filter_class" class="btn btn-success w-100">Filter</button>
+                                                <a href="class-list.php" class="btn btn-secondary w-100">Reset</a>
                                             </div>
                                         </div>
                                     </form>
-                                    <table id="studentDatatable" class="table display compact">
+                                    <table id="studentDatatable" class="display compact table">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox"></th>
+                                                <?= $this->filterStudent == null ? "" : "<th><input type='checkbox'></th>" ?>
+                                                <th>Student Number</th>
                                                 <th>Name</th>
                                                 <th>Year Level</th>
                                                 <th>Program</th>
                                                 <th>Section</th>
+                                                <th>Date Created</th>
                                                 <th>actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $students = $this->student;
-                                            foreach ($students as $student => $data) {
+                                            $studentData = $this->student;
+                                            $filterStudent = $this->filterStudent;
+                                            if ($filterStudent == null) {
+                                                foreach ($studentData as $studentItem => $data) {
+                                                    $dateString = $data['date_added'];
+                                                    $timestamp = strtotime($dateString);
+                                                    $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                                    $fullname = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'];
                                             ?>
-                                                <tr>
-                                                    <td>
-                                                        <input type="checkbox">
-                                                    </td>
-                                                    <td><?= $data['lastname'] ?></td>
-                                                    <td><?= $data['year_level'] ?></td>
-                                                    <td>Program</td>
-                                                    <td>Section</td>
-                                                    <td>actions</td>
-                                                </tr>
+                                                    <tr>
+                                                        <td><?= $data['student_id'] ?></td>
+                                                        <td><?= $fullname ?></td>
+                                                        <td><?= $data['year_level'] == "" || null ? "N/A" : $data['year_level'] ?></td>
+                                                        <td><?= $data['program_code'] ?></td>
+                                                        <td><?= $data['section_name'] == "" || null ? "N/A" : $data['section_name'] ?></td>
+                                                        <td><?= $formattedDate ?></td>
+                                                        <td>
+                                                            <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                                <div class="dropdown-menu dropdown-menu-end m-0">
+
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')"><i class="ti ti-edit ms-1"></i>Update
+                                                                    </button>
+
+                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                <?php
+                                                }
+                                            } else {
+                                                foreach ($filterStudent as $studentItem => $data) {
+                                                    $dateString = $data['date_added'];
+                                                    $timestamp = strtotime($dateString);
+                                                    $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                                    $fullname = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'];
+                                                ?>
+                                                    <tr>
+                                                        <td><input type="checkbox"></td>
+                                                        <td><?= $data['student_id'] ?></td>
+                                                        <td><?= $fullname ?></td>
+                                                        <td><?= $data['year_level'] == "" || null ? "N/A" : $data['year_level'] ?></td>
+                                                        <td><?= $data['program_code'] ?></td>
+                                                        <td><?= $data['section_name'] == "" || null ? "N/A" : $data['section_name'] ?></td>
+                                                        <td><?= $formattedDate ?></td>
+                                                        <td>
+                                                            <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                                <div class="dropdown-menu dropdown-menu-end m-0">
+
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')"><i class="ti ti-edit ms-1"></i>Update
+                                                                    </button>
+
+                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                             <?php
+                                                }
                                             }
                                             ?>
-
                                         </tbody>
                                     </table>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#assignSectionModal" class="btn btn-primary">Assign Section</button>
                                 </div>
                             </div>
                             <!-- Program Table -->
@@ -2537,6 +2612,66 @@ class View
                 </div>
             </div>
         </div>
+
+        <!-- Add Student Modal -->
+        <div class="modal fade" id="assignSectionModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-simple modal-upgrade-plan">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body p-2">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center">
+                            <h3 class="mb-2">Assign Section</h3>
+                        </div>
+                        <form method="POST" action="action.php">
+                            <input type="hidden" id="studentIds" name="studentIds[]">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="form-label">Year Level <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="yearLevel2" name="year_level2" onchange="getSections2()">
+                                        <option value="1st Year">1st Year</option>
+                                        <option value="2nd Year">2nd Year</option>
+                                        <option value="3rd Year">3rd Year</option>
+                                        <option value="4th Year">4th Year</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Program <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="programId2" name="program_id2" onchange="getSections2()">
+                                        <?php
+                                        $programs = $this->program;
+                                        foreach ($programs as $program => $data) {
+                                        ?>
+                                            <option value="<?= $data['program_id'] ?>"><?= $data['program_name'] ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Section <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="sectionId2" name="section_id2">
+                                        <?php
+                                        $sections = $this->section;
+                                        foreach ($sections as $section => $data) {
+                                        ?>
+                                            <option value="<?= $data['section_id'] ?>"><?= $data['section_name'] ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button type="submit" name="assign_section" class="btn btn-success w-100">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Student Modal -->
 
         <!-- Edit Program Modal -->
 
