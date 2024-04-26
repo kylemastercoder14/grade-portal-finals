@@ -31,6 +31,10 @@ class Control {
         $advisorUnarchiveArr = $this->model->getAllAdvisor(0);
         $advisorArchiveArr = $this->model->getAllAdvisor(1);
 
+        //subject taught view
+        $subjecTaughtUnarchiveArr = $this->model->getAllSubjectTaught(0);
+        $subjecTaughtArchiveArr = $this->model->getAllSubjectTaught(1);
+
         $program_arr = null;
         
         
@@ -54,6 +58,8 @@ class Control {
             $studentArchiveArr,
             $advisorUnarchiveArr,
             $advisorArchiveArr,
+            $subjecTaughtUnarchiveArr,
+            $subjecTaughtArchiveArr,
             $program_arr,
             
         );
@@ -100,8 +106,26 @@ class Control {
         $this->view->subjectTaughtContent();
     }
 
+    public function advises()
+    {
+        $this->view->assignAdviserContent();
+    }
+
+    public function sectionSubjectTaught()
+    {
+        $this->view->sectionSubjectTaughtContent();
+    }
+
     public function controlCallHelper() {
         $this->model->callHelperFilter();
+    }
+
+    public function controlAllCallHelper() {
+        $this->model->callAllHelperFilter();
+    }
+
+    public function controlCallHelperFilterTeacherCourse() {
+        $this->model->callHelperFilterTeacherCourse();
     }
 }
 ?>

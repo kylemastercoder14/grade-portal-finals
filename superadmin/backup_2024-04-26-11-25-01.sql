@@ -1,10 +1,14 @@
 -- Table structure for table `advises_tbl`
 CREATE TABLE `advises_tbl` (
   `advises_id` int(255) NOT NULL AUTO_INCREMENT,
-  `advisor_id` int(255) NOT NULL,
-  `student_id` int(255) NOT NULL,
+  `advisor_id` varchar(255) NOT NULL,
+  `section_id` varchar(255) NOT NULL,
   PRIMARY KEY (`advises_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Dumping data for table `advises_tbl`
+INSERT INTO `advises_tbl` VALUES ('1', 'KLD-23-75890', 'KLD-IICS-283480269-20241376210857');
+INSERT INTO `advises_tbl` VALUES ('2', 'KLD-23-75890', 'KLD-IICS-283480269-2024403192329');
+INSERT INTO `advises_tbl` VALUES ('3', 'KLD-23-86434', '');
 
 -- Table structure for table `advisor_tbl`
 CREATE TABLE `advisor_tbl` (
@@ -35,6 +39,7 @@ CREATE TABLE `advisor_tbl` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- Dumping data for table `advisor_tbl`
 INSERT INTO `advisor_tbl` VALUES ('KLD-23-75890', 'LPT, MIEE', 'Professor III', 'Cesar', 'Escobar', 'Galingana', 'Sr.', '1977-04-13', '47', 'Male', 'Single', '+63 943 953 4758', 'Batangas', 'Nasugbu', 'Malapad Na Bato', 'B123 L5 Emerald St.', '4114', 'cegalingana@kld.edu.ph', 'KLD-IICS-283480269', '', '', '0', '2024-04-24 16:51:57');
+INSERT INTO `advisor_tbl` VALUES ('KLD-23-86434', 'LPT', 'Professor IV', 'Con Marvin', '', 'Serrano', '', '2024-04-26', '47', 'Male', 'Single', '+63 675 676 57', 'Cavite', 'Mataasnakahoy', 'San Sebastian', 'sgfsg', '4114', 'cmserrano@kld.edu.ph', 'KLD-IOPE-1887072785', '', '', '0', '2024-04-26 11:25:07');
 
 -- Table structure for table `course_tbl`
 CREATE TABLE `course_tbl` (
@@ -163,6 +168,18 @@ INSERT INTO `student_tbl` VALUES ('hjghbxcv', 'vcmnb,b,', 'nm,nmbcvb', 'cvnvbmbn
 INSERT INTO `student_tbl` VALUES ('KLD-21-000209', 'Kyle Andre', 'David', 'Lim', '', '2000-01-14', '24', 'Male', 'Single', '+63 915 247 9693', 'Cavite', 'City of Dasmariñas', 'Santa Lucia', 'B111 L4 Ruby Street', '4114', 'kadlim@kld.edu.ph', '4th Year', 'KLD-IICS-283480269', 'KLD-IICS-283480269-20241864450327', 'Dasmarinas II Central School', 'Dasmarinas Integrated High School', 'KLD-21-000209', '', '0', '2024-04-24 16:36:06');
 INSERT INTO `student_tbl` VALUES ('ykhjkkjlg', 'hnghhjk', 'fdgdhgfjgh', 'khjlklj', '', '2024-04-15', '24', 'Female', 'Single', '+63 FHG TYU YHF', 'Cavite', 'Silang', 'Lalaan II', 'sfgfghfgj', 'dghdf', 'gshdrh@kld.edu', '1st Year', 'KLD-IOM-880832296', '', 'Dasmarinas II Central School', 'Dasmarinas Integrated High School', 'ykhjkkjlg', '', '0', '2024-04-24 18:10:21');
 
+-- Table structure for table `subject_course_tbl`
+CREATE TABLE `subject_course_tbl` (
+  `subject_course_id` int(255) NOT NULL AUTO_INCREMENT,
+  `advisor_id` varchar(255) NOT NULL,
+  `section_id` varchar(255) NOT NULL,
+  `course_id` varchar(255) NOT NULL,
+  PRIMARY KEY (`subject_course_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Dumping data for table `subject_course_tbl`
+INSERT INTO `subject_course_tbl` VALUES ('2', 'KLD-23-86434', 'KLD-IICS-283480269-20241376210857', 'KLD-PCIS3222-1271014603');
+INSERT INTO `subject_course_tbl` VALUES ('3', 'KLD-23-86434', 'KLD-IICS-283480269-20242103153527', 'KLD-PCIS3222-1271014603');
+
 -- Table structure for table `subject_taught_tbl`
 CREATE TABLE `subject_taught_tbl` (
   `subject_taught_id` int(255) NOT NULL AUTO_INCREMENT,
@@ -171,12 +188,10 @@ CREATE TABLE `subject_taught_tbl` (
   `date_added` timestamp NOT NULL DEFAULT current_timestamp(),
   `is_archive` tinyint(4) NOT NULL,
   PRIMARY KEY (`subject_taught_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- Dumping data for table `subject_taught_tbl`
-INSERT INTO `subject_taught_tbl` VALUES ('6', '0', '0', '2024-04-25 19:00:26', '0');
-INSERT INTO `subject_taught_tbl` VALUES ('7', '0', '0', '2024-04-25 19:03:18', '0');
-INSERT INTO `subject_taught_tbl` VALUES ('8', '0', '0', '2024-04-25 19:03:18', '0');
 INSERT INTO `subject_taught_tbl` VALUES ('9', 'KLD-23-75890', 'KLD-PCIS3213-1418964901', '2024-04-25 19:04:07', '0');
 INSERT INTO `subject_taught_tbl` VALUES ('10', 'KLD-23-75890', 'KLD-PCIS3222-1271014603', '2024-04-25 19:04:07', '0');
 INSERT INTO `subject_taught_tbl` VALUES ('11', 'KLD-23-75890', 'KLD-GEC9100-580103182', '2024-04-25 19:06:32', '0');
+INSERT INTO `subject_taught_tbl` VALUES ('12', 'KLD-23-86434', 'KLD-PCIS3222-1271014603', '2024-04-26 16:10:54', '0');
 

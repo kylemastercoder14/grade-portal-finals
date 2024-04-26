@@ -2,7 +2,7 @@
 include('includes/includes.php');
 class View
 {
-    private $data, $program, $archivedProgram, $section, $archivedSection, $subject, $archivedSubject, $student, $archivedStudent, $advisor, $archivedAdvisor, $filterStudent;
+    private $data, $program, $archivedProgram, $section, $archivedSection, $subject, $archivedSubject, $student, $archivedStudent, $advisor, $archivedAdvisor, $filterStudent, $subjectTaught, $archivedSubjectTaught;
     public $active_page;
     public $statusDashboard;
     public $statusYearlevel;
@@ -13,6 +13,8 @@ class View
     public $statusTeacher;
     public $statusClassList;
     public $statusSubjectTaught;
+    public $statusAdvises;
+    public $statusSectionSubject;
 
     public function __construct(
         $data_arr = null,
@@ -27,7 +29,9 @@ class View
         $archivedStudent = null,
         $unarchiveAdvisor = null,
         $archivedAdvisor = null,
-        $filterStudent = null
+        $unarchiveSubjectTaught = null,
+        $archivedSubjectTaught = null,
+        $filterStudent = null,
     ) {
         $this->data = $data_arr;
         $this->program = $unarchiveProgram;
@@ -40,6 +44,8 @@ class View
         $this->archivedStudent = $archivedStudent;
         $this->advisor = $unarchiveAdvisor;
         $this->archivedAdvisor = $archivedAdvisor;
+        $this->subjectTaught = $unarchiveSubjectTaught;
+        $this->archivedSubjectTaught = $archivedSubjectTaught;
         $this->filterStudent = $filterStudent;
         $this->active_page = $page;
 
@@ -67,6 +73,12 @@ class View
                 break;
             case 'subject_taught':
                 $this->statusSubjectTaught = 'active';
+                break;
+            case 'advises':
+                $this->statusAdvises = 'active';
+                break;
+            case 'subject_course':
+                $this->statusSectionSubject = 'active';
                 break;
         }
     }
@@ -406,6 +418,12 @@ class View
                                     <div data-i18n="Class List">Class List</div>
                                 </a>
                             </li>
+                            <li class="menu-item <?php echo $this->statusClassList ?>">
+                                <a href="grading-criteria.php" class="menu-link">
+                                    <i class="menu-icon tf-icons ti ti-percentage"></i>
+                                    <div data-i18n="Grading Criteria">Grading Criteria</div>
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
@@ -432,6 +450,18 @@ class View
                                 <a href="subject-taught.php" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-notebook"></i>
                                     <div data-i18n="Subject Taught">Subject Taught</div>
+                                </a>
+                            </li>
+                            <li class="menu-item <?php echo $this->statusAdvises ?>">
+                                <a href="assign-adviser.php" class="menu-link">
+                                    <i class="menu-icon tf-icons ti ti-building"></i>
+                                    <div data-i18n="Advisers">Advisers</div>
+                                </a>
+                            </li>
+                            <li class="menu-item <?php echo $this->statusSectionSubject ?>">
+                                <a href="assign-subject-teacher.php" class="menu-link">
+                                    <i class="menu-icon tf-icons ti ti-pencil"></i>
+                                    <div data-i18n="Section Subject Teacher">Section Subject Teacher</div>
                                 </a>
                             </li>
                         </ul>
@@ -2048,11 +2078,11 @@ class View
                                         <div class="row">
                                             <div class="col-md-6 mb-2">
                                                 <label class="form-label">Title <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="firstname" placeholder="MIT, MIEE, LPT" required />
+                                                <input type="text" class="form-control" name="title" placeholder="MIT, MIEE, LPT" required />
                                             </div>
                                             <div class="col-md-6 mb-2">
                                                 <label class="form-label">Position <span class="text-danger">*</span></label>
-                                                <select name="" class="form-select">
+                                                <select name="position" class="form-select">
                                                     <option value="Professor I">Professor I</option>
                                                     <option value="Professor II">Professor II</option>
                                                     <option value="Professor III">Professor III</option>
@@ -2839,7 +2869,296 @@ class View
             </div>
         </div>
         <!-- Add Student Modal -->
-<?php
+    <?php
+    }
+
+    public function assignAdviserContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header();  ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+
+                        <!-- / Navbar -->
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5>
+                                    <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Assign Adviser
+                                </h5>
+                                <div class="d-flex align-items-center gap-3 mb-4">
+                                    <button class="btn btn-primary d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#retrieveStudent">
+                                        <i class="ti ti-edit"></i>
+                                        <span>Retrieve Data</span>
+                                    </button>
+                                    <button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#assignSectionAdviser">
+                                        <i class="ti ti-plus"></i>
+                                        <span>Assign Section Adviser</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Student Table -->
+                            <div class="card">
+                                <div class="card-body table-responsive">
+
+                                    <table id="studentDatatable" class="display compact table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Course Name</th>
+                                                <th>Course Teacher</th>
+                                                <th>Date Created</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
+
+        <!-- Add Student Modal -->
+        <div class="modal fade" id="assignSectionAdviser" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-simple modal-upgrade-plan">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body p-2">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center">
+                            <h3 class="mb-2">Assign Section Adviser</h3>
+                        </div>
+                        <form action="action.php" method="POST">
+                            <div class="row">
+                                <div class="col-12 col-md-12 mb-3">
+                                    <label class="form-label">Instructor</label>
+                                    <select name="advisor_id" id="advisorId" class="form-select" onchange="getDepartment()" required>
+                                    <option value="">Select instructor</option>
+                                        <?php
+                                        $teachers = $this->advisor;
+                                        foreach ($teachers as $teacher => $data) {
+                                            $fullname = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'] . ", " . $data['title'];
+                                        ?>
+                                            <option value="<?= $data['advisor_id'] ?>"><?= $fullname ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-12" id="sectionContainer">
+                                    <label class="form-label">Section Name</label>
+                                    <br>
+                                    <select id="multiple-select" multiple name="section_ids" placeholder="Select Course Name" data-search="true">
+                                        <?php
+                                        $sections = $this->section;
+                                        foreach ($sections as $section => $data) {
+                                        ?>
+                                            <option value="<?= $data['section_id'] ?>"><?= $data['section_name'] ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-12 d-flex justify-content-end mt-4">
+                                    <button class="btn btn-success" type="submit" name="assign_section_adviser"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Student Modal -->
+    <?php
+    }
+
+    public function sectionSubjectTaughtContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header();  ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+
+                        <!-- / Navbar -->
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5>
+                                    <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Handled Course Section
+                                </h5>
+                                <div class="d-flex align-items-center gap-3 mb-4">
+                                    <button class="btn btn-primary d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#retrieveStudent">
+                                        <i class="ti ti-edit"></i>
+                                        <span>Retrieve Data</span>
+                                    </button>
+                                    <button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#assignSubjectSection">
+                                        <i class="ti ti-plus"></i>
+                                        <span>Assign Handled Course Section</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Student Table -->
+                            <div class="card">
+                                <div class="card-body table-responsive">
+
+                                    <table id="studentDatatable" class="display compact table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Course Name</th>
+                                                <th>Course Teacher</th>
+                                                <th>Date Created</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
+
+        <!-- Add Student Modal -->
+        <div class="modal fade" id="assignSubjectSection" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-simple modal-upgrade-plan">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body p-2">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center">
+                            <h3 class="mb-2">Assign Handled Course Section</h3>
+                        </div>
+                        <form action="action.php" method="POST">
+                            <div class="row">
+                                <div class="col-12 col-md-12 mb-3">
+                                    <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
+                                    <label class="form-label">Course</label>
+                                    <select name="course_id" id="courseId" class="form-select" required onchange="getSubjectTaught()">
+                                        <?php
+                                        $courses = $this->subject;
+                                        foreach ($courses as $course => $data) {
+                                        ?>
+                                            <option value="<?= $data['course_id'] ?>"><?= $data['course_name'] ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-12 mb-3">
+                                    <label class="form-label">Instructor</label>
+                                    <select name="advisor_id" id="advisorId" class="form-select" required> 
+                                        <?php
+                                        $teachers = $this->advisor;
+                                        foreach ($teachers as $teacher => $data) {
+                                            $fullname = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'] . ", " . $data['title'];
+                                        ?>
+                                            <option value="<?= $data['advisor_id'] ?>"><?= $fullname; ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-12">
+                                    <label class="form-label">Section</label>
+                                    <br>
+                                    <select id="multiple-select" multiple name="sectionIds" placeholder="Select Section Name" data-search="true" data-silent-initial-value-set="true">
+                                        <?php
+                                        $sections = $this->section;
+                                        foreach ($sections as $section => $data) {
+                                        ?>
+                                            <option value="<?= $data['section_id'] ?>"><?= $data['section_name'] ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-12 d-flex justify-content-end mt-4">
+                                    <button class="btn btn-success" type="submit" name="assign_handle_course_section"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Student Modal -->
+    <?php
     }
 }
 ?>

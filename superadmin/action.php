@@ -93,6 +93,8 @@ if (isset($_POST['add_program'])) {
     $currentPage = $_POST['current_page'];
     $data = array(
         'advisor_id' => $_POST['advisor_id'],
+        'title' => $_POST['title'],
+        'position' => $_POST['position'],
         'firstname' => $_POST['firstname'],
         'middlename' => $_POST['middlename'],
         'lastname' => $_POST['lastname'],
@@ -136,6 +138,16 @@ if (isset($_POST['add_program'])) {
     $course_ids = $_POST['course_ids'];
 
     $model->callAssignCourseTeacher($advisor_id, $course_ids);
-    // header("Location: http://localhost/grade-portal-finals/superadmin/subject-taught.php?advisor=$advisor_id&course=$course_ids");
+}else if(isset($_POST['assign_section_adviser'])) {
+    $advisor_id = $_POST['advisor_id'];
+    $section_ids = $_POST['section_ids'];
+
+    $model->callAssignAdvisor($advisor_id, $section_ids);
+}else if(isset($_POST['assign_handle_course_section'])) {
+    $advisor_id = $_POST['advisor_id'];
+    $course_id = $_POST['course_id'];
+    $section_ids = $_POST['sectionIds'];
+
+    $model->callInsertSubjectTaughtSection($advisor_id, $section_ids, $course_id);
 }
 ?>

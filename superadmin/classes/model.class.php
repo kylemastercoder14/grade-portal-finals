@@ -380,6 +380,60 @@ class Model extends Dbconfig
         $this->callFilterSectionByProgram();
     }
 
+    protected function filterAllSectionByProgram($advisor_id)
+    {
+        $sql = "SELECT * FROM advisor_tbl WHERE advisor_id = ? ORDER BY advisor_id ASC";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$advisor_id]);
+
+        $advisor = $stmt->fetch();
+
+        if ($advisor) {
+            $program_id = $advisor['program_id'];
+            $sql2 = "SELECT * FROM section_tbl WHERE program_id = ? ORDER BY section_name ASC";
+            $stmt2 = $this->db()->prepare($sql2);
+            $stmt2->execute([$program_id]);
+
+            $sections = $stmt2->fetchAll();
+
+            // Start building the select dropdown options
+            $options = "";
+            foreach ($sections as $section) {
+                // Append each option to the $options variable
+                $options .= "<option value='" . $section['section_id'] . "'>" . $section['section_name'] . "</option>";
+            }
+
+            // Now, echo the select dropdown with the options
+            if (!empty($options)) {
+                echo "<select id='multiple-select' multiple name='course_ids' placeholder='Select Course Name' data-search='true'>";
+                echo $options;
+                echo "</select>";
+            } else {
+                echo "<select id='multiple-select' multiple name='course_ids' placeholder='Select Course Name' data-search='true'>";
+                echo "<option value=''>No sections found</option>";
+                echo "</select>";
+            }
+        } else {
+            echo "<select id='multiple-select' multiple name='course_ids' placeholder='Select Course Name' data-search='true'>";
+            echo "<option value=''>No advisor found</option>";
+            echo "</select>";
+        }
+    }
+
+
+    protected function callFilterAllSectionByProgram()
+    {
+        if (isset($_GET['advisor_id'])) {
+            $advisor_id = $_GET['advisor_id'];
+            $this->filterAllSectionByProgram($advisor_id);
+        }
+    }
+
+    public function callAllHelperFilter()
+    {
+        $this->callFilterAllSectionByProgram();
+    }
+
     protected function filterStudents($program_id = null, $year_level = null, $section_id = null)
     {
         if ($section_id == null) {
@@ -484,7 +538,7 @@ class Model extends Dbconfig
                     // Set success message
                     $_SESSION['message'] = "Course instructor assigned successfully!";
                     $_SESSION['status'] = "#22bb33";
-                }else {
+                } else {
                     // Set success message
                     $_SESSION['message'] = "Course instructor already assigned!";
                     $_SESSION['status'] = "#bb2124";
@@ -499,5 +553,146 @@ class Model extends Dbconfig
     public function callAssignCourseTeacher($advisor_id, $course_ids)
     {
         $this->assignCourseTeacher($advisor_id, $course_ids);
+    }
+
+    protected function assignAdvisor($advisor_id, $section_ids)
+    {
+        $sectionIdsArray = explode(",", $section_ids);
+
+        // Check if $section_ids is an array
+        if (is_array($sectionIdsArray)) {
+            // Use placeholders in the SQL query to prevent SQL injection
+            $sqlSelect = "SELECT * FROM advises_tbl WHERE advisor_id = ? AND section_id = ?";
+            $sqlInsert = "INSERT INTO advises_tbl (advisor_id, section_id) VALUES (?, ?)";
+
+            // Prepare the select and insert statements
+            $stmtSelect = $this->db()->prepare($sqlSelect);
+            $stmtInsert = $this->db()->prepare($sqlInsert);
+
+            foreach ($sectionIdsArray as $sectionId) {
+                // Execute the select query for each sectionId
+                $stmtSelect->execute([$advisor_id, $sectionId]);
+
+                // Fetch the result for each execution
+                $result = $stmtSelect->fetch(PDO::FETCH_ASSOC);
+
+                // Check if a result is found
+                if (!$result) {
+                    // If no data exists, insert the sectionId
+                    $stmtInsert->execute([$advisor_id, $sectionId]);
+                    // Set success message
+                    $_SESSION['message'] = "Section adviser assigned successfully!";
+                    $_SESSION['status'] = "#22bb33";
+                } else {
+                    // Set success message
+                    $_SESSION['message'] = "Section adviser already assigned!";
+                    $_SESSION['status'] = "#bb2124";
+                }
+            }
+        }
+
+        // Redirect to subject-taught.php after processing all courses
+        header("Location: assign-adviser.php");
+    }
+
+    public function callAssignAdvisor($advisor_id, $section_ids)
+    {
+        $this->assignAdvisor($advisor_id, $section_ids);
+    }
+
+    protected function readSubjectTaught($condition)
+    {
+        $sql = "SELECT * FROM subject_taught_tbl INNER JOIN advisor_tbl ON subject_taught_tbl.advisor_id = advisor_tbl.advisor_id INNER JOIN course_tbl ON subject_taught_tbl.course_id = course_tbl.course_id WHERE subject_taught_tbl.is_archive = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$condition]); // 0 is NOT  archive
+        $data = $stmt->fetchAll();
+
+        return $data;
+    }
+
+    public function getAllSubjectTaught($condition)
+    {
+        return $this->readSubjectTaught($condition);
+    }
+
+    protected function filterTeacherByCourse($course_id)
+    {
+
+        $sql = "SELECT * FROM subject_taught_tbl INNER JOIN advisor_tbl ON subject_taught_tbl.advisor_id = advisor_tbl.advisor_id WHERE course_id = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$course_id]);
+
+        $advisors = $stmt->fetchAll();
+
+        if ($advisors) {
+            // Output options for advisor dropdown
+            foreach ($advisors as $advisor) {
+                $fullname = $advisor['firstname'] . " " . $advisor['middlename'] . " " . $advisor['lastname'] . " " . $advisor['suffix'] . ", " . $advisor['title'];
+                echo "<option value='" . $advisor['advisor_id'] . "'>" . $fullname . "</option>";
+            }
+        } else {
+            echo "<option value=''>No instructor found</option>";
+        }
+    }
+
+    protected function callFilterTeacherByCourse()
+    {
+        if (isset($_GET['course_id'])) {
+            $course_id = $_GET['course_id'];
+            $this->filterTeacherByCourse($course_id);
+        } else {
+            // Handle case where program_id is not provided
+            echo "<option value=''>Select instructor first</option>";
+        }
+    }
+
+    public function callHelperFilterTeacherCourse()
+    {
+        $this->callFilterTeacherByCourse();
+    }
+
+    protected function insertSubjectTaughtSection($advisor_id, $section_ids, $course_id)
+    {
+        $sectionIdsArray = explode(",", $section_ids);
+
+        // Check if $course_ids is an array
+        if (is_array($sectionIdsArray)) {
+            // Use placeholders in the SQL query to prevent SQL injection
+            $sqlSelect = "SELECT * FROM subject_course_tbl WHERE advisor_id = ? AND section_id = ? AND course_id = ?";
+            $sqlInsert = "INSERT INTO subject_course_tbl (advisor_id, section_id, course_id) VALUES (?,?,?)";
+
+            // Prepare the select and insert statements
+            $stmtSelect = $this->db()->prepare($sqlSelect);
+            $stmtInsert = $this->db()->prepare($sqlInsert);
+
+            foreach ($sectionIdsArray as $sectionId) {
+                // Execute the select query for each courseId
+                $stmtSelect->execute([$advisor_id, $sectionId, $course_id]);
+
+                // Fetch the result for each execution
+                $result = $stmtSelect->fetch(PDO::FETCH_ASSOC);
+
+                // Check if a result is found
+                if (!$result) {
+                    // If no data exists, insert the course_id
+                    $stmtInsert->execute([$advisor_id, $sectionId, $course_id]);
+                    // Set success message
+                    $_SESSION['message'] = "Course instructor assigned to section successfully!";
+                    $_SESSION['status'] = "#22bb33";
+                } else {
+                    // Set success message
+                    $_SESSION['message'] = "Course instructor already assigned!";
+                    $_SESSION['status'] = "#bb2124";
+                }
+            }
+        }
+
+        // Redirect to assign-subject-teacher.php after processing all courses
+        header("Location: assign-subject-teacher.php");
+    }
+
+    public function callInsertSubjectTaughtSection($advisor_id, $section_id, $section_ids)
+    {
+        $this->insertSubjectTaughtSection($advisor_id, $section_id, $section_ids);
     }
 }
