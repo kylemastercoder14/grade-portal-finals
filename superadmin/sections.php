@@ -43,8 +43,10 @@ $control = new Control(1, 'section');
     <link rel="stylesheet" href="assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
     <link rel="stylesheet" href="assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
     <link rel="stylesheet" href="assets/vendor/libs/select2/select2.css" />
-    <link rel="stylesheet" href="assets/vendor/libs/%40form-validation/form-validation.css" />
+    <link rel="stylesheet" href="assets/vendor/libs/@form-validation/form-validation.css" />
     <link rel="stylesheet" href="assets/vendor/libs/bs-stepper/bs-stepper.css" />
+    <link rel="stylesheet" href="assets/css/toastify.min.css" />
+    <link rel="stylesheet" href="assets/css/dataTables.bootstrap5.css" />
 
     <!-- Helpers -->
     <script src="assets/vendor/js/helpers.js"></script>
@@ -66,7 +68,6 @@ $control = new Control(1, 'section');
     <script src="assets/vendor/libs/i18n/i18n.js"></script>
     <script src="assets/vendor/libs/typeahead-js/typeahead.js"></script>
     <script src="assets/vendor/js/menu.js"></script>
-    <link rel="stylesheet" href="assets/css/toastify.min.css" />
 
     <!-- endbuild -->
 
@@ -81,12 +82,21 @@ $control = new Control(1, 'section');
     <script src="assets/vendor/libs/%40form-validation/auto-focus.js"></script>
     <script src="assets/vendor/libs/bs-stepper/bs-stepper.js"></script>
     <script src="assets/js/toastify.min.js"></script>
+    <script src="assets/js/dataTables.bootstrap5.js"></script>
+    <script src="assets/js/dataTables.js"></script>
 
     <!-- Main JS -->
     <script src="assets/js/main.js"></script>
 
-    <!-- Page JS -->
-    <script src="assets/js/app-section.js"></script>
+    <script>
+        new DataTable('#sectionDatatable', {
+            lengthMenu: [
+                [5, 10, 25, 50, -1],
+                [5, 10, 25, 50, 'All']
+            ],
+            paging: true
+        });
+    </script>
 
     <script>
         function editSectionDataJS(sectionData) {
@@ -147,7 +157,7 @@ $control = new Control(1, 'section');
             }
         });
     </script>
-    
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var editYearLevel = document.getElementById("editYearLevel");

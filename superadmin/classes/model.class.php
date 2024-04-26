@@ -74,7 +74,6 @@ class Model extends Dbconfig
             header("Location: sections.php");
         }
     }
-
     public function callInsertSection($data, $currentPage)
     {
         $this->insertSection($data, $currentPage);
@@ -125,12 +124,10 @@ class Model extends Dbconfig
             header("Location: students.php");
         }
     }
-
     public function callInsertStudent($data, $currentPage)
     {
         $this->insertStudent($data, $currentPage);
     }
-
     protected function insertAdvisor($data, $currentPage)
     {
         $advisor_id = $data['advisor_id'];
@@ -150,12 +147,10 @@ class Model extends Dbconfig
             header("Location: faculties.php");
         }
     }
-
     public function callInsertAdvisor($data, $currentPage)
     {
         $this->insertAdvisor($data, $currentPage);
     }
-
     protected function readProgram($condition)
     {
         $sql = "SELECT * FROM program_tbl WHERE is_archive = ?";
@@ -165,7 +160,6 @@ class Model extends Dbconfig
 
         return $data;
     }
-
     public function getAllProgram($condition)
     {
         return $this->readProgram($condition);
@@ -180,12 +174,10 @@ class Model extends Dbconfig
 
         return $data;
     }
-
     public function getAllSection($condition)
     {
         return $this->readSection($condition);
     }
-
     protected function readSubject($condition)
     {
         $sql = "SELECT * FROM course_tbl WHERE is_archive = ?";
@@ -195,12 +187,23 @@ class Model extends Dbconfig
 
         return $data;
     }
-
     public function getAllSubject($condition)
     {
         return $this->readSubject($condition);
     }
+    protected function readGradingCriteria($condition)
+    {
+        $sql = "SELECT * FROM gradingsystem_tbl INNER JOIN program_tbl ON gradingsystem_tbl.program_id = program_tbl.program_id WHERE gradingsystem_tbl.is_archive = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$condition]); // 0 is NOT  archive
+        $data = $stmt->fetchAll();
 
+        return $data;
+    }
+    public function getAllGradingCriteria($condition)
+    {
+        return $this->readGradingCriteria($condition);
+    }
     protected function readStudent($condition)
     {
         $sql = "SELECT 
@@ -218,13 +221,10 @@ class Model extends Dbconfig
 
         return $data;
     }
-
-
     public function getAllStudent($condition)
     {
         return $this->readStudent($condition);
     }
-
     protected function readAdvisor($condition)
     {
         $sql = "SELECT *
@@ -238,12 +238,10 @@ class Model extends Dbconfig
 
         return $data;
     }
-
     public function getAllAdvisor($condition)
     {
         return $this->readAdvisor($condition);
     }
-
     protected function insert($data, $currentPage)
     {
         $columns = implode(', ', array_keys($data));
@@ -265,12 +263,10 @@ class Model extends Dbconfig
 
         return;
     }
-
     public function callEditProgram($data, $currentPage)
     {
         $this->editProgram($data, $currentPage);
     }
-
     protected function editProgram($data, $currentPage)
     {
         $tableName = $currentPage . '_tbl';
@@ -293,12 +289,10 @@ class Model extends Dbconfig
             header("Location: programs.php");
         }
     }
-
     public function callArchiveProgram($data, $currentPage)
     {
         $this->archiveProgram($data, $currentPage);
     }
-
     protected function unarchiveProgram($program_id, $currentPage)
     {
         $tableName = $currentPage . '_tbl';
@@ -310,12 +304,10 @@ class Model extends Dbconfig
         $_SESSION['status'] = "#22bb33";
         header('Location: programs.php');
     }
-
     public function callUnarchiveProgram($program_id, $currentPage)
     {
         $this->unarchiveProgram($program_id, $currentPage);
     }
-
     protected function archiveProgram($data, $currentPage)
     {
         $tableName = $currentPage . '_tbl';
@@ -327,7 +319,6 @@ class Model extends Dbconfig
         $_SESSION['status'] = "#22bb33";
         header('Location: programs.php');
     }
-
     protected function readSectionById($id)
     {
         $sql = "SELECT * FROM section_tbl WHERE section_id = ?";
@@ -337,12 +328,10 @@ class Model extends Dbconfig
 
         return $data;
     }
-
     public function callReadSectionById($id)
     {
         return $this->readSectionById($id);
     }
-
     protected function filterSectionByProgram($program_id, $year_level)
     {
 
@@ -362,7 +351,6 @@ class Model extends Dbconfig
             echo "<option value=''>No sections found</option>";
         }
     }
-
     protected function callFilterSectionByProgram()
     {
         if (isset($_GET['program_id'], $_GET['year_level'])) {
@@ -374,12 +362,10 @@ class Model extends Dbconfig
             echo "<option value=''>Select a program and year level first</option>";
         }
     }
-
     public function callHelperFilter()
     {
         $this->callFilterSectionByProgram();
     }
-
     protected function filterAllSectionByProgram($advisor_id)
     {
         $sql = "SELECT * FROM advisor_tbl WHERE advisor_id = ? ORDER BY advisor_id ASC";
@@ -419,7 +405,6 @@ class Model extends Dbconfig
             echo "</select>";
         }
     }
-
     protected function callFilterAllSectionByProgram()
     {
         if (isset($_GET['advisor_id'])) {
@@ -427,12 +412,10 @@ class Model extends Dbconfig
             $this->filterAllSectionByProgram($advisor_id);
         }
     }
-
     public function callAllHelperFilter()
     {
         $this->callFilterAllSectionByProgram();
     }
-
     protected function filterStudents($program_id = null, $year_level = null, $section_id = null)
     {
         if ($section_id == null) {
@@ -443,7 +426,7 @@ class Model extends Dbconfig
             FROM student_tbl
             LEFT JOIN program_tbl ON student_tbl.program_id = program_tbl.program_id
             LEFT JOIN section_tbl ON student_tbl.section_id = section_tbl.section_id
-            WHERE student_tbl.program_id = ? AND student_tbl.year_level = ? ORDER BY lastname ASC";
+            WHERE student_tbl.program_id = ? AND student_tbl.year_level = ? ORDER BY student_id ASC";
             $stmt = $this->db()->prepare($sql);
             $stmt->execute([$program_id, $year_level]);
             $result = $stmt->fetchAll();
@@ -463,26 +446,28 @@ class Model extends Dbconfig
         FROM student_tbl
         LEFT JOIN program_tbl ON student_tbl.program_id = program_tbl.program_id
         LEFT JOIN section_tbl ON student_tbl.section_id = section_tbl.section_id
-        WHERE student_tbl.program_id = ? AND student_tbl.year_level = ? AND student_tbl.section_id = ? ORDER BY lastname ASC";
+        WHERE student_tbl.program_id = ? AND student_tbl.year_level = ? AND student_tbl.section_id = ? ORDER BY student_id ASC";
             $stmt = $this->db()->prepare($sql);
             $stmt->execute([$program_id, $year_level, $section_id]);
-            $result = $stmt->fetchAll();
-
-            // Check if any rows were returned
-            if ($result) {
-                return $result;
+            if ($stmt->rowCount() > 0) {
+                $result = $stmt->fetchAll();
+                // Check if any rows were returned
+                if ($result) {
+                    return $result;
+                } else {
+                    $_SESSION['message'] = "No student found in this filter!";
+                    $_SESSION['status'] = "#bb2124";
+                }
             } else {
-                // Handle case where no rows were returned
-                return []; // Return an empty array
+                $_SESSION['message'] = "No student found in this filter!";
+                $_SESSION['status'] = "#bb2124";
             }
         }
     }
-
     public function callFilterStudents($program_id, $year_level, $section_id)
     {
         return $this->filterStudents($program_id, $year_level, $section_id);
     }
-
     protected function assignStudentSection($section_id, $year_level, $program_id, $studentIds)
     {
         // Ensure $studentIds is a string
@@ -503,12 +488,10 @@ class Model extends Dbconfig
         $_SESSION['status'] = "#22bb33";
         header('Location: class-list.php');
     }
-
     public function callAssignStudentSection($section_id, $year_level, $program_id, $studentIds)
     {
         $this->assignStudentSection($section_id, $year_level, $program_id, $studentIds);
     }
-
     protected function assignCourseTeacher($advisor_id, $course_ids)
     {
         $courseIdsArray = explode(",", $course_ids);
@@ -548,12 +531,10 @@ class Model extends Dbconfig
         // Redirect to subject-taught.php after processing all courses
         header("Location: subject-taught.php");
     }
-
     public function callAssignCourseTeacher($advisor_id, $course_ids)
     {
         $this->assignCourseTeacher($advisor_id, $course_ids);
     }
-
     protected function assignAdvisor($advisor_id, $section_ids)
     {
         $sectionIdsArray = explode(",", $section_ids);
@@ -593,12 +574,10 @@ class Model extends Dbconfig
         // Redirect to subject-taught.php after processing all courses
         header("Location: assign-adviser.php");
     }
-
     public function callAssignAdvisor($advisor_id, $section_ids)
     {
         $this->assignAdvisor($advisor_id, $section_ids);
     }
-
     protected function readSubjectTaught($condition)
     {
         $sql = "SELECT * FROM subject_taught_tbl INNER JOIN advisor_tbl ON subject_taught_tbl.advisor_id = advisor_tbl.advisor_id INNER JOIN course_tbl ON subject_taught_tbl.course_id = course_tbl.course_id WHERE subject_taught_tbl.is_archive = ?";
@@ -608,12 +587,10 @@ class Model extends Dbconfig
 
         return $data;
     }
-
     public function getAllSubjectTaught($condition)
     {
         return $this->readSubjectTaught($condition);
     }
-
     protected function filterTeacherByCourse($course_id)
     {
 
@@ -633,7 +610,6 @@ class Model extends Dbconfig
             echo "<option value=''>No instructor found</option>";
         }
     }
-
     protected function callFilterTeacherByCourse()
     {
         if (isset($_GET['course_id'])) {
@@ -644,12 +620,10 @@ class Model extends Dbconfig
             echo "<option value=''>Select instructor first</option>";
         }
     }
-
     public function callHelperFilterTeacherCourse()
     {
         $this->callFilterTeacherByCourse();
     }
-
     protected function insertSubjectTaughtSection($advisor_id, $section_ids, $course_id)
     {
         $sectionIdsArray = explode(",", $section_ids);
@@ -689,12 +663,10 @@ class Model extends Dbconfig
         // Redirect to assign-subject-teacher.php after processing all courses
         header("Location: assign-subject-teacher.php");
     }
-
     public function callInsertSubjectTaughtSection($advisor_id, $section_id, $section_ids)
     {
         $this->insertSubjectTaughtSection($advisor_id, $section_id, $section_ids);
     }
-
     protected function insertGradingCriteria($data, $current_page)
     {
         $program_id = $data['program_id'];
@@ -715,7 +687,6 @@ class Model extends Dbconfig
             header("Location: grading-criteria.php");
         }
     }
-
     public function callInsertGradingCriteria($data, $current_page)
     {
         $this->insertGradingCriteria($data, $current_page);

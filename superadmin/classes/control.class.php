@@ -35,6 +35,10 @@ class Control {
         $subjecTaughtUnarchiveArr = $this->model->getAllSubjectTaught(0);
         $subjecTaughtArchiveArr = $this->model->getAllSubjectTaught(1);
 
+        //grading criteria view
+        $gradingCriteriaUnarchiveArr = $this->model->getAllGradingCriteria(0);
+        $gradingCriteriaArchiveArr = $this->model->getAllGradingCriteria(1);
+
         $program_arr = null;
         
         
@@ -60,10 +64,10 @@ class Control {
             $advisorArchiveArr,
             $subjecTaughtUnarchiveArr,
             $subjecTaughtArchiveArr,
+            $gradingCriteriaUnarchiveArr,
+            $gradingCriteriaArchiveArr,
             $program_arr,
-            
         );
-
     }
 
     public function dashboard()

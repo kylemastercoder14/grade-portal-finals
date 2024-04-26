@@ -45,6 +45,7 @@ $control = new Control(1, 'course');
     <link rel="stylesheet" href="assets/vendor/libs/%40form-validation/form-validation.css" />
     <link rel="stylesheet" href="assets/vendor/libs/bs-stepper/bs-stepper.css" />
     <link rel="stylesheet" href="assets/css/toastify.min.css" />
+    <link rel="stylesheet" href="assets/css/dataTables.bootstrap5.css" />
 
     <!-- Helpers -->
     <script src="assets/vendor/js/helpers.js"></script>
@@ -80,13 +81,21 @@ $control = new Control(1, 'course');
     <script src="assets/vendor/libs/%40form-validation/auto-focus.js"></script>
     <script src="assets/vendor/libs/bs-stepper/bs-stepper.js"></script>
     <script src="assets/js/toastify.min.js"></script>
+    <script src="assets/js/dataTables.bootstrap5.js"></script>
+    <script src="assets/js/dataTables.js"></script>
 
     <!-- Main JS -->
     <script src="assets/js/main.js"></script>
 
-    <!-- Page JS -->
-    <script src="assets/js/app-subject.js"></script>
-    <!-- <script src="assets/js/modal-edit-user.js"></script> -->
+    <script>
+        new DataTable('#courseDatatable', {
+            lengthMenu: [
+                [5, 10, 25, 50, -1],
+                [5, 10, 25, 50, 'All']
+            ],
+            paging: true
+        });
+    </script>
 
     <script>
         Toastify({

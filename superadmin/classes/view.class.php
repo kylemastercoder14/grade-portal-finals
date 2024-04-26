@@ -2,7 +2,7 @@
 include('includes/includes.php');
 class View
 {
-    private $data, $program, $archivedProgram, $section, $archivedSection, $subject, $archivedSubject, $student, $archivedStudent, $advisor, $archivedAdvisor, $filterStudent, $subjectTaught, $archivedSubjectTaught;
+    private $data, $program, $archivedProgram, $section, $archivedSection, $subject, $archivedSubject, $student, $archivedStudent, $advisor, $archivedAdvisor, $filterStudent, $subjectTaught, $archivedSubjectTaught, $gradingCriteria, $archivedGradingCriteria;
     public $active_page;
     public $statusDashboard;
     public $statusYearlevel;
@@ -16,6 +16,7 @@ class View
     public $statusAdvises;
     public $statusSectionSubject;
     public $statusGradingsystem;
+    public $statusSemester;
 
     public function __construct(
         $data_arr = null,
@@ -32,6 +33,8 @@ class View
         $archivedAdvisor = null,
         $unarchiveSubjectTaught = null,
         $archivedSubjectTaught = null,
+        $unarchiveGradingCriteria = null,
+        $archivedGradingCriteria = null,
         $filterStudent = null,
     ) {
         $this->data = $data_arr;
@@ -47,6 +50,8 @@ class View
         $this->archivedAdvisor = $archivedAdvisor;
         $this->subjectTaught = $unarchiveSubjectTaught;
         $this->archivedSubjectTaught = $archivedSubjectTaught;
+        $this->gradingCriteria = $unarchiveGradingCriteria;
+        $this->archivedGradingCriteria = $archivedGradingCriteria;
         $this->filterStudent = $filterStudent;
         $this->active_page = $page;
 
@@ -83,6 +88,9 @@ class View
                 break;
             case 'gradingsystem':
                 $this->statusGradingsystem = 'active';
+                break;
+            case 'semester':
+                $this->statusSemester = 'active';
                 break;
         }
     }
@@ -381,6 +389,27 @@ class View
     public function navbar()
     {
     ?>
+        <!-- BACKUP MODAL -->
+        <div class="modal fade" id="backupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <form action="action.php" method="POST" class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure u want to backup this database? Please enter pin first.
+                        <div class="mt-3">
+                            <input type="password" class="form-control" name="okaylang" placeholder="XX-XXX-X">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" name="okaykaba?" class="btn btn-danger">Backup</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <aside id="layout-menu" class="layout-menu-horizontal menu-horizontal menu bg-menu-theme flex-grow-0">
             <div class="container-xxl d-flex h-100">
                 <ul class="menu-inner">
@@ -413,13 +442,19 @@ class View
                             <li class="menu-item <?php echo $this->statusSubjects ?>">
                                 <a href="subjects.php" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-book"></i>
-                                    <div data-i18n="Subjects">Subjects</div>
+                                    <div data-i18n="Courses">Courses</div>
                                 </a>
                             </li>
                             <li class="menu-item <?php echo $this->statusClassList ?>">
                                 <a href="class-list.php" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-folder"></i>
                                     <div data-i18n="Class List">Class List</div>
+                                </a>
+                            </li>
+                            <li class="menu-item <?php echo $this->statusSemester ?>">
+                                <a href="semester.php" class="menu-link">
+                                    <i class="menu-icon tf-icons ti ti-calendar"></i>
+                                    <div data-i18n="Semester">Semester</div>
                                 </a>
                             </li>
                             <li class="menu-item <?php echo $this->statusGradingsystem ?>">
@@ -521,28 +556,6 @@ class View
                 </ul>
             </div>
         </aside>
-
-        <!-- BACKUP MODAL -->
-        <div class="modal fade" id="backupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <form action="action.php" method="POST" class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Are you sure u want to backup this database? Please enter pin first.
-                        <div class="mt-3">
-                            <input type="password" class="form-control" name="okaylang" placeholder="XX-XXX-X">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" name="okaykaba?" class="btn btn-danger">Backup</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
     <?php
     }
     public function footer()
@@ -624,7 +637,6 @@ class View
         <!--/ Student Overview -->
     <?php
     }
-
     public function studentGradeOverview()
     {
     ?>
@@ -678,7 +690,6 @@ class View
         <!-- Student Grades Overview -->
     <?php
     }
-
     public function totalSubmittedGrades()
     {
     ?>
@@ -729,7 +740,6 @@ class View
         <!--/ Total Submitted Grades -->
     <?php
     }
-
     public function totalProgramsOffered()
     {
     ?>
@@ -796,7 +806,6 @@ class View
         <!--/ Total Programs Offered -->
     <?php
     }
-
     public function dashboardContent()
     {
     ?>
@@ -836,7 +845,6 @@ class View
         </div>
     <?php
     }
-
     public function programsContent()
     {
     ?>
@@ -858,13 +866,13 @@ class View
                         <!-- Content -->
                         <div class="container-xxl flex-grow-1 container-p-y">
                             <div class="d-flex align-items-center justify-content-between">
-                                <h5 class="py-2 mt-4">
+                                <h5 class="py-2">
                                     <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Programs
                                 </h5>
-                                <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-3 mb-4">
                                     <button class="btn btn-primary d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#retrieveProgram">
                                         <i class="ti ti-edit"></i>
-                                        <span>Retrieve Program</span>
+                                        <span>Retrieve Data</span>
                                     </button>
                                     <button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#addProgram">
                                         <i class="ti ti-plus"></i>
@@ -913,7 +921,7 @@ class View
                                                                     <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editProgram" href="javascript:0;" class="dropdown-item" onclick="editProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')">
                                                                         <i class="ti ti-edit ms-1"></i>Update
                                                                     </button>
-                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#archiveProgram" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
 
                                                                 </div>
                                                             </div>
@@ -1022,7 +1030,7 @@ class View
         <!-- Edit Program Modal -->
 
         <!-- Archive Program Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="archiveProgram" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <form action="action.php" method="POST" class="modal-content">
                     <div class="modal-header">
@@ -1108,7 +1116,6 @@ class View
 
     <?php
     }
-
     public function sectionContent()
     {
     ?>
@@ -1128,14 +1135,26 @@ class View
                         <!-- / Navbar -->
                         <!-- Content -->
                         <div class="container-xxl flex-grow-1 container-p-y">
-                            <h5 class="py-2 mb-4">
-                                <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Sections
-                            </h5>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5 class="py-2">
+                                    <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Sections
+                                </h5>
+                                <div class="d-flex align-items-center gap-3 mb-4">
+                                    <button class="btn btn-primary d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#retrieveSection">
+                                        <i class="ti ti-edit"></i>
+                                        <span>Retrieve Data</span>
+                                    </button>
+                                    <button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#addSection">
+                                        <i class="ti ti-plus"></i>
+                                        <span>Add Section</span>
+                                    </button>
+                                </div>
+                            </div>
                             <!-- Program Table -->
                             <div class="card">
-                                <div class="card-datatable table-responsive">
-                                    <table class="datatables-section table">
-                                        <thead class="border-top">
+                                <div class="card-body table-responsive">
+                                    <table id="sectionDatatable" class="table display compact">
+                                        <thead>
                                             <tr>
                                                 <th>Section ID</th>
                                                 <th>Program</th>
@@ -1320,7 +1339,6 @@ class View
         <!-- Edit Program Modal -->
     <?php
     }
-
     public function subjectContent()
     {
     ?>
@@ -1340,14 +1358,26 @@ class View
                         <!-- / Navbar -->
                         <!-- Content -->
                         <div class="container-xxl flex-grow-1 container-p-y">
-                            <h5 class="py-2 mb-4">
-                                <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Subjects
-                            </h5>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5 class="py-2">
+                                    <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Courses
+                                </h5>
+                                <div class="d-flex align-items-center gap-3 mb-4">
+                                    <button class="btn btn-primary d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#retrieveCourses">
+                                        <i class="ti ti-edit"></i>
+                                        <span>Retrieve Data</span>
+                                    </button>
+                                    <button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#addCourse">
+                                        <i class="ti ti-plus"></i>
+                                        <span>Add Course</span>
+                                    </button>
+                                </div>
+                            </div>
                             <!-- Program Table -->
                             <div class="card">
-                                <div class="card-datatable table-responsive">
-                                    <table class="datatables-subject table">
-                                        <thead class="border-top">
+                                <div class="card-body table-responsive">
+                                    <table id="courseDatatable" class="table display compact">
+                                        <thead>
                                             <tr>
                                                 <th>Course ID</th>
                                                 <th>Course Name</th>
@@ -1434,13 +1464,13 @@ class View
         </div>
 
         <!-- Add Subject Modal -->
-        <div class="modal fade" id="addSubject" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="addCourse" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
                 <div class="modal-content p-3 p-md-5">
                     <div class="modal-body">
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         <div class="text-center mb-4">
-                            <h3 class="mb-2">Add Subject Information</h3>
+                            <h3 class="mb-2">Add Course Information</h3>
                         </div>
                         <form class="row g-3" action="action.php" method="POST">
                             <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
@@ -1522,7 +1552,6 @@ class View
         <!-- Edit Subject Modal -->
     <?php
     }
-
     public function studentContent()
     {
     ?>
@@ -1637,10 +1666,8 @@ class View
                                                         <td>
                                                             <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
                                                                 <div class="dropdown-menu dropdown-menu-end m-0">
-
                                                                     <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')"><i class="ti ti-edit ms-1"></i>Update
                                                                     </button>
-
                                                                     <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
 
                                                                 </div>
@@ -1853,7 +1880,7 @@ class View
                                             </div>
                                             <div class="col-md-12 mb-2" id="hideYearlevel">
                                                 <label class="form-label">Year Level <span class="text-danger">*</span></label>
-                                                <select class="form-select" id="yearLevel" name="year_level" onchange="getSections()">
+                                                <select class="form-select" id="yearLevel2" name="year_level" onchange="getSections2()">
                                                     <option value="1st Year">1st Year</option>
                                                     <option value="2nd Year">2nd Year</option>
                                                     <option value="3rd Year">3rd Year</option>
@@ -1862,7 +1889,7 @@ class View
                                             </div>
                                             <div id="programFull" class="col-md-6 mb-2">
                                                 <label class="form-label">Program <span class="text-danger">*</span></label>
-                                                <select id="programId" class="form-select" name="program_id" onchange="getSections()">
+                                                <select id="programId2" class="form-select" name="program_id" onchange="getSections2()">
                                                     <?php
                                                     $programs = $this->program;
                                                     foreach ($programs as $program => $data) {
@@ -1875,7 +1902,7 @@ class View
                                             </div>
                                             <div class="col-md-6 mb-2" id="hideSection">
                                                 <label class="form-label">Section <span class="text-danger">*</span></label>
-                                                <select id="sectionId" class="form-select" name="section_id">
+                                                <select id="sectionId2" class="form-select" name="section_id">
                                                     <option value="">Choose a section</option>
                                                     <?php
                                                     $sections = $this->section;
@@ -1945,11 +1972,6 @@ class View
                 </div>
             </div>
         </div>
-
-        <!-- Edit Program Modal -->
-
-        <!-- Edit Student Modal -->
-
         <!-- Edit Student Modal -->
     <?php
     }
@@ -3223,19 +3245,58 @@ class View
                             <!-- Student Table -->
                             <div class="card">
                                 <div class="card-body table-responsive">
-
-                                    <table id="studentDatatable" class="display compact table">
+                                    <table id="gradingCriteriaDatatable" class="display compact table">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Course Name</th>
-                                                <th>Course Teacher</th>
+                                                <th>Year Level</th>
+                                                <th>Program</th>
+                                                <th>Criteria</th>
                                                 <th>Date Created</th>
                                                 <th>actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr></tr>
+                                            <?php
+                                            $gradingCriterias = $this->gradingCriteria;
+                                            if (!$gradingCriterias) {
+                                            ?>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <h4 class="text-center text-danger mt-2">No grading criteria found yet!</h4>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            } else {
+                                                foreach ($gradingCriterias as $gradingCriteria => $data) {
+                                                    $dateString = $data['date_added'];
+                                                    $timestamp = strtotime($dateString);
+                                                    $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                                    $criteria = "Seatwork = " . $data['seatwork'] . "% | Quizzes = " . $data['quizzes'] . "% | Assignment = " . $data['assignment'] . "% | Examination = " . $data['examination'] . "% | Others = " . $data['others'] . "%";
+                                                ?>
+                                                    <tr>
+                                                        <td><?= $data['grading_system_id'] ?></td>
+                                                        <td><?= $data['year_level'] ?></td>
+                                                        <td><?= $data['program_code'] ?></td>
+                                                        <td><?= $criteria ?></td>
+                                                        <td><?= $formattedDate ?></td>
+                                                        <td>
+                                                            <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                                <div class="dropdown-menu dropdown-menu-end m-0">
+
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')"><i class="ti ti-edit ms-1"></i>Update
+                                                                    </button>
+
+                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
                                 </div>
