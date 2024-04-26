@@ -3,12 +3,12 @@ CREATE TABLE `advises_tbl` (
   `advises_id` int(255) NOT NULL AUTO_INCREMENT,
   `advisor_id` varchar(255) NOT NULL,
   `section_id` varchar(255) NOT NULL,
+  `is_archive` tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (`advises_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- Dumping data for table `advises_tbl`
-INSERT INTO `advises_tbl` VALUES ('1', 'KLD-23-75890', 'KLD-IICS-283480269-20241376210857');
-INSERT INTO `advises_tbl` VALUES ('2', 'KLD-23-75890', 'KLD-IICS-283480269-2024403192329');
-INSERT INTO `advises_tbl` VALUES ('3', 'KLD-23-86434', '');
+INSERT INTO `advises_tbl` VALUES ('1', 'KLD-23-75890', 'KLD-IICS-283480269-20241376210857', '0');
+INSERT INTO `advises_tbl` VALUES ('2', 'KLD-23-75890', 'KLD-IICS-283480269-2024403192329', '0');
 
 -- Table structure for table `advisor_tbl`
 CREATE TABLE `advisor_tbl` (
@@ -135,11 +135,15 @@ INSERT INTO `section_tbl` VALUES ('KLD-IOPE-1887072785-20241423527731', '3rd Yea
 
 -- Table structure for table `semester_tbl`
 CREATE TABLE `semester_tbl` (
-  `semester_id` int(255) NOT NULL,
+  `semester_id` int(255) NOT NULL AUTO_INCREMENT,
   `semester_name` varchar(255) NOT NULL,
-  `year` year(4) NOT NULL,
+  `year` varchar(255) NOT NULL,
+  `date_added` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_archive` tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (`semester_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Dumping data for table `semester_tbl`
+INSERT INTO `semester_tbl` VALUES ('1', '2nd Semester', '2023 - 2024', '2024-04-27 06:55:29', '0');
 
 -- Table structure for table `student_tbl`
 CREATE TABLE `student_tbl` (
@@ -181,11 +185,12 @@ CREATE TABLE `subject_course_tbl` (
   `advisor_id` varchar(255) NOT NULL,
   `section_id` varchar(255) NOT NULL,
   `course_id` varchar(255) NOT NULL,
+  `is_archive` tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (`subject_course_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- Dumping data for table `subject_course_tbl`
-INSERT INTO `subject_course_tbl` VALUES ('2', 'KLD-23-86434', 'KLD-IICS-283480269-20241376210857', 'KLD-PCIS3222-1271014603');
-INSERT INTO `subject_course_tbl` VALUES ('3', 'KLD-23-86434', 'KLD-IICS-283480269-20242103153527', 'KLD-PCIS3222-1271014603');
+INSERT INTO `subject_course_tbl` VALUES ('2', 'KLD-23-86434', 'KLD-IICS-283480269-20241376210857', 'KLD-PCIS3222-1271014603', '0');
+INSERT INTO `subject_course_tbl` VALUES ('3', 'KLD-23-86434', 'KLD-IICS-283480269-20242103153527', 'KLD-PCIS3222-1271014603', '0');
 
 -- Table structure for table `subject_taught_tbl`
 CREATE TABLE `subject_taught_tbl` (

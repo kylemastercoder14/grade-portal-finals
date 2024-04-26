@@ -2,7 +2,7 @@
 
 include "includes/includes.php";
 // kailangan parehas ang second argument nito sa table name ng database
-$control = new Control(1, 'subject_taught');
+$control = new Control(1, 'semester');
 
 ?>
 
@@ -57,7 +57,7 @@ $control = new Control(1, 'subject_taught');
 
 <body>
 
-    <?php $control->sectionSubjectTaught();  ?>
+    <?php $control->semester();  ?>
 
 
     <!-- Core JS -->
@@ -100,30 +100,7 @@ $control = new Control(1, 'subject_taught');
     <script src="assets/js/dataTables.js"></script>
 
     <script>
-        function getSubjectTaught() {
-            var courseId = document.getElementById("courseId").value;
-
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    // Update the section dropdown with new options
-                    var advisorDropdown = document.getElementById("advisorId");
-                    advisorDropdown.innerHTML = this.responseText;
-                }
-            };
-            xhttp.open("GET", "fetch_subject_teacher.php?course_id=" + courseId, true);
-            xhttp.send();
-        }
-    </script>
-
-    <script>
-        VirtualSelect.init({
-            ele: '#multiple-select'
-        });
-    </script>
-
-    <script>
-        new DataTable('#assignCourseTeacherDatatable', {
+        new DataTable('#semesterDatatable', {
             lengthMenu: [
                 [5, 10, 25, 50, -1],
                 [5, 10, 25, 50, 'All']
@@ -131,6 +108,38 @@ $control = new Control(1, 'subject_taught');
             paging: true
         });
     </script>
+
+    <!-- <script>
+        var addGradeComponentBtn = document.getElementById("addGradeComponent");
+        var gradeComponentsContainer = document.getElementById("gradeComponents");
+        var gradeComponentCount = 0;
+
+        addGradeComponentBtn.addEventListener("click", function() {
+            gradeComponentCount++; // Increment the count for unique IDs
+
+            // Create new grade component elements
+            var gradeComponentDiv = document.createElement("div");
+            gradeComponentDiv.classList.add("col-sm-12", "col-md-12", "mb-3");
+
+            var gradeLabel = document.createElement("label");
+            gradeLabel.classList.add("form-label");
+            gradeLabel.textContent = "Grade Criteria " + gradeComponentCount;
+
+            var gradeInput = document.createElement("input");
+            gradeInput.type = "number";
+            gradeInput.name = "criteria_" + gradeComponentCount;
+            gradeInput.classList.add("form-control");
+            gradeInput.placeholder = "Enter percentage";
+            gradeInput.id = "gradeValue" + gradeComponentCount;
+
+            // Append elements to the grade component div
+            gradeComponentDiv.appendChild(gradeLabel);
+            gradeComponentDiv.appendChild(gradeInput);
+
+            // Append the grade component div to the container
+            gradeComponentsContainer.appendChild(gradeComponentDiv);
+        });
+    </script> -->
 
     <script>
         Toastify({

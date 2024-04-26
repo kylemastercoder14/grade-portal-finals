@@ -48,6 +48,7 @@ $control = new Control(1, 'advises');
     <link rel="stylesheet" href="assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css" />
     <link rel="stylesheet" href="assets/css/toastify.min.css" />
     <link rel="stylesheet" href="assets/css/virtual-select.min.css">
+    <link rel="stylesheet" href="assets/css/dataTables.bootstrap5.css" />
 
     <!-- Helpers -->
     <script src="assets/vendor/js/helpers.js"></script>
@@ -123,7 +124,7 @@ $control = new Control(1, 'advises');
     </script>
 
     <script>
-        new DataTable('#studentDatatable', {
+        new DataTable('#assignAdvisorDatatable', {
             lengthMenu: [
                 [5, 10, 25, 50, -1],
                 [5, 10, 25, 50, 'All']

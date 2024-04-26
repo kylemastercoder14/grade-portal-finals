@@ -163,4 +163,11 @@ if (isset($_POST['add_program'])) {
 
     $db = new Dbconfig();
     $db->okaynamantayonglahat($okaylang);
+}else if (isset($_POST['add_semester'])) {
+    $current_page = $_POST['current_page'];
+    $data = array(
+        'semester_name' => $_POST['semester_name'],
+        'year' => $_POST['year']
+    );
+    $model->callInsertSemester($data, $current_page);
 }

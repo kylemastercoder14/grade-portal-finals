@@ -2,7 +2,7 @@
 include('includes/includes.php');
 class View
 {
-    private $data, $program, $archivedProgram, $section, $archivedSection, $subject, $archivedSubject, $student, $archivedStudent, $advisor, $archivedAdvisor, $filterStudent, $subjectTaught, $archivedSubjectTaught, $gradingCriteria, $archivedGradingCriteria;
+    private $data, $program, $archivedProgram, $section, $archivedSection, $subject, $archivedSubject, $student, $archivedStudent, $advisor, $archivedAdvisor, $filterStudent, $subjectTaught, $archivedSubjectTaught, $gradingCriteria, $archivedGradingCriteria, $assignAdviser, $archivedAssignAdviser, $assignSubjectTeacher, $archivedAssignSubjectTeacher, $semester, $archivedSemester;
     public $active_page;
     public $statusDashboard;
     public $statusYearlevel;
@@ -35,6 +35,12 @@ class View
         $archivedSubjectTaught = null,
         $unarchiveGradingCriteria = null,
         $archivedGradingCriteria = null,
+        $unarchivedAssignAdviser = null,
+        $archivedAssignAdviser = null,
+        $unarchivedAssignSubjectTeacher = null,
+        $archivedAssignSubjectTeacher = null,
+        $unarchivedSemester = null,
+        $archivedSemester = null,
         $filterStudent = null,
     ) {
         $this->data = $data_arr;
@@ -52,6 +58,12 @@ class View
         $this->archivedSubjectTaught = $archivedSubjectTaught;
         $this->gradingCriteria = $unarchiveGradingCriteria;
         $this->archivedGradingCriteria = $archivedGradingCriteria;
+        $this->assignAdviser = $unarchivedAssignAdviser;
+        $this->archivedAssignAdviser = $archivedAssignAdviser;
+        $this->assignSubjectTeacher = $unarchivedAssignSubjectTeacher;
+        $this->archivedAssignSubjectTeacher = $archivedAssignSubjectTeacher;
+        $this->semester = $unarchivedSemester;
+        $this->archivedSemester = $archivedSemester;
         $this->filterStudent = $filterStudent;
         $this->active_page = $page;
 
@@ -1975,7 +1987,6 @@ class View
         <!-- Edit Student Modal -->
     <?php
     }
-
     public function teacherContent()
     {
     ?>
@@ -2306,7 +2317,6 @@ class View
         <!-- Edit Instructor Modal -->
     <?php
     }
-
     public function classListContent()
     {
     ?>
@@ -2791,7 +2801,6 @@ class View
         <!-- Edit Student Modal -->
     <?php
     }
-
     public function subjectTaughtContent()
     {
     ?>
@@ -2966,7 +2975,6 @@ class View
         <!-- Add Student Modal -->
     <?php
     }
-
     public function assignAdviserContent()
     {
     ?>
@@ -3005,19 +3013,56 @@ class View
                             <!-- Student Table -->
                             <div class="card">
                                 <div class="card-body table-responsive">
-
-                                    <table id="studentDatatable" class="display compact table">
+                                    <table id="assignAdvisorDatatable" class="display compact table">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Course Name</th>
-                                                <th>Course Teacher</th>
+                                                <th>Instructor</th>
+                                                <th>Section</th>
                                                 <th>Date Created</th>
                                                 <th>actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr></tr>
+                                            <?php
+                                            $assignAdvisers = $this->assignAdviser;
+                                            if (!$assignAdvisers) {
+                                            ?>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <h4 class="text-center text-danger mt-2">No assign adviser found yet!</h4>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            } else {
+                                                foreach ($assignAdvisers as $assignAdviser => $data) {
+                                                    $dateString = $data['date_added'];
+                                                    $timestamp = strtotime($dateString);
+                                                    $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                                    $fullname = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'] . ", " . $data['title'];
+                                                ?>
+                                                    <tr>
+                                                        <td><?= $data['advises_id'] ?></td>
+                                                        <td><?= $fullname ?></td>
+                                                        <td><?= $data['section_name'] ?></td>
+                                                        <td><?= $formattedDate ?></td>
+                                                        <td>
+                                                            <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                                <div class="dropdown-menu dropdown-menu-end m-0">
+
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')"><i class="ti ti-edit ms-1"></i>Update
+                                                                    </button>
+
+                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -3104,7 +3149,6 @@ class View
         <!-- Add Student Modal -->
     <?php
     }
-
     public function sectionSubjectTaughtContent()
     {
     ?>
@@ -3143,19 +3187,60 @@ class View
                             <!-- Student Table -->
                             <div class="card">
                                 <div class="card-body table-responsive">
-
-                                    <table id="studentDatatable" class="display compact table">
+                                    <table id="assignCourseTeacherDatatable" class="display compact table">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Course Name</th>
-                                                <th>Course Teacher</th>
+                                                <th>Instructor</th>
+                                                <th>Course</th>
+                                                <th>Section</th>
                                                 <th>Date Created</th>
                                                 <th>actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr></tr>
+                                        <tbody>
+                                            <?php
+                                            $assignSubjectTeachers = $this->assignSubjectTeacher;
+                                            if (!$assignSubjectTeachers) {
+                                            ?>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <h4 class="text-center text-danger mt-2">No assign course instructor found yet!</h4>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            } else {
+                                                foreach ($assignSubjectTeachers as $assignSubjectTeacher => $data) {
+                                                    $dateString = $data['date_added'];
+                                                    $timestamp = strtotime($dateString);
+                                                    $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                                    $fullname = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'] . ", " . $data['title'];
+                                                ?>
+                                                    <tr>
+                                                        <td><?= $data['subject_course_id'] ?></td>
+                                                        <td><?= $fullname ?></td>
+                                                        <td><?= $data['course_name'] ?></td>
+                                                        <td><?= $data['section_name'] ?></td>
+                                                        <td><?= $formattedDate ?></td>
+                                                        <td>
+                                                            <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                                <div class="dropdown-menu dropdown-menu-end m-0">
+
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')"><i class="ti ti-edit ms-1"></i>Update
+                                                                    </button>
+
+                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
+                                        </tbody>
                                         </tbody>
                                     </table>
                                 </div>
@@ -3451,6 +3536,163 @@ class View
             </div>
         </div>
         <!-- Add Student Modal -->
+<?php
+    }
+
+    public function semesterContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header();  ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+
+                        <!-- / Navbar -->
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5>
+                                    <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Semester
+                                </h5>
+                                <div class="d-flex align-items-center gap-3 mb-4">
+                                    <button class="btn btn-primary d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#retrieveSemester">
+                                        <i class="ti ti-edit"></i>
+                                        <span>Retrieve Data</span>
+                                    </button>
+                                    <button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#addSemester">
+                                        <i class="ti ti-plus"></i>
+                                        <span>Add Semester</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Student Table -->
+                            <div class="card">
+                                <div class="card-body table-responsive">
+                                    <table id="semesterDatatable" class="display compact table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Semester</th>
+                                                <th>Academic Year</th>
+                                                <th>Date Created</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $semesters = $this->semester;
+                                            if (!$semesters) {
+                                            ?>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <h4 class="text-center text-danger mt-2">No semester found yet!</h4>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            } else {
+                                                foreach ($semesters as $semester => $data) {
+                                                    $dateString = $data['date_added'];
+                                                    $timestamp = strtotime($dateString);
+                                                    $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                                ?>
+                                                    <tr>
+                                                        <td><?= $data['semester_id'] ?></td>
+                                                        <td><?= $data['semester_name'] ?></td>
+                                                        <td><?= $data['year'] ?></td>
+                                                        <td><?= $formattedDate ?></td>
+                                                        <td>
+                                                            <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                                <div class="dropdown-menu dropdown-menu-end m-0">
+
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')"><i class="ti ti-edit ms-1"></i>Update
+                                                                    </button>
+
+                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
+
+        <!-- Add Semester Modal -->
+        <div class="modal fade" id="addSemester" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-simple modal-upgrade-plan">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body p-2">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center">
+                            <h3 class="mb-2">Add Semester</h3>
+                        </div>
+                        <form action="action.php" method="POST">
+                            <div class="row">
+                                <div class="col-12 col-md-12 mb-3">
+                                    <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
+                                    <label class="form-label">Semester</label>
+                                    <select class="form-select" name="semester_name" required>
+                                        <option value="1st Semester">1st Semester</option>
+                                        <option value="2nd Semester">2nd Semester</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-12 mb-3">
+                                    <label class="form-label">Academic Year</label>
+                                    <input type="text" name="year" class="form-control" placeholder="2023 - 2024">
+                                </div>
+                                <div class="col-12 d-flex justify-content-end mt-4">
+                                    <button class="btn btn-success" type="submit" name="add_semester"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Semester Modal -->
 <?php
     }
 }

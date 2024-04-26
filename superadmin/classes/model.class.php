@@ -591,6 +591,45 @@ class Model extends Dbconfig
     {
         return $this->readSubjectTaught($condition);
     }
+    protected function readAssignAdviser($condition)
+    {
+        $sql = "SELECT * FROM advises_tbl INNER JOIN advisor_tbl ON advises_tbl.advisor_id = advisor_tbl.advisor_id INNER JOIN section_tbl ON advises_tbl.section_id = section_tbl.section_id WHERE advises_tbl.is_archive = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$condition]); // 0 is NOT  archive
+        $data = $stmt->fetchAll();
+
+        return $data;
+    }
+    public function getAllAssignAdviser($condition)
+    {
+        return $this->readAssignAdviser($condition);
+    }
+    protected function readAssignSubjectTeacher($condition)
+    {
+        $sql = "SELECT * FROM subject_course_tbl INNER JOIN advisor_tbl ON subject_course_tbl.advisor_id = advisor_tbl.advisor_id INNER JOIN section_tbl ON subject_course_tbl.section_id = section_tbl.section_id INNER JOIN course_tbl ON subject_course_tbl.course_id = course_tbl.course_id WHERE subject_course_tbl.is_archive = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$condition]); // 0 is NOT  archive
+        $data = $stmt->fetchAll();
+
+        return $data;
+    }
+    public function getAllAssignSubjectTeacher($condition)
+    {
+        return $this->readAssignSubjectTeacher($condition);
+    }
+    protected function readSemester($condition)
+    {
+        $sql = "SELECT * FROM semester_tbl WHERE is_archive = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$condition]); // 0 is NOT  archive
+        $data = $stmt->fetchAll();
+
+        return $data;
+    }
+    public function getAllSemester($condition)
+    {
+        return $this->readSemester($condition);
+    }
     protected function filterTeacherByCourse($course_id)
     {
 
@@ -690,5 +729,29 @@ class Model extends Dbconfig
     public function callInsertGradingCriteria($data, $current_page)
     {
         $this->insertGradingCriteria($data, $current_page);
+    }
+    protected function insertSemester($data, $current_page)
+    {
+        $semester_name = $data['semester_name'];
+        $year = $data['year'];
+        $sql = "SELECT * FROM semester_tbl WHERE semester_name = ? AND year = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$semester_name, $year]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            $_SESSION['message'] = "Semester on this academic year is already exist!";
+            $_SESSION['status'] = "#bb2124";
+            header("Location: semester.php");
+        } else {
+            $this->insert($data, $current_page);
+            $_SESSION['message'] = "Semester on this academic year inserted successfully.";
+            $_SESSION['status'] = "#22bb33";
+            header("Location: semester.php");
+        }
+    }
+    public function callInsertSemester($data, $current_page)
+    {
+        $this->insertSemester($data, $current_page);
     }
 }

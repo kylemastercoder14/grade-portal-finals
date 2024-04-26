@@ -1,16 +1,18 @@
-<?php 
-include ('includes/includes.php');
+<?php
+include('includes/includes.php');
 
-class Control {
+class Control
+{
     private $view;
     private $model;
     private $import;
-   
 
-    public function __construct($id = null , $page = null){
+
+    public function __construct($id = null, $page = null)
+    {
         $this->model = new Model();
         $data_arr = $this->model->getById($id);
-        
+
         // program view
         $programUnarchiveArr = $this->model->getAllProgram(0);
         $programArchiveArr = $this->model->getAllProgram(1);
@@ -39,10 +41,22 @@ class Control {
         $gradingCriteriaUnarchiveArr = $this->model->getAllGradingCriteria(0);
         $gradingCriteriaArchiveArr = $this->model->getAllGradingCriteria(1);
 
+        //assign adviser view
+        $assignAdviserUnarchiveArr = $this->model->getAllAssignAdviser(0);
+        $assignAdviserArchiveArr = $this->model->getAllAssignAdviser(1);
+
+        //assign adviser view
+        $assignSubjectTeacherUnarchiveArr = $this->model->getAllAssignSubjectTeacher(0);
+        $assignSubjectTeacherArchiveArr = $this->model->getAllAssignSubjectTeacher(1);
+
+        //semester view
+        $semesterUnarchiveArr = $this->model->getAllSemester(0);
+        $semesterArchiveArr = $this->model->getAllSemester(1);
+
         $program_arr = null;
-        
-        
-        if(isset($_GET['program_id'], $_GET['year_level'], $_GET['section_id'])){
+
+
+        if (isset($_GET['program_id'], $_GET['year_level'], $_GET['section_id'])) {
             $program_id = $_GET['program_id'];
             $year_level = $_GET['year_level'];
             $section_id = $_GET['section_id'];
@@ -50,8 +64,8 @@ class Control {
         }
 
         $this->view = new View(
-            $data_arr, 
-            $page, 
+            $data_arr,
+            $page,
             $programUnarchiveArr,
             $programArchiveArr,
             $sectionUnarchiveArr,
@@ -66,6 +80,12 @@ class Control {
             $subjecTaughtArchiveArr,
             $gradingCriteriaUnarchiveArr,
             $gradingCriteriaArchiveArr,
+            $assignAdviserUnarchiveArr,
+            $assignAdviserArchiveArr,
+            $assignSubjectTeacherUnarchiveArr,
+            $assignSubjectTeacherArchiveArr,
+            $semesterUnarchiveArr,
+            $semesterArchiveArr,
             $program_arr,
         );
     }
@@ -94,7 +114,7 @@ class Control {
     {
         $this->view->studentContent();
     }
-    
+
     public function teacher()
     {
         $this->view->teacherContent();
@@ -125,16 +145,23 @@ class Control {
         $this->view->gradingSystemContent();
     }
 
-    public function controlCallHelper() {
+    public function semester()
+    {
+        $this->view->semesterContent();
+    }
+
+    public function controlCallHelper()
+    {
         $this->model->callHelperFilter();
     }
 
-    public function controlAllCallHelper() {
+    public function controlAllCallHelper()
+    {
         $this->model->callAllHelperFilter();
     }
 
-    public function controlCallHelperFilterTeacherCourse() {
+    public function controlCallHelperFilterTeacherCourse()
+    {
         $this->model->callHelperFilterTeacherCourse();
     }
 }
-?>
