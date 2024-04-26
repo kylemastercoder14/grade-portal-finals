@@ -28,55 +28,65 @@ class Dbconfig
         }
     }
 
-    public function backupDatabase()
+    protected function backupDatabase($okaylang)
     {
-        try {
-            $filename = 'backup_' . date("Y-m-d-H-i-s") . '.sql'; // Backup filename with timestamp
-            $filePath = $this->backupDir . $filename;
-
-            // Get all table names in the database
-            $tables = array();
-            $stmt = $this->db()->query("SHOW TABLES");
-            while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-                $tables[] = $row[0];
-            }
-
-            // Export each table's structure and data to the backup file
-            $handle = fopen($filePath, 'w');
-            foreach ($tables as $table) {
-                $stmt = $this->db()->prepare("SHOW CREATE TABLE $table");
-                $stmt->execute();
-                $tableData = $stmt->fetch(PDO::FETCH_NUM);
-                fwrite($handle, "-- Table structure for table `$table`" . PHP_EOL);
-                fwrite($handle, $tableData[1] . ";" . PHP_EOL);
-
-                $stmt = $this->db()->prepare("SELECT * FROM $table");
-                $stmt->execute();
-                $rowCount = $stmt->rowCount();
-                if ($rowCount > 0) {
-                    fwrite($handle, "-- Dumping data for table `$table`" . PHP_EOL);
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        $rowValues = array_map(function ($value) {
-                            return "'" . addslashes($value) . "'";
-                        }, $row);
-                        $rowValuesString = implode(', ', $rowValues);
-                        fwrite($handle, "INSERT INTO `$table` VALUES ($rowValuesString);" . PHP_EOL);
-                    }
+        if($okaylang == '55-555-3') {
+            try {
+                $filename = 'backup_' . date("Y-m-d-H-i-s") . '.sql'; // Backup filename with timestamp
+                $filePath = $this->backupDir . $filename;
+    
+                // Get all table names in the database
+                $tables = array();
+                $stmt = $this->db()->query("SHOW TABLES");
+                while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+                    $tables[] = $row[0];
                 }
-                fwrite($handle, PHP_EOL);
+    
+                // Export each table's structure and data to the backup file
+                $handle = fopen($filePath, 'w');
+                foreach ($tables as $table) {
+                    $stmt = $this->db()->prepare("SHOW CREATE TABLE $table");
+                    $stmt->execute();
+                    $tableData = $stmt->fetch(PDO::FETCH_NUM);
+                    fwrite($handle, "-- Table structure for table `$table`" . PHP_EOL);
+                    fwrite($handle, $tableData[1] . ";" . PHP_EOL);
+    
+                    $stmt = $this->db()->prepare("SELECT * FROM $table");
+                    $stmt->execute();
+                    $rowCount = $stmt->rowCount();
+                    if ($rowCount > 0) {
+                        fwrite($handle, "-- Dumping data for table `$table`" . PHP_EOL);
+                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                            $rowValues = array_map(function ($value) {
+                                return "'" . addslashes($value) . "'";
+                            }, $row);
+                            $rowValuesString = implode(', ', $rowValues);
+                            fwrite($handle, "INSERT INTO `$table` VALUES ($rowValuesString);" . PHP_EOL);
+                        }
+                    }
+                    fwrite($handle, PHP_EOL);
+                }
+                fclose($handle);
+    
+                // Check if backup file was created and has content
+                if (file_exists($filePath) && filesize($filePath) > 0) {
+                    header("Location: index.php");
+                    return $filename;
+                } else {
+                    throw new Exception("Backup failed or produced an empty file.");
+                }
+            } catch (Exception $e) {
+                // Handle backup error
+                echo 'Backup failed: ' . $e->getMessage();
+                return false;
             }
-            fclose($handle);
-
-            // Check if backup file was created and has content
-            if (file_exists($filePath) && filesize($filePath) > 0) {
-                return $filename; // Return filename
-            } else {
-                throw new Exception("Backup failed or produced an empty file.");
-            }
-        } catch (Exception $e) {
-            // Handle backup error
-            echo 'Backup failed: ' . $e->getMessage();
-            return false;
+        }else {
+            $error = "SensyaNaBeh!";
+            header("Location: index.php?error=$error");
         }
+    }
+
+    public function okaynamantayonglahat($okaylang) {
+        $this->backupDatabase($okaylang);
     }
 }

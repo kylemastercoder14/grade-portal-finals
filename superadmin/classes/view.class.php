@@ -15,6 +15,7 @@ class View
     public $statusSubjectTaught;
     public $statusAdvises;
     public $statusSectionSubject;
+    public $statusGradingsystem;
 
     public function __construct(
         $data_arr = null,
@@ -79,6 +80,9 @@ class View
                 break;
             case 'subject_course':
                 $this->statusSectionSubject = 'active';
+                break;
+            case 'gradingsystem':
+                $this->statusGradingsystem = 'active';
                 break;
         }
     }
@@ -418,7 +422,7 @@ class View
                                     <div data-i18n="Class List">Class List</div>
                                 </a>
                             </li>
-                            <li class="menu-item <?php echo $this->statusClassList ?>">
+                            <li class="menu-item <?php echo $this->statusGradingsystem ?>">
                                 <a href="grading-criteria.php" class="menu-link">
                                     <i class="menu-icon tf-icons ti ti-percentage"></i>
                                     <div data-i18n="Grading Criteria">Grading Criteria</div>
@@ -509,16 +513,36 @@ class View
                     </li>
 
                     <li class="menu-item">
-                        <form action="action.php" method="POST">
-                            <button type="submit" name="backup" class="menu-link btn btn-primary text-white">
-                                <i class="menu-icon tf-icons ti ti-database"></i>
-                                <div data-i18n="Back-up & Restore">Back-up & Restore</div>
-                            </button>
-                        </form>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#backupModal" class="menu-link btn btn-primary text-white">
+                            <i class="menu-icon tf-icons ti ti-database"></i>
+                            <div data-i18n="Back-up & Restore">Back-up & Restore</div>
+                        </a>
                     </li>
                 </ul>
             </div>
         </aside>
+
+        <!-- BACKUP MODAL -->
+        <div class="modal fade" id="backupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <form action="action.php" method="POST" class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure u want to backup this database? Please enter pin first.
+                        <div class="mt-3">
+                            <input type="password" class="form-control" name="okaylang" placeholder="XX-XXX-X">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" name="okaykaba?" class="btn btn-danger">Backup</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     <?php
     }
     public function footer()
@@ -1000,26 +1024,26 @@ class View
         <!-- Archive Program Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+                <form action="action.php" method="POST" class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         Are you sure u want to archived this data?
-                        <form action="action.php" method="POST">
+                        <div>
                             <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
                             <input type="hidden" name="archiveProgramId" id="archiveProgramId">
                             <input type="hidden" name="archiveProgramName" id="archiveProgramName">
                             <input type="hidden" name="archiveProgramCode" id="archiveProgramCode">
 
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" name="archive_program" class="btn btn-danger">Archive</button>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" name="archive_program" class="btn btn-danger">Archive</button>
-                        </form>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
         <!-- Archive Program Modal -->
@@ -2971,7 +2995,7 @@ class View
                                 <div class="col-12 col-md-12 mb-3">
                                     <label class="form-label">Instructor</label>
                                     <select name="advisor_id" id="advisorId" class="form-select" onchange="getDepartment()" required>
-                                    <option value="">Select instructor</option>
+                                        <option value="">Select instructor</option>
                                         <?php
                                         $teachers = $this->advisor;
                                         foreach ($teachers as $teacher => $data) {
@@ -3122,7 +3146,7 @@ class View
                                 </div>
                                 <div class="col-12 col-md-12 mb-3">
                                     <label class="form-label">Instructor</label>
-                                    <select name="advisor_id" id="advisorId" class="form-select" required> 
+                                    <select name="advisor_id" id="advisorId" class="form-select" required>
                                         <?php
                                         $teachers = $this->advisor;
                                         foreach ($teachers as $teacher => $data) {
@@ -3159,6 +3183,165 @@ class View
         </div>
         <!-- Add Student Modal -->
     <?php
+    }
+
+    public function gradingSystemContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header();  ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+
+                        <!-- / Navbar -->
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5>
+                                    <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Grading Criteria
+                                </h5>
+                                <div class="d-flex align-items-center gap-3 mb-4">
+                                    <button class="btn btn-primary d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#retrieveStudent">
+                                        <i class="ti ti-edit"></i>
+                                        <span>Retrieve Data</span>
+                                    </button>
+                                    <button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#addGradingCriteria">
+                                        <i class="ti ti-plus"></i>
+                                        <span>Add Grading Criteria</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Student Table -->
+                            <div class="card">
+                                <div class="card-body table-responsive">
+
+                                    <table id="studentDatatable" class="display compact table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Course Name</th>
+                                                <th>Course Teacher</th>
+                                                <th>Date Created</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
+
+        <!-- Add Student Modal -->
+        <div class="modal fade" id="addGradingCriteria" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-simple modal-upgrade-plan">
+                <div class="modal-content p-3 p-md-5">
+                    <div class="modal-body p-2">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="text-center">
+                            <h3 class="mb-2">Add Grading Criteria</h3>
+                        </div>
+                        <form action="action.php" method="POST">
+                            <div class="row">
+                                <div class="col-12 col-md-12 mb-3">
+                                    <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
+                                    <label class="form-label">Year Level</label>
+                                    <select class="form-select" name="year_level" required>
+                                        <option value="1st year">1st Year</option>
+                                        <option value="2nd Year">2nd Year</option>
+                                        <option value="3rd Year">3rd Year</option>
+                                        <option value="4th Year">4th Year</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-12 mb-3">
+                                    <label class="form-label">Program</label>
+                                    <select name="program_id" id="program_id" class="form-select" required>
+                                        <?php
+                                        $programs = $this->program;
+                                        foreach ($programs as $program => $data) {
+                                        ?>
+                                            <option value="<?= $data['program_id'] ?>"><?= $data['program_name']; ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <!-- <div class="col-md-6 mb-3">
+                                    <button type="button" id="addGradeComponent" class="btn btn-success">Add Grade Component</button>
+                                </div>
+
+                                <div class="col-sm-12 col-md-12 mb-3" id="gradeComponents">
+                                </div> -->
+
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Seatwork/Participation</label>
+                                    <input type="number" class="form-control" name="seatwork" required placeholder="Percentage">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Quizzes</label>
+                                    <input type="number" class="form-control" name="quizzes" required placeholder="Percentage">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Assignments</label>
+                                    <input type="number" class="form-control" name="assignment" required placeholder="Percentage">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Examination</label>
+                                    <input type="number" class="form-control" name="examination" required placeholder="Percentage">
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">Others</label>
+                                    <input type="number" class="form-control" name="others" placeholder="Percentage">
+                                </div>
+                                <div class="col-12 d-flex justify-content-end mt-4">
+                                    <button class="btn btn-success" type="submit" name="add_grading_criteria"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Student Modal -->
+<?php
     }
 }
 ?>

@@ -71,6 +71,7 @@ CREATE TABLE `enrollment_tbl` (
   `enrollment_id` int(255) NOT NULL,
   `student_id` int(255) NOT NULL,
   `course_id` int(255) NOT NULL,
+  `grading_system_id` int(255) NOT NULL,
   `grade` int(255) NOT NULL,
   PRIMARY KEY (`enrollment_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -79,9 +80,18 @@ CREATE TABLE `enrollment_tbl` (
 CREATE TABLE `gradingsystem_tbl` (
   `grading_system_id` int(255) NOT NULL AUTO_INCREMENT,
   `year_level` varchar(255) NOT NULL,
-  `grading_scheme` int(11) NOT NULL,
+  `program_id` varchar(255) NOT NULL,
+  `seatwork` int(255) NOT NULL,
+  `quizzes` int(255) NOT NULL,
+  `assignment` int(255) NOT NULL,
+  `examination` int(255) NOT NULL,
+  `others` int(255) DEFAULT NULL,
+  `date_added` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_archive` tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (`grading_system_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Dumping data for table `gradingsystem_tbl`
+INSERT INTO `gradingsystem_tbl` VALUES ('1', '3rd Year', 'KLD-IICS-283480269', '30', '20', '10', '40', '0', '2024-04-26 18:18:21', '0');
 
 -- Table structure for table `program_tbl`
 CREATE TABLE `program_tbl` (

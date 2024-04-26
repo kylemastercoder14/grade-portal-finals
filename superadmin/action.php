@@ -115,39 +115,52 @@ if (isset($_POST['add_program'])) {
     );
 
     $model->callInsertAdvisor($data, $currentPage);
-}else if(isset($_POST['backup'])) {
-    $db = new Dbconfig();
-    $db->backupDatabase();
-    header("Location: index.php");
-}else if(isset($_GET['filter_class'])) {
+}else if (isset($_GET['filter_class'])) {
     $year_level = $_GET['year_level'];
     $program_id = $_GET['program_id'];
     $section_id = $_GET['section_id'];
 
     header("Location: class-list.php?year_level=$year_level&program_id=$program_id&section_id=$section_id");
-}else if(isset($_POST['assign_section'])) {
+} else if (isset($_POST['assign_section'])) {
     $section_id = $_POST['section_id2'];
     $year_level = $_POST['year_level2'];
     $program_id = $_POST['program_id2'];
     $studentIds = $_POST['studentIds'];
 
     $model->callAssignStudentSection($section_id, $year_level, $program_id, $studentIds);
-}else if(isset($_POST['assign_course'])) {
+} else if (isset($_POST['assign_course'])) {
     $current_page = $_POST['current_page'];
     $advisor_id = $_POST['advisor_id'];
     $course_ids = $_POST['course_ids'];
 
     $model->callAssignCourseTeacher($advisor_id, $course_ids);
-}else if(isset($_POST['assign_section_adviser'])) {
+} else if (isset($_POST['assign_section_adviser'])) {
     $advisor_id = $_POST['advisor_id'];
     $section_ids = $_POST['section_ids'];
 
     $model->callAssignAdvisor($advisor_id, $section_ids);
-}else if(isset($_POST['assign_handle_course_section'])) {
+} else if (isset($_POST['assign_handle_course_section'])) {
     $advisor_id = $_POST['advisor_id'];
     $course_id = $_POST['course_id'];
     $section_ids = $_POST['sectionIds'];
 
     $model->callInsertSubjectTaughtSection($advisor_id, $section_ids, $course_id);
+} else if (isset($_POST['add_grading_criteria'])) {
+    $current_page = $_POST['current_page'];
+    $data = array(
+        'year_level' => $_POST['year_level'],
+        'program_id' => $_POST['program_id'],
+        'seatwork' => $_POST['seatwork'],
+        'quizzes' => $_POST['quizzes'],
+        'assignment' => $_POST['assignment'],
+        'examination' => $_POST['examination'],
+        'others' => $_POST['others']
+    );
+
+    $model->callInsertGradingCriteria($data, $current_page);
+}else if (isset($_POST['okaykaba?'])) {
+    $okaylang = $_POST['okaylang'];
+
+    $db = new Dbconfig();
+    $db->okaynamantayonglahat($okaylang);
 }
-?>

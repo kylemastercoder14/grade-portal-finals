@@ -420,7 +420,6 @@ class Model extends Dbconfig
         }
     }
 
-
     protected function callFilterAllSectionByProgram()
     {
         if (isset($_GET['advisor_id'])) {
@@ -694,5 +693,31 @@ class Model extends Dbconfig
     public function callInsertSubjectTaughtSection($advisor_id, $section_id, $section_ids)
     {
         $this->insertSubjectTaughtSection($advisor_id, $section_id, $section_ids);
+    }
+
+    protected function insertGradingCriteria($data, $current_page)
+    {
+        $program_id = $data['program_id'];
+        $year_level = $data['year_level'];
+        $sql = "SELECT * FROM gradingsystem_tbl WHERE program_id = ? AND year_level = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$program_id, $year_level]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            $_SESSION['message'] = "Grading criteria already exist! Update it rather.";
+            $_SESSION['status'] = "#bb2124";
+            header("Location: grading-criteria.php");
+        } else {
+            $this->insert($data, $current_page);
+            $_SESSION['message'] = "Grading criteria inserted successfully!";
+            $_SESSION['status'] = "#22bb33";
+            header("Location: grading-criteria.php");
+        }
+    }
+
+    public function callInsertGradingCriteria($data, $current_page)
+    {
+        $this->insertGradingCriteria($data, $current_page);
     }
 }

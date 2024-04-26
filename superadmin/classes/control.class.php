@@ -116,6 +116,11 @@ class Control {
         $this->view->sectionSubjectTaughtContent();
     }
 
+    public function gradingSystem()
+    {
+        $this->view->gradingSystemContent();
+    }
+
     public function controlCallHelper() {
         $this->model->callHelperFilter();
     }
