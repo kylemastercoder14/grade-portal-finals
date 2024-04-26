@@ -1578,7 +1578,7 @@ class View
                                 <div class="d-flex align-items-center gap-3 mb-4">
                                     <button class="btn btn-primary d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#retrieveStudent">
                                         <i class="ti ti-edit"></i>
-                                        <span>Retrieve Student</span>
+                                        <span>Retrieve Data</span>
                                     </button>
                                     <button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#addStudent">
                                         <i class="ti ti-plus"></i>
@@ -1995,14 +1995,26 @@ class View
                         <!-- / Navbar -->
                         <!-- Content -->
                         <div class="container-xxl flex-grow-1 container-p-y">
-                            <h5 class="py-2 mb-4">
-                                <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Instructors
-                            </h5>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5>
+                                    <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Instructors
+                                </h5>
+                                <div class="d-flex align-items-center gap-3 mb-4">
+                                    <button class="btn btn-primary d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#retrieveInstructor">
+                                        <i class="ti ti-edit"></i>
+                                        <span>Retrieve Data</span>
+                                    </button>
+                                    <button class="btn btn-success d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#addInstructor">
+                                        <i class="ti ti-plus"></i>
+                                        <span>Add Instructor</span>
+                                    </button>
+                                </div>
+                            </div>
                             <!-- Program Table -->
                             <div class="card">
-                                <div class="card-datatable table-responsive">
-                                    <table class="datatables-teacher table">
-                                        <thead class="border-top">
+                                <div class="card-body table-responsive">
+                                    <table id="instructorDatatable" class="display compact table">
+                                        <thead>
                                             <tr>
                                                 <th>Advisor Number</th>
                                                 <th>Name</th>
@@ -2818,8 +2830,7 @@ class View
                             <!-- Student Table -->
                             <div class="card">
                                 <div class="card-body table-responsive">
-
-                                    <table id="studentDatatable" class="display compact table">
+                                    <table id="subjectTaughDatatable" class="display compact table">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -2830,7 +2841,45 @@ class View
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr></tr>
+                                            <?php
+                                            $subjectTaughts = $this->subjectTaught;
+                                            if (!$subjectTaughts) {
+                                            ?>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <h4 class="text-center text-danger mt-2">No student found yet!</h4>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            } else {
+                                                foreach ($subjectTaughts as $subjectTaught => $data) {
+                                                    $dateString = $data['date_added'];
+                                                    $timestamp = strtotime($dateString);
+                                                    $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                                    $fullname = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'] . ", " . $data['title'];
+                                                ?>
+                                                    <tr>
+                                                        <td><?= $data['subject_taught_id'] ?></td>
+                                                        <td><?= $data['course_name'] ?></td>
+                                                        <td><?= $fullname ?></td>
+                                                        <td><?= $formattedDate ?></td>
+                                                        <td>
+                                                            <div class="d-inline-block text-nowrap"><button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical me-2"></i></button>
+                                                                <div class="dropdown-menu dropdown-menu-end m-0">
+
+                                                                    <button id="updateButton" data-bs-toggle="modal" data-bs-target="#editSection" href="javascript:0;" class="dropdown-item" onclick="editSectionDataJS('<?= htmlspecialchars(json_encode($data)); ?>')"><i class="ti ti-edit ms-1"></i>Update
+                                                                    </button>
+
+                                                                    <button href="javascript:0;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="archiveProgramDataJS('<?= htmlspecialchars(json_encode($data)); ?>')" class="dropdown-item bg-danger text-white"><i class="ti ti-trash ms-1"></i>Archive</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
                                 </div>

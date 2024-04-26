@@ -47,6 +47,7 @@ $control = new Control(1, 'advisor');
     <link rel="stylesheet" href="assets/vendor/libs/flatpickr/flatpickr.css" />
     <link rel="stylesheet" href="assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css" />
     <link rel="stylesheet" href="assets/css/toastify.min.css" />
+    <link rel="stylesheet" href="assets/css/dataTables.bootstrap5.css" />
 
     <!-- Helpers -->
     <script src="assets/vendor/js/helpers.js"></script>
@@ -93,7 +94,18 @@ $control = new Control(1, 'advisor');
     <script src="assets/js/forms-pickers.js"></script>
     <script src="assets/js/forms-extras.js"></script>
     <script src="assets/js/toastify.min.js"></script>
-    <!-- <script src="assets/js/modal-edit-user.js"></script> -->
+    <script src="assets/js/dataTables.bootstrap5.js"></script>
+    <script src="assets/js/dataTables.js"></script>
+
+    <script>
+        new DataTable('#instructorDatatable', {
+            lengthMenu: [
+                [5, 10, 25, 50, -1],
+                [5, 10, 25, 50, 'All']
+            ],
+            paging: true
+        });
+    </script>
 
     <script>
         // Function to fetch cities based on the selected province
