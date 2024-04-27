@@ -219,7 +219,7 @@ class Model extends Dbconfig
     }
     protected function readGradingCriteria($condition)
     {
-        $sql = "SELECT * FROM gradingsystem_tbl INNER JOIN program_tbl ON gradingsystem_tbl.program_id = program_tbl.program_id WHERE gradingsystem_tbl.is_archive = ?";
+        $sql = "SELECT * FROM grading_system_tbl INNER JOIN program_tbl ON grading_system_tbl.program_id = program_tbl.program_id WHERE grading_system_tbl.is_archive = ?";
         $stmt = $this->db()->prepare($sql);
         $stmt->execute([$condition]); // 0 is NOT  archive
         $data = $stmt->fetchAll();
@@ -688,7 +688,7 @@ class Model extends Dbconfig
     {
         $program_id = $data['program_id'];
         $year_level = $data['year_level'];
-        $sql = "SELECT * FROM gradingsystem_tbl WHERE program_id = ? AND year_level = ?";
+        $sql = "SELECT * FROM grading_system_tbl WHERE program_id = ? AND year_level = ?";
         $stmt = $this->db()->prepare($sql);
         $stmt->execute([$program_id, $year_level]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);

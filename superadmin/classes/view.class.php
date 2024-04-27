@@ -98,7 +98,7 @@ class View
             case 'subject_course':
                 $this->statusSectionSubject = 'active';
                 break;
-            case 'gradingsystem':
+            case 'grading_system':
                 $this->statusGradingsystem = 'active';
                 break;
             case 'semester':

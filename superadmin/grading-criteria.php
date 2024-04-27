@@ -2,7 +2,7 @@
 
 include "includes/includes.php";
 // kailangan parehas ang second argument nito sa table name ng database
-$control = new Control(1, 'gradingsystem');
+$control = new Control(1, 'grading_system');
 
 ?>
 
