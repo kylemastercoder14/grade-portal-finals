@@ -110,6 +110,24 @@ class View
     public function header()
     {
 ?>
+        <!-- LOGOUT MODAL -->
+        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <form action="action.php" method="POST" class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Log out</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure u want to logout?
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <a href="logout.php" name="" class="btn btn-danger">Backup</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
             <div class="container-xxl">
                 <div class="navbar-brand app-brand demo d-none d-xl-flex py-2 me-4">
@@ -342,7 +360,7 @@ class View
                         <li class="nav-item navbar-dropdown dropdown-user dropdown">
                             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                 <div class="avatar avatar-online">
-                                    <img src="https://github.com/shadcn.png" alt class="h-auto rounded-circle" />
+                                    <img src="assets/images/dummy.png" alt class="h-auto rounded-circle" />
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -351,12 +369,12 @@ class View
                                         <div class="d-flex">
                                             <div class="flex-shrink-0 me-3">
                                                 <div class="avatar avatar-online">
-                                                    <img src="https://github.com/shadcn.png" alt class="h-auto rounded-circle" />
+                                                    <img src="assets/images/dummy.png" alt="avatar" class="h-auto rounded-circle" />
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <span class="fw-medium d-block">Super Admin</span>
-                                                <small class="text-muted">Super Admin</small>
+                                                <span class="fw-medium d-block">KLD ADMIN</span>
+                                                <small class="text-muted">superadmin</small>
                                                 <!-- role dapat  -->
                                             </div>
                                         </div>
@@ -384,7 +402,7 @@ class View
                                     <div class="dropdown-divider"></div>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="logout.php">
+                                    <a data-bs-toggle="modal" data-bs-target="#logoutModal" class="dropdown-item" href="#">
                                         <i class="ti ti-logout me-2 ti-sm"></i>
                                         <span class="align-middle">Log Out</span>
                                     </a>
@@ -3536,7 +3554,7 @@ class View
             </div>
         </div>
         <!-- Add Student Modal -->
-<?php
+    <?php
     }
 
     public function semesterContent()
@@ -3693,17 +3711,18 @@ class View
             </div>
         </div>
         <!-- Add Semester Modal -->
-<?php
+    <?php
     }
 
-    public function signinContent() {
-        ?>
+    public function signinContent()
+    {
+    ?>
         <form action="action.php" method="POST">
             <input type="text" class="form-control" name="username">
             <input type="text" class="form-control" name="password">
             <button type="submit" name="signin" class="btn btn-success">Sign in</button>
         </form>
-        <?php
+<?php
     }
 }
 ?>

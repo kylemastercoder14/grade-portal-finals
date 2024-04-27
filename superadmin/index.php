@@ -6,7 +6,6 @@ $control = new Control($_SESSION['id'],'index');
 
 ?>
 
-
 <!DOCTYPE html>
 
 <html

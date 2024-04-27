@@ -54,6 +54,7 @@ class Control
         $semesterArchiveArr = $this->model->getAllSemester(1);
 
         $program_arr = null;
+        $sessionKicker = $this->model->sessionKicker($id);
 
 
         if (isset($_GET['program_id'], $_GET['year_level'], $_GET['section_id'])) {

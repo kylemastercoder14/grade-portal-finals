@@ -26,6 +26,13 @@ class Model extends Dbconfig
         return;
     }
 
+    // session kicker
+    public function sessionKicker($sessionId) {
+        if(!isset($sessionId)) {
+            header("Location: signin.php");
+        }
+    }
+
     // hari ng read
     protected function read()
     {
