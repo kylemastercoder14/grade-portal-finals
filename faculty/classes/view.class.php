@@ -2,52 +2,49 @@
 include('includes/includes.php');
 class View
 {
-    private $student_data;
+    private $data, $assignAdviser, $archivedAssignAdviser, $classList, $archivedClassList, $gradeCriteria, $archivedGradeCriteria;
     public $active_page;
-   
-    public function __construct($page) {
+
+    public $statusDashboard;
+    public $statusAdvises;
+    public $statusSubjectTaught;
+
+    public function __construct(
+        $page, 
+        $dataArr = null,
+        $unarchivedAssignAdviser = null,
+        $archivedAssignAdviser = null,
+        $unarchivedClassList = null,
+        $archivedClassList = null,
+        $unarchivedGradeCriteria = null,
+        $archivedGradeCriteria = null,
+    )
+    {
+        $this->data = $dataArr;
         $this->active_page = $page;
+        $this->assignAdviser = $unarchivedAssignAdviser;
+        $this->archivedAssignAdviser = $archivedAssignAdviser;
+        $this->classList = $unarchivedClassList;
+        $this->archivedClassList = $archivedClassList;
+        $this->gradeCriteria = $unarchivedGradeCriteria;
+        $this->archivedGradeCriteria = $archivedGradeCriteria;
 
         switch ($this->active_page) {
             case 'dashboard':
                 $this->statusDashboard = 'active';
                 break;
-            case 'program':
-                $this->statusPrograms = 'active';
-                break;
-            case 'section':
-                $this->statusSections = 'active';
-                break;
-            case 'course': //subject
-                $this->statusSubjects = 'active';
-                break;
-            case 'student':
-                $this->statusStudents = 'active';
-                break;
             case 'advisor':
-                $this->statusTeacher = 'active';
-                break;
-            case 'class_list':
-                $this->statusClassList = 'active';
+                $this->statusAdvises = 'active';
                 break;
             case 'subject_taught':
                 $this->statusSubjectTaught = 'active';
-                break;
-            case 'advises':
-                $this->statusAdvises = 'active';
-                break;
-            case 'subject_course':
-                $this->statusSectionSubject = 'active';
-                break;
-            case 'gradingsystem':
-                $this->statusGradingsystem = 'active';
                 break;
         }
     }
 
     public function header()
     {
-?>
+    ?>
         <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
             <div class="container-xxl">
                 <div class="navbar-brand app-brand demo d-none d-xl-flex py-2 me-4">
@@ -350,157 +347,22 @@ class View
                         </a>
                     </li>
 
-                    <li class="menu-item">
-                        <a href="javascript:void(0)" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons ti ti-layout-grid-add"></i>
-                            <div data-i18n="General">General</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item <?php echo $this->statusPrograms ?>">
-                                <a href="programs.php" class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-layout-sidebar"></i>
-                                    <div data-i18n="Programs">Programs</div>
-                                </a>
-                            </li>
-                            <li class="menu-item <?php echo $this->statusSections ?>">
-                                <a href="sections.php" class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-table"></i>
-                                    <div data-i18n="Sections">Sections</div>
-                                </a>
-                            </li>
-                            <li class="menu-item <?php echo $this->statusSubjects ?>">
-                                <a href="subjects.php" class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-book"></i>
-                                    <div data-i18n="Subjects">Subjects</div>
-                                </a>
-                            </li>
-                            <li class="menu-item <?php echo $this->statusClassList ?>">
-                                <a href="class-list.php" class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-folder"></i>
-                                    <div data-i18n="Class List">Class List</div>
-                                </a>
-                            </li>
-                            <li class="menu-item <?php echo $this->statusGradingsystem ?>">
-                                <a href="grading-criteria.php" class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-percentage"></i>
-                                    <div data-i18n="Grading Criteria">Grading Criteria</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="menu-item <?php echo $this->statusStudents ?>">
-                        <a href="students.php" class="menu-link">
+                    <li class="menu-item <?php echo $this->statusAdvises ?>">
+                        <a href="advisory.php" class="menu-link">
                             <i class="menu-icon tf-icons ti ti-users"></i>
-                            <div data-i18n="Students">Students</div>
+                            <div data-i18n="Advisory">Advisory</div>
                         </a>
                     </li>
 
-                    <li class="menu-item">
-                        <a href="javascript:void(0)" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons ti ti-id"></i>
-                            <div data-i18n="Faculties">Faculties</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item <?php echo $this->statusTeacher ?>">
-                                <a href="faculties.php" class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-users"></i>
-                                    <div data-i18n="Instructor">Instructors</div>
-                                </a>
-                            </li>
-                            <li class="menu-item <?php echo $this->statusSubjectTaught ?>">
-                                <a href="subject-taught.php" class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-notebook"></i>
-                                    <div data-i18n="Subject Taught">Subject Taught</div>
-                                </a>
-                            </li>
-                            <li class="menu-item <?php echo $this->statusAdvises ?>">
-                                <a href="assign-adviser.php" class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-building"></i>
-                                    <div data-i18n="Advisers">Advisers</div>
-                                </a>
-                            </li>
-                            <li class="menu-item <?php echo $this->statusSectionSubject ?>">
-                                <a href="assign-subject-teacher.php" class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-pencil"></i>
-                                    <div data-i18n="Section Subject Teacher">Section Subject Teacher</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="menu-item">
-                        <a href="registrar.php" class="menu-link">
-                            <i class="menu-icon tf-icons ti ti-user-circle"></i>
-                            <div data-i18n="Registrar">Registrar</div>
-                        </a>
-                    </li>
-
-                    <!-- Apps -->
-                    <li class="menu-item">
-                        <a href="javascript:void(0)" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons ti ti-toggle-left"></i>
-                            <div data-i18n="Others">Others</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="document-request.php" class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-file"></i>
-                                    <div data-i18n="Document Request">Document Request</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="announcement.php" class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-forms"></i>
-                                    <div data-i18n="Announcement">Announcement</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="feedbacks.php" class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-message"></i>
-                                    <div data-i18n="Feedbacks">Feedbacks</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="settings.php" class="menu-link">
-                                    <i class="menu-icon tf-icons ti ti-settings"></i>
-                                    <div data-i18n="Settings">Settings</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="menu-item">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#backupModal" class="menu-link btn btn-primary text-white">
-                            <i class="menu-icon tf-icons ti ti-database"></i>
-                            <div data-i18n="Back-up & Restore">Back-up & Restore</div>
+                    <li class="menu-item <?php echo $this->statusSubjectTaught ?>">
+                        <a href="handled-courses.php" class="menu-link">
+                            <i class="menu-icon tf-icons ti ti-notebook"></i>
+                            <div data-i18n="Handled Courses">Handled Courses</div>
                         </a>
                     </li>
                 </ul>
             </div>
         </aside>
-
-        <!-- BACKUP MODAL -->
-        <div class="modal fade" id="backupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <form action="action.php" method="POST" class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Are you sure u want to backup this database? Please enter pin first.
-                        <div class="mt-3">
-                            <input type="password" class="form-control" name="okaylang" placeholder="XX-XXX-X">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" name="okaykaba?" class="btn btn-danger">Backup</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
     <?php
     }
     public function footer()
@@ -527,6 +389,254 @@ class View
                 </div>
             </div>
         </footer>
+    <?php
+    }
+
+    public function dashboardContent()
+    {
+    ?>
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header($this->data); ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar($this->data); ?>
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            DASHBOARD
+                        </div>
+
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+    <?php
+    }
+
+    public function advisorContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header(); ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+                        <!-- / Navbar -->
+
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5 class="py-2">
+                                    <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Advisory
+                                </h5>
+                            </div>
+                            <!-- Program Table -->
+                            <div class="card">
+                                <div class="card-body table-responsive">
+                                    <table id="advisoryDatatable" class="table display compact">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Section</th>
+                                                <th>Date Created</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $assignAdvisers = $this->assignAdviser;
+                                            if (!$assignAdvisers) {
+                                            ?>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <h4 class="text-center text-danger mt-2">No data found yet!</h4>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            } else {
+                                                foreach ($assignAdvisers as $assignAdviser => $data) {
+                                                    $dateString = $data['date_added'];
+                                                    $timestamp = strtotime($dateString);
+                                                    $formattedDate = date("F j, Y, g:i a", $timestamp);
+                                                ?>
+                                                    <tr>
+                                                        <td><?= $data['advises_id'] ?></td>
+                                                        <td><?= $data['section_name'] ?></td>
+                                                        <td><?= $formattedDate ?></td>
+                                                        <td>
+                                                            <a class="btn btn-success" href="class-list.php?section_id=<?= $data['section_id'] ?>&program_id=<?= $data['program_id'] ?>&year_level=<?= $data['year_level'] ?>">View Class List</a>
+                                                        </td>
+                                                    </tr>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->navbar(); ?>
+
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
+    <?php
+    }
+
+    public function advisesContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header(); ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+                        <!-- / Navbar -->
+
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5 class="py-2">
+                                    <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Class List
+                                </h5>
+                            </div>
+                            <!-- Program Table -->
+                            <div class="card">
+                                <div class="card-body table-responsive">
+                                    <table id="advisoryDatatable" class="table display compact">
+                                        <form action="action.php" method="POST">
+                                        <thead>
+                                            <?php
+                                            $gradeCriteria = $this->gradeCriteria;
+                                            $others = $gradeCriteria['others'];
+                                            ?>
+                                            <tr>
+                                                <th>Student ID</th>
+                                                <th>Name</th>
+                                                <th>Quizzes</th>
+                                                <th>Assignments</th>
+                                                <th>Seatwork</th>
+                                                <th>Examination</th>
+                                                <?= $others != null ? "" : "<th>Others</th>" ?>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $classLists = $this->classList;
+                                            if (!$classLists) {
+                                            ?>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <h4 class="text-center text-danger mt-2">No data found yet!</h4>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            } else {
+                                                foreach ($classLists as $classList => $data) {
+                                                    $fullName = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'];
+                                                ?>
+                                                    <tr>
+                                                        <td style="min-width: 300px"><?= $data['student_id'] ?></td>
+                                                        <td style="min-width: 300px"><?= $fullName ?></td>
+                                                        <td><input type="text" class="form-control" name="quizzes" placeholder="<?= $gradeCriteria['quizzes'] . "%" ?>"></td>
+                                                        <td><input type="text" class="form-control" name="assignment" placeholder="<?= $gradeCriteria['assignment'] . "%" ?>"></td>
+                                                        <td><input type="text" class="form-control" name="seatwork" placeholder="<?= $gradeCriteria['seatwork'] . "%" ?>"></td>
+                                                        <td><input type="text" class="form-control" name="examination" placeholder="<?= $gradeCriteria['examination'] . "%" ?>"></td>
+                                                        <?= $others != null ? "" : '<td><input type="text" name="others" class="form-control" placeholder="'.$gradeCriteria['others'].'"></td>' ?>
+                                                        
+                                                    </tr>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
+                                        </tbody>
+                                        </form>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->navbar(); ?>
+
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
     <?php
     }
 }
