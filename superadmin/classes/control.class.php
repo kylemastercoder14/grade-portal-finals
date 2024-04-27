@@ -150,6 +150,11 @@ class Control
         $this->view->semesterContent();
     }
 
+    public function signin()
+    {
+        $this->view->signinContent();
+    }
+
     public function controlCallHelper()
     {
         $this->model->callHelperFilter();
@@ -163,5 +168,10 @@ class Control
     public function controlCallHelperFilterTeacherCourse()
     {
         $this->model->callHelperFilterTeacherCourse();
+    }
+
+    public function callStatusMessage($decode)
+    {
+       return $this->model->statusMessage($decode);
     }
 }

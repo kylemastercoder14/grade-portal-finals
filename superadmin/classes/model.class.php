@@ -1,10 +1,32 @@
 <?php
 
-session_start();
-
 class Model extends Dbconfig
 {
 
+    // hari ng insert
+    protected function insert($data, $currentPage)
+    {
+        $columns = implode(', ', array_keys($data));
+        $placeholders = implode(', ', array_fill(0, count($data), '?'));
+
+        $tableName = $currentPage . '_tbl';
+
+        $sql = "INSERT INTO $tableName ($columns) VALUES ($placeholders)";
+
+        $stmt = $this->db()->prepare($sql);
+
+        // Bind values to placeholders
+        $i = 1;
+        foreach ($data as $value) {
+            $stmt->bindValue($i++, $value);
+        }
+
+        $stmt->execute();
+
+        return;
+    }
+
+    // hari ng read
     protected function read()
     {
         $sql = "SELECT * FROM student_tbl";
@@ -14,9 +36,10 @@ class Model extends Dbconfig
 
         return $data;
     }
+
     protected function readById($id)
     {
-        $sql = "SELECT * FROM student_tbl WHERE student_id = ?";
+        $sql = "SELECT * FROM admin_tbl WHERE id = ?";
         $stmt = $this->db()->prepare($sql);
         $stmt->execute([$id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch a single row as an associative array
@@ -38,14 +61,27 @@ class Model extends Dbconfig
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($result) {
-            $_SESSION['message'] = "Progam already exist!";
-            $_SESSION['status'] = "#bb2124";
-            header("Location: programs.php");
+            header("Location: programs.php?message=0");
         } else {
             $this->insert($data, $currentPage);
-            $_SESSION['message'] = "Program inserted successfully!";
-            $_SESSION['status'] = "#22bb33";
-            header("Location: programs.php");
+            header("Location: programs.php?message=1");
+        }
+    }
+
+    public function statusMessage($decode)
+    {
+        if ($decode === '0') {
+            return ['message' => 'Data already exist.', 'status' => '#bb2124'];
+        } else if ($decode === '1') {
+            return ['message' => 'Inserted successfully.', 'status' => '#22bb33'];
+        } else if ($decode === '2') {
+            return ['message' => 'Updated successfully.', 'status' => '#22bb33'];
+        } else if ($decode === '3') {
+            return ['message' => 'Archived successfully.', 'status' => '#22bb33'];
+        } else if($decode === '4'){
+            return ['message' => 'Retrived successfully.', 'status' => '#22bb33'];
+        }else {
+            return ['message' => 'Something went wrong. Please try again later.', 'status' => '#bb2124'];
         }
     }
     // call sa action
@@ -64,21 +100,16 @@ class Model extends Dbconfig
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($result) {
-            $_SESSION['message'] = "Section already exist!";
-            $_SESSION['status'] = "#bb2124";
-            header("Location: sections.php");
+            header("Location: sections.php?message=0");
         } else {
             $this->insert($data, $currentPage);
-            $_SESSION['message'] = "Section inserted successfully!";
-            $_SESSION['status'] = "#22bb33";
-            header("Location: sections.php");
+            header("Location: sections.php?message=1");
         }
     }
     public function callInsertSection($data, $currentPage)
     {
         $this->insertSection($data, $currentPage);
     }
-
     // pang-protekta ng insert query kasama ang sanitation
     protected function insertSubject($data, $currentPage)
     {
@@ -89,14 +120,10 @@ class Model extends Dbconfig
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($result) {
-            $_SESSION['message'] = "Course already exist!";
-            $_SESSION['status'] = "#bb2124";
-            header("Location: subjects.php");
+            header("Location: subjects.php?message=0");
         } else {
             $this->insert($data, $currentPage);
-            $_SESSION['message'] = "Course inserted successfully!";
-            $_SESSION['status'] = "#22bb33";
-            header("Location: subjects.php");
+            header("Location: subjects.php?message=1");
         }
     }
 
@@ -114,14 +141,10 @@ class Model extends Dbconfig
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($result) {
-            $_SESSION['message'] = "Student already exist!";
-            $_SESSION['status'] = "#bb2124";
-            header("Location: students.php");
+            header("Location: students.php?message=0");
         } else {
             $this->insert($data, $currentPage);
-            $_SESSION['message'] = "Student inserted successfully!";
-            $_SESSION['status'] = "#22bb33";
-            header("Location: students.php");
+            header("Location: students.php?message=1");
         }
     }
     public function callInsertStudent($data, $currentPage)
@@ -137,14 +160,10 @@ class Model extends Dbconfig
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($result) {
-            $_SESSION['message'] = "Instructor already exist!";
-            $_SESSION['status'] = "#bb2124";
-            header("Location: faculties.php");
+            header("Location: faculties.php?message=0");
         } else {
             $this->insert($data, $currentPage);
-            $_SESSION['message'] = "Instructor inserted successfully!";
-            $_SESSION['status'] = "#22bb33";
-            header("Location: faculties.php");
+            header("Location: faculties.php?message=1");
         }
     }
     public function callInsertAdvisor($data, $currentPage)
@@ -242,27 +261,6 @@ class Model extends Dbconfig
     {
         return $this->readAdvisor($condition);
     }
-    protected function insert($data, $currentPage)
-    {
-        $columns = implode(', ', array_keys($data));
-        $placeholders = implode(', ', array_fill(0, count($data), '?'));
-
-        $tableName = $currentPage . '_tbl';
-
-        $sql = "INSERT INTO $tableName ($columns) VALUES ($placeholders)";
-
-        $stmt = $this->db()->prepare($sql);
-
-        // Bind values to placeholders
-        $i = 1;
-        foreach ($data as $value) {
-            $stmt->bindValue($i++, $value);
-        }
-
-        $stmt->execute();
-
-        return;
-    }
     public function callEditProgram($data, $currentPage)
     {
         $this->editProgram($data, $currentPage);
@@ -280,13 +278,9 @@ class Model extends Dbconfig
             $stmt = $this->db()->prepare($sql2);
             $stmt->execute([$data['program_name'], $data['program_code'], $data['program_id']]);
 
-            $_SESSION['message'] = "Program updated successfully!";
-            $_SESSION['status'] = "#22bb33";
-            header("Location: programs.php");
+            header("Location: programs.php?message=2");
         } else {
-            $_SESSION['message'] = "Error updating program!";
-            $_SESSION['status'] = "#bb2124";
-            header("Location: programs.php");
+            header("Location: programs.php?message=5");
         }
     }
     public function callArchiveProgram($data, $currentPage)
@@ -300,9 +294,7 @@ class Model extends Dbconfig
         $stmt = $this->db()->prepare($sql);
         $stmt->execute([0, $program_id]); // 1 is archived, 0 is NOT
 
-        $_SESSION['message'] = "Program retrieved successfully!";
-        $_SESSION['status'] = "#22bb33";
-        header('Location: programs.php');
+        header('Location: programs.php?message=4');
     }
     public function callUnarchiveProgram($program_id, $currentPage)
     {
@@ -315,9 +307,7 @@ class Model extends Dbconfig
         $stmt = $this->db()->prepare($sql);
         $stmt->execute([1, $data['program_id']]); // 1 is archived, 0 is NOT
 
-        $_SESSION['message'] = "Program archived successfully!";
-        $_SESSION['status'] = "#22bb33";
-        header('Location: programs.php');
+        header('Location: programs.php?message=3');
     }
     protected function readSectionById($id)
     {
@@ -455,12 +445,10 @@ class Model extends Dbconfig
                 if ($result) {
                     return $result;
                 } else {
-                    $_SESSION['message'] = "No student found in this filter!";
-                    $_SESSION['status'] = "#bb2124";
+                    header("Location: ?message=5");
                 }
             } else {
-                $_SESSION['message'] = "No student found in this filter!";
-                $_SESSION['status'] = "#bb2124";
+                header("Location: ?message=5");
             }
         }
     }
@@ -484,9 +472,7 @@ class Model extends Dbconfig
             $stmt->execute([$section_id, $year_level, $program_id, $studentId]);
         }
 
-        $_SESSION['message'] = "Student's section updated successfully!";
-        $_SESSION['status'] = "#22bb33";
-        header('Location: class-list.php');
+        header('Location: class-list.php?message=2');
     }
     public function callAssignStudentSection($section_id, $year_level, $program_id, $studentIds)
     {
@@ -518,18 +504,13 @@ class Model extends Dbconfig
                     // If no data exists, insert the course_id
                     $stmtInsert->execute([$advisor_id, $courseId]);
                     // Set success message
-                    $_SESSION['message'] = "Course instructor assigned successfully!";
-                    $_SESSION['status'] = "#22bb33";
+                    header("Location: ?message=1");
                 } else {
                     // Set success message
-                    $_SESSION['message'] = "Course instructor already assigned!";
-                    $_SESSION['status'] = "#bb2124";
+                    header("Location: ?message=0");
                 }
             }
         }
-
-        // Redirect to subject-taught.php after processing all courses
-        header("Location: subject-taught.php");
     }
     public function callAssignCourseTeacher($advisor_id, $course_ids)
     {
@@ -561,18 +542,13 @@ class Model extends Dbconfig
                     // If no data exists, insert the sectionId
                     $stmtInsert->execute([$advisor_id, $sectionId]);
                     // Set success message
-                    $_SESSION['message'] = "Section adviser assigned successfully!";
-                    $_SESSION['status'] = "#22bb33";
+                    header("Location: ?message=1");
                 } else {
                     // Set success message
-                    $_SESSION['message'] = "Section adviser already assigned!";
-                    $_SESSION['status'] = "#bb2124";
+                    header("Location: ?message=0");
                 }
             }
         }
-
-        // Redirect to subject-taught.php after processing all courses
-        header("Location: assign-adviser.php");
     }
     public function callAssignAdvisor($advisor_id, $section_ids)
     {
@@ -689,18 +665,13 @@ class Model extends Dbconfig
                     // If no data exists, insert the course_id
                     $stmtInsert->execute([$advisor_id, $sectionId, $course_id]);
                     // Set success message
-                    $_SESSION['message'] = "Course instructor assigned to section successfully!";
-                    $_SESSION['status'] = "#22bb33";
+                    header("Location: ?message=1");
                 } else {
                     // Set success message
-                    $_SESSION['message'] = "Course instructor already assigned!";
-                    $_SESSION['status'] = "#bb2124";
+                    header("Location: ?message=0");
                 }
             }
         }
-
-        // Redirect to assign-subject-teacher.php after processing all courses
-        header("Location: assign-subject-teacher.php");
     }
     public function callInsertSubjectTaughtSection($advisor_id, $section_id, $section_ids)
     {
@@ -716,14 +687,10 @@ class Model extends Dbconfig
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($result) {
-            $_SESSION['message'] = "Grading criteria already exist! Update it rather.";
-            $_SESSION['status'] = "#bb2124";
-            header("Location: grading-criteria.php");
+            header("Location: ?message=0");
         } else {
             $this->insert($data, $current_page);
-            $_SESSION['message'] = "Grading criteria inserted successfully!";
-            $_SESSION['status'] = "#22bb33";
-            header("Location: grading-criteria.php");
+            header("Location: ?message=1");
         }
     }
     public function callInsertGradingCriteria($data, $current_page)
@@ -740,18 +707,65 @@ class Model extends Dbconfig
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($result) {
-            $_SESSION['message'] = "Semester on this academic year is already exist!";
-            $_SESSION['status'] = "#bb2124";
-            header("Location: semester.php");
+            header("Location: ?message=0");
         } else {
             $this->insert($data, $current_page);
-            $_SESSION['message'] = "Semester on this academic year inserted successfully.";
-            $_SESSION['status'] = "#22bb33";
-            header("Location: semester.php");
+            header("Location: ?message=1");
         }
     }
     public function callInsertSemester($data, $current_page)
     {
         $this->insertSemester($data, $current_page);
+    }
+
+    protected function signin($username, $password)
+    {
+        $encryptedUsername = $this->caesar_cipher_encrypt($username, 21);
+        $encryptedPassword = $this->caesar_cipher_encrypt($password, 21);
+
+        $sql = "SELECT * FROM admin_tbl WHERE username = ? AND password = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$encryptedUsername, $encryptedPassword]);
+        $result = $stmt->fetch();
+
+        if ($result) {
+            session_start();
+            $_SESSION['id'] = $result['id'];
+            header("Location: index.php");
+        } else {
+            header("Location: faculties.php");
+        }
+    }
+
+    public function callSignin($username, $password)
+    {
+        $this->signin($username, $password);
+    }
+
+    protected function caesar_cipher_encrypt($text, $shift)
+    {
+        $encrypted_text = "";
+        $text_length = strlen($text);
+        for ($i = 0; $i < $text_length; $i++) {
+            $char = $text[$i];
+            if (ctype_alpha($char)) {
+                $is_lower = ctype_lower($char);
+                $ascii_code = ord($char);
+                $shifted = $ascii_code + $shift;
+                if ($is_lower) {
+                    if ($shifted > ord('z')) {
+                        $shifted -= 26;
+                    }
+                } else {
+                    if ($shifted > ord('Z')) {
+                        $shifted -= 26;
+                    }
+                }
+                $encrypted_text .= chr($shifted);
+            } else {
+                $encrypted_text .= $char;
+            }
+        }
+        return $encrypted_text;
     }
 }

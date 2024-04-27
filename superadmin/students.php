@@ -249,21 +249,21 @@ $control = new Control(1, 'student');
         });
     </script>
 
-    <script>
+<script>
+        <?php
+        $messageStatus = $control->callStatusMessage($_GET['message']);
+        ?>
         Toastify({
-            text: "<?= $_SESSION['message'] ?>",
+            text: "<?php echo $messageStatus['message'] ?>",
             duration: 3000,
             gravity: "top",
             position: "right",
             stopOnFocus: true,
             style: {
-                background: "<?= $_SESSION['status'] ?>",
+                background: "<?php echo $messageStatus['status'] ?>",
             },
             onClick: function() {}
         }).showToast();
-
-        // Unset the session after displaying the message
-        <?php unset($_SESSION['message']); ?>
     </script>
 </body>
 

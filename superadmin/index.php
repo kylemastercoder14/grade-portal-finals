@@ -1,7 +1,8 @@
 <?php
 
 include "includes/includes.php";
-$control = new Control(1,'index');
+session_start();
+$control = new Control($_SESSION['id'],'index');
 
 ?>
 
@@ -115,5 +116,6 @@ $control = new Control(1,'index');
 
     <!-- Page JS -->
     <script src="assets/js/dashboards-analytics.js"></script>
+    
   </body>
 </html>

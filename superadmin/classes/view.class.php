@@ -355,8 +355,8 @@ class View
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <span class="fw-medium d-block"><?php echo $this->data['firstname']; ?></span>
-                                                <small class="text-muted"><?php echo  $this->data['firstname']; ?></small>
+                                                <span class="fw-medium d-block">Super Admin</span>
+                                                <small class="text-muted">Super Admin</small>
                                                 <!-- role dapat  -->
                                             </div>
                                         </div>
@@ -3694,6 +3694,16 @@ class View
         </div>
         <!-- Add Semester Modal -->
 <?php
+    }
+
+    public function signinContent() {
+        ?>
+        <form action="action.php" method="POST">
+            <input type="text" class="form-control" name="username">
+            <input type="text" class="form-control" name="password">
+            <button type="submit" name="signin" class="btn btn-success">Sign in</button>
+        </form>
+        <?php
     }
 }
 ?>

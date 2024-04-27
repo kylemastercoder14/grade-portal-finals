@@ -170,4 +170,8 @@ if (isset($_POST['add_program'])) {
         'year' => $_POST['year']
     );
     $model->callInsertSemester($data, $current_page);
+}else if (isset($_POST['signin'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $model->callSignin($username, $password);
 }
