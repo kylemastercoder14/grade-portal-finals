@@ -17,7 +17,7 @@ class Model extends Dbconfig
         $sql = "SELECT * FROM student_tbl WHERE student_id = ?";
         $stmt = $this->db()->prepare($sql);
         $stmt->execute([$id]);
-        $data = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch a single row as an associative array
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $data;
     }
@@ -46,5 +46,33 @@ class Model extends Dbconfig
         $stmt->execute();
 
         return;
+    }
+
+    protected function signin($student_id, $password)
+    {
+        $sql = "SELECT * FROM student_tbl WHERE student_id = ? AND password = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$student_id, $password]);
+        $result = $stmt->fetch();
+
+        if ($result) {
+            session_start();
+            $_SESSION['id'] = $result['id'];
+            header("Location: index.php");
+        } else {
+            header("Location: signin.php");
+        }
+    }
+
+    public function callSignin($student_id, $password)
+    {
+        $this->signin($student_id, $password);
+    }
+
+    // session kicker
+    public function sessionKicker($sessionId) {
+        if(!isset($sessionId)) {
+            header("Location: signin.php");
+        }
     }
 }

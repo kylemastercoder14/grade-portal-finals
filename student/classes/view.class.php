@@ -255,7 +255,7 @@ class View
                         <li class="nav-item navbar-dropdown dropdown-user dropdown">
                             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                                 <div class="avatar avatar-online">
-                                    <img src="https://github.com/shadcn.png" alt class="h-auto rounded-circle" />
+                                    <img src="<?= $this->data['profile_img'] == null || "" ? "assets/images/dummy.png" : $this->data['profile_img'] ?>" alt class="h-auto rounded-circle" />
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -264,7 +264,7 @@ class View
                                         <div class="d-flex">
                                             <div class="flex-shrink-0 me-3">
                                                 <div class="avatar avatar-online">
-                                                    <img src="https://github.com/shadcn.png" alt class="h-auto rounded-circle" />
+                                                    <img src="<?= $this->data['profile_img'] == null || "" ? "assets/images/dummy.png" : $this->data['profile_img'] ?>" alt class="h-auto rounded-circle" />
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
@@ -327,35 +327,42 @@ class View
                     </li>
 
                     <li class="menu-item">
-                        <a href="students.php" class="menu-link">
+                        <a href="grades.php" class="menu-link">
                             <i class="menu-icon tf-icons ti ti-percentage"></i>
                             <div data-i18n="Grades">Grades</div>
                         </a>
                     </li>
 
                     <li class="menu-item">
-                        <a href="students.php" class="menu-link">
+                        <a href="advising.php" class="menu-link">
+                            <i class="menu-icon tf-icons ti ti-calendar"></i>
+                            <div data-i18n="Advising">Advising</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item">
+                        <a href="courses.php" class="menu-link">
                             <i class="menu-icon tf-icons ti ti-notebook"></i>
                             <div data-i18n="Course Enrolled">Course Enrolled</div>
                         </a>
                     </li>
 
                     <li class="menu-item">
-                        <a href="registrar.php" class="menu-link">
+                        <a href="request-documents.php" class="menu-link">
                             <i class="menu-icon tf-icons ti ti-note"></i>
                             <div data-i18n="Request Document">Request Document</div>
                         </a>
                     </li>
 
                     <li class="menu-item">
-                        <a href="registrar.php" class="menu-link">
+                        <a href="feedbacks.php" class="menu-link">
                             <i class="menu-icon tf-icons ti ti-message"></i>
                             <div data-i18n="Feedbacks">Feedbacks</div>
                         </a>
                     </li>
 
                     <li class="menu-item">
-                        <a href="registrar.php" class="menu-link">
+                        <a href="settings.php" class="menu-link">
                             <i class="menu-icon tf-icons ti ti-settings"></i>
                             <div data-i18n="Settings">Settings</div>
                         </a>
@@ -363,28 +370,6 @@ class View
                 </ul>
             </div>
         </aside>
-
-        <!-- BACKUP MODAL -->
-        <div class="modal fade" id="backupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <form action="action.php" method="POST" class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Are you sure u want to backup this database? Please enter pin first.
-                        <div class="mt-3">
-                            <input type="password" class="form-control" name="okaylang" placeholder="XX-XXX-X">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" name="okaykaba?" class="btn btn-danger">Backup</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
     <?php
     }
 
@@ -433,11 +418,19 @@ class View
                         <?php $this->navbar();  ?>
                         <!-- / Navbar -->
                         <!-- Content -->
-                        <div class="container-xxl flex-grow-1 container-p-y">
-                            <h1>Dashboard</h1>
-                            <!-- Program Table -->
-                            
-                            <!-- Program Table -->
+                        <div class="container-xxl flex-grow-1 container-p-y mt-5">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="card-title">Announcement</h3>
+                                    <p>Hi Kyle Andre David Lim, kindly read about some of the important announcement below.</p>
+                                    <p>You may now send a request for advising in your respective instructor by navigating to <b class="text-success">Advising Tab >> Send a Request for Advising</b>. This is for students with regular standing status only.</p>
+                                    <p>For students with irregular standing status, you may contact our College Registrar.</p>
+                                    <div class="d-flex align-items-center justify-content-center gap-3">
+                                        <img style="width: 700px; height: 500px; object-fit: cover;" src="assets/images/announce1.jpg" alt="">
+                                        <img style="width: 700px; height: 500px; object-fit: cover;" src="assets/images/announce2.jpg" alt="">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!--/ Content -->
                         <!-- Footer -->
@@ -467,6 +460,162 @@ class View
             </a>
         </div>
     <?php
+    }
+
+    public function signinContent()
+    {
+    ?>
+        <style>
+            body {
+                overflow: hidden;
+            }
+
+            .school-bg {
+                position: absolute;
+                background-position: center;
+                background-size: cover;
+                filter: blur(10px);
+            }
+
+            .overlay-black {
+                position: fixed;
+                background: rgba(0, 0, 0, 0.5);
+                width: 100%;
+                height: 100vh;
+                z-index: 3;
+            }
+
+            .signin-content {
+                display: flex;
+                position: relative;
+                flex-direction: column;
+                width: 100%;
+                align-items: center;
+                justify-content: center;
+                z-index: 99;
+                gap: 2rem;
+                padding: 5rem 0;
+            }
+
+            .logo-signin {
+                width: 400px;
+            }
+
+            .header-content {
+                padding: 10px 30px;
+                background-color: rgba(0, 0, 0, 0.6);
+                color: #fff;
+            }
+
+            .signin-content form {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                width: 40rem;
+            }
+        </style>
+        <div class="position-relative">
+            <img class="school-bg" src="assets/images/school_image.jpg" alt="school-kld">
+            <div class="overlay-black"></div>
+        </div>
+        <div class="signin-content">
+            <img src="assets/images/KLD.png" class="logo-signin" alt="logo-kld">
+            <p class="header-content">
+                Login to view your grades, access academic advising tools, and stay
+                updated on your educational journey.
+            </p>
+            <form action="action.php" method="POST">
+                <h3 class="fw-bold mb-0">Welcome, KLD Regals! 👋</h3>
+                <span>Sign in first to get started.</span>
+                <div class="form-group mb-3 mt-2">
+                    <label class="form-label">Student Number</label>
+                    <input type="text" class="form-control" name="student_id" placeholder="Enter student number" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" placeholder="Enter password" required>
+                </div>
+                <button type="submit" name="signin" class="btn btn-success w-100 mt-2">Sign in</button>
+            </form>
+        </div>
+    <?php
+    }
+
+    public function courseEnrolledContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header();  ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+
+                        <!-- / Navbar -->
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5>
+                                    <span class="text-muted fw-light"><a href="index.php" class="text-success">Dashboard</a> /</span> Course Enrolled
+                                </h5>
+                            </div>
+                            <!-- Student Table -->
+                            <div class="card">
+                                <div class="card-body table-responsive">
+                                    <table id="semesterDatatable" class="display compact table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Course</th>
+                                                <th>Course Code</th>
+                                                <th>Units</th>
+                                                <th>Instructor</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Program Table -->
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
+<?php
     }
 }
 ?>

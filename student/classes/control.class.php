@@ -10,6 +10,8 @@ class Control {
     public function __construct($id = null , $page = null){
         $this->model = new Model();
         $data_arr = $this->model->getById($id);
+
+        $sessionKicker = $this->model->sessionKicker($id);
         
         $this->view = new View(
             $data_arr, 
@@ -22,6 +24,16 @@ class Control {
     public function dashboard()
     {
         $this->view->dashboardContent();
+    }
+
+    public function signin()
+    {
+        $this->view->signinContent();
+    }
+
+    public function coursesEnrolled()
+    {
+        $this->view->courseEnrolledContent();
     }
 }
 ?>

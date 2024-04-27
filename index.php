@@ -75,8 +75,8 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="http://localhost/grade-portal-finals/superadmin">Registrar</a></li>
-                        <li><a class="dropdown-item" href="http://localhost/grade-portal-finals/faculties">Faculty</a></li>
-                        <li><a class="dropdown-item" href="http://localhost/grade-portal-finals/students">Student</a></li>
+                        <li><a class="dropdown-item" href="http://localhost/grade-portal-finals/faculty">Faculty</a></li>
+                        <li><a class="dropdown-item" href="http://localhost/grade-portal-finals/student">Student</a></li>
                     </ul>
                 </div>
             </div>
