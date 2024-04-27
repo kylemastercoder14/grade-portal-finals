@@ -3,7 +3,7 @@
 include "includes/includes.php";
 session_start();
 // kailangan parehas ang second argument nito sa table name ng database
-$control = new Control($_SESSION['id'], 'subject_taught');
+$control = new Control($_SESSION['id'], 'grading_system');
 
 ?>
 
@@ -58,7 +58,7 @@ $control = new Control($_SESSION['id'], 'subject_taught');
 
 <body>
 
-    <?php $control->advising();  ?>
+    <?php $control->grades();  ?>
 
 
     <!-- Core JS -->

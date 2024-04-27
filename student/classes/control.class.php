@@ -26,6 +26,16 @@ class Control {
         $this->view->dashboardContent();
     }
 
+    public function advising()
+    {
+        $this->view->advisingContent();
+    }
+
+    public function grades()
+    {
+        $this->view->gradesContent();
+    }
+
     public function signin()
     {
         $this->view->signinContent();

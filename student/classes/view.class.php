@@ -418,7 +418,19 @@ class View
                         <?php $this->navbar();  ?>
                         <!-- / Navbar -->
                         <!-- Content -->
-                        <div class="container-xxl flex-grow-1 container-p-y mt-5">
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="ti ti-home ti-xl"></i>
+                                        <div class="d-flex flex-column">
+                                            <p class="my-0 h4">Dashboard</p>
+                                            <small class="my-0">A.Y (2023 - 2024) | 2ND SEMESTER | INSTITUTE OF INFORMATION AND COMPUTING SCIENCES</small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
                             <div class="card">
                                 <div class="card-body">
                                     <h3 class="card-title">Announcement</h3>
@@ -429,6 +441,193 @@ class View
                                         <img style="width: 700px; height: 500px; object-fit: cover;" src="assets/images/announce1.jpg" alt="">
                                         <img style="width: 700px; height: 500px; object-fit: cover;" src="assets/images/announce2.jpg" alt="">
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
+    <?php
+    }
+
+    public function advisingContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header();  ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+                        <!-- / Navbar -->
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="ti ti-calendar ti-xl"></i>
+                                        <div class="d-flex flex-column">
+                                            <p class="my-0 h4">Advised Courses</p>
+                                            <small class="my-0">A.Y (2023 - 2024) | 2ND SEMESTER | INSTITUTE OF INFORMATION AND COMPUTING SCIENCES</small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="bg-danger p-2 text-white rounded mb-3" style="border: 2px solid red;">
+                                        <p class="my-0">Hi Kyle Andre David Lim,</p>
+                                        <p class="my-0">Please contact your adviser under your program for the advising process. Just click the button below.</p>
+                                    </div>
+                                    <a href="#" class="btn btn-outline-success">
+                                        <i class="ti ti-mail ti-sm me-2"></i>
+                                        <span>Request for Advising</span>
+                                    </a>
+                                    <br>
+                                    <small>You have sent a total of (0) advising requests this semester.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/ Content -->
+                        <!-- Footer -->
+                        <?php $this->footer();  ?>
+                        <!-- / Footer -->
+
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!--/ Content wrapper -->
+                </div>
+
+                <!--/ Layout container -->
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
+
+        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        <div class="drag-target"></div>
+
+        <!--/ Layout wrapper -->
+
+        <div class="buy-now">
+            <a href="#" class="btn btn-danger btn-buy-now">
+                <i class="ti ti-headset ti-sm"></i>
+            </a>
+        </div>
+    <?php
+    }
+
+    public function gradesContent()
+    {
+    ?>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+            <div class="layout-container">
+                <!-- Header -->
+                <?php $this->header();  ?>
+                <!-- / Header -->
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Navbar -->
+                        <?php $this->navbar();  ?>
+                        <!-- / Navbar -->
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="ti ti-note ti-xl"></i>
+                                        <div class="d-flex flex-column">
+                                            <p class="my-0 h4">eCOG</p>
+                                            <small class="my-0">These are your current grades of all courses for the 2nd semester of A.Y (2023 - 2024).</small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Academic Year</th>
+                                                <th>Semester</th>
+                                                <th>Course Title</th>
+                                                <th>Grade</th>
+                                                <th>Units</th>
+                                                <th>Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>2023 - 2024</td>
+                                                <td>2nd Semester</td>
+                                                <td>Evaluation of Business Performance</td>
+                                                <td>1.25</td>
+                                                <td>3</td>
+                                                <td><span class="badge text-bg-success">PASSED</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>IT Outsourcing and Offshoring</td>
+                                                <td>3.50</td>
+                                                <td>3</td>
+                                                <td><span class="badge text-bg-danger">FAILED</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>Capstone Project 1</td>
+                                                <td>1.00</td>
+                                                <td>3</td>
+                                                <td><span class="badge text-bg-success">PASSED</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td><span class="badge text-bg-success">1.25</span></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
