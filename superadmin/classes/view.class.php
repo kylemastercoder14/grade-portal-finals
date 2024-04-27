@@ -122,7 +122,7 @@ class View
                         Are you sure u want to logout?
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <a href="logout.php" name="" class="btn btn-danger">Backup</a>
+                            <a href="logout.php" class="btn btn-danger">Logout</a>
                         </div>
                     </div>
                 </form>
@@ -3717,11 +3717,79 @@ class View
     public function signinContent()
     {
     ?>
-        <form action="action.php" method="POST">
-            <input type="text" class="form-control" name="username">
-            <input type="text" class="form-control" name="password">
-            <button type="submit" name="signin" class="btn btn-success">Sign in</button>
-        </form>
+        <style>
+            body {
+                overflow: hidden;
+            }
+
+            .school-bg {
+                position: absolute;
+                background-position: center;
+                background-size: cover;
+                filter: blur(10px);
+            }
+
+            .overlay-black {
+                position: fixed;
+                background: rgba(0, 0, 0, 0.5);
+                width: 100%;
+                height: 100vh;
+                z-index: 3;
+            }
+
+            .signin-content {
+                display: flex;
+                position: relative;
+                flex-direction: column;
+                width: 100%;
+                align-items: center;
+                justify-content: center;
+                z-index: 99;
+                gap: 2rem;
+                padding: 5rem 0;
+            }
+
+            .logo-signin {
+                width: 400px;
+            }
+
+            .header-content {
+                padding: 10px 30px;
+                background-color: rgba(0, 0, 0, 0.6);
+                color: #fff;
+            }
+
+            .signin-content form {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                width: 40rem;
+            }
+        </style>
+        <div class="position-relative">
+            <img class="school-bg" src="assets/images/school_image.jpg" alt="school-kld">
+            <div class="overlay-black"></div>
+        </div>
+        <div class="signin-content">
+            <img src="assets/images/KLD.png" class="logo-signin" alt="logo-kld">
+            <p class="header-content">
+                Login to view your grades, access academic advising tools, and stay
+                updated on your educational journey.
+            </p>
+            <form action="action.php" method="POST">
+                <h3 class="fw-bold mb-0">Welcome, KLD Admin! 👋</h3>
+                <span>Sign in first to get started.</span>
+                <div class="form-group mb-3 mt-2">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username" placeholder="Enter username" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" placeholder="Enter password" required>
+                </div>
+                <button type="submit" name="signin" class="btn btn-success w-100 mt-2">Sign in</button>
+            </form>
+        </div>
 <?php
     }
 }

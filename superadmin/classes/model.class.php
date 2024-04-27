@@ -87,6 +87,8 @@ class Model extends Dbconfig
             return ['message' => 'Archived successfully.', 'status' => '#22bb33'];
         } else if($decode === '4'){
             return ['message' => 'Retrived successfully.', 'status' => '#22bb33'];
+        }else if($decode === '5'){
+            return ['message' => 'Incorrect credentials.', 'status' => '#bb2124'];
         }else {
             return ['message' => 'Something went wrong. Please try again later.', 'status' => '#bb2124'];
         }
@@ -740,7 +742,7 @@ class Model extends Dbconfig
             $_SESSION['id'] = $result['id'];
             header("Location: index.php");
         } else {
-            header("Location: faculties.php");
+            header("Location: signin.php?message=5");
         }
     }
 

@@ -20,7 +20,7 @@
             align-items: center;
             justify-content: center;
             gap: 10rem;
-            padding: 0 5rem;
+            padding: 0 3rem;
             position: relative;
         }
 
@@ -32,51 +32,28 @@
         }
 
         .left-content .title {
-            font-size: 40px;
+            font-size: 60px;
         }
 
         .hero img {
-            width: 70%;
+            width: 82%;
         }
 
         .sub-content {
             position: absolute;
             bottom: 20px;
-            left: 20%;
-            background-color: rgba(0, 0, 0, 0.4);
-            padding: 15px;
+            left: 15%;
+            background-color: rgba(0,0,0,0.4);
+            padding: 20px;
         }
 
         .nav-content {
-            padding: 10px 5rem;
+            padding: 10px 10rem;
         }
 
         .card {
-            width: 15rem !important;
+            width: 20rem !important;
         }
-
-        /* @media screen and (max-width: 768px) {
-            .hero-img {
-                width: 100%;
-            }
-
-            .hero {
-                flex-direction: column;
-                padding: 0 1rem;
-            }
-
-            body {
-                overflow: auto;
-            }
-
-            .card {
-                width: 15rem !important;
-            }
-
-            .left-content .title {
-                font-size: 20px;
-            }
-        } */
     </style>
 </head>
 
@@ -123,29 +100,29 @@
                 <div class="card">
                     <div class="card-body text-center">
                         <img src="assets/icon-1.png" alt="">
-                        <h6>Enrolled Students</h6>
-                        <p class="h4 text-success fw-bold">4000</p>
+                        <h2>Enrolled Students</h2>
+                        <p class="h3 text-success fw-bold">4000</p>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-body text-center">
                         <img src="assets/icon-2.png" alt="">
-                        <h6>Institutes</h6>
-                        <p class="h4 text-success fw-bold">7</p>
+                        <h2>Institutes</h2>
+                        <p class="h3 text-success fw-bold">7</p>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-body text-center">
-                        <img src="assets/icon-3.png" alt="">
-                        <h6>Programs Offered</h6>
-                        <p class="h4 text-success fw-bold">5</p>
+                    <img src="assets/icon-3.png" alt="">
+                        <h2>Programs Offered</h2>
+                        <p class="h3 text-success fw-bold">5</p>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-body text-center">
-                        <img src="assets/icon-4.png" alt="">
-                        <h6>Faculties</h6>
-                        <p class="h4 text-success fw-bold">185</p>
+                    <img src="assets/icon-4.png" alt="">
+                        <h2>Faculties</h2>
+                        <p class="h3 text-success fw-bold">185</p>
                     </div>
                 </div>
             </div>
@@ -157,7 +134,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="dataPrivacyLabel">Data Privacy Notice</h1>
+                    <h1 class="modal-title fs-5" id="dataPrivacyLabel">Data PRivacy Notice</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
