@@ -94,6 +94,7 @@ $control = new Control('KLD-23-75890', 'advisor');
   <script src="assets/js/toastify.min.js"></script>
   <script src="assets/js/dataTables.bootstrap5.js"></script>
   <script src="assets/js/dataTables.js"></script>
+  
 
   <script>
     new DataTable('#advisoryDatatable', {

@@ -4,7 +4,7 @@ CREATE TABLE `admin_tbl` (
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- Dumping data for table `admin_tbl`
 INSERT INTO `admin_tbl` VALUES ('1', 'ftgzhczmrziddxn', 'orjadqzocmzzadqzjizocmzz');
 
@@ -78,13 +78,18 @@ CREATE TABLE `enrollment_sem_tbl` (
 
 -- Table structure for table `enrollment_tbl`
 CREATE TABLE `enrollment_tbl` (
-  `enrollment_id` int(255) NOT NULL,
-  `student_id` int(255) NOT NULL,
-  `course_id` int(255) NOT NULL,
+  `enrollment_id` int(255) NOT NULL AUTO_INCREMENT,
+  `student_id` varchar(255) NOT NULL,
+  `course_id` varchar(255) NOT NULL,
   `grading_system_id` int(255) NOT NULL,
-  `grade` int(255) NOT NULL,
+  `grade` float NOT NULL,
   PRIMARY KEY (`enrollment_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Dumping data for table `enrollment_tbl`
+INSERT INTO `enrollment_tbl` VALUES ('1', 'KLD-21-000209', 'KLD-GEC9100-580103182', '1', '58.56');
+INSERT INTO `enrollment_tbl` VALUES ('2', 'KLD-21-000209', 'KLD-GEC9100-580103182', '1', '75.548');
+INSERT INTO `enrollment_tbl` VALUES ('3', 'KLD-21-000209', 'KLD-GEC9100-580103182', '1', '88.254');
+INSERT INTO `enrollment_tbl` VALUES ('4', 'KLD-21-000226', 'KLD-GEC9100-580103182', '1', '93.13');
 
 -- Table structure for table `grading_system_tbl`
 CREATE TABLE `grading_system_tbl` (
@@ -185,8 +190,8 @@ CREATE TABLE `student_tbl` (
   PRIMARY KEY (`student_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- Dumping data for table `student_tbl`
-INSERT INTO `student_tbl` VALUES ('KLD-21-000209', 'Kyle Andre', 'David', 'Lim', '', '2000-01-14', '24', 'Male', 'Single', '+63 915 247 9693', 'Cavite', 'City of Dasmariñas', 'Santa Lucia', 'B111 L4 Ruby Street', '4114', 'kadlim@kld.edu.ph', '4th Year', 'KLD-IICS-283480269', 'KLD-IICS-283480269-20241864450327', 'Dasmarinas II Central School', 'Dasmarinas Integrated High School', 'KLD-21-000209', '', '0', '2024-04-24 16:36:06');
-INSERT INTO `student_tbl` VALUES ('KLD-21-000226', 'Mherwen Wiel', 'Calumba', 'Romero', '', '2000-04-10', '24', 'Male', 'Single', '+63 912 376 9544', 'Cavite', 'City of Dasmariñas', 'San Luis I', 'B98 L100 Emerald St.', '4114', 'mwcromero@kld.edu.ph', '4th Year', 'KLD-IICS-283480269', 'KLD-IICS-283480269-20241864450327', 'Dasmarinas II Central School', 'Dasmarinas East National High School', 'KLD-21-000226', '', '0', '2024-04-27 03:11:21');
+INSERT INTO `student_tbl` VALUES ('KLD-21-000209', 'Kyle Andre', 'David', 'Lim', '', '2000-01-14', '24', 'Male', 'Single', '+63 915 247 9693', 'Cavite', 'City of Dasmariñas', 'Santa Lucia', 'B111 L4 Ruby Street', '4114', 'kadlim@kld.edu.ph', '3rd Year', 'KLD-IICS-283480269', 'KLD-IICS-283480269-20241376210857', 'Dasmarinas II Central School', 'Dasmarinas Integrated High School', 'KLD-21-000209', '', '0', '2024-04-24 16:36:06');
+INSERT INTO `student_tbl` VALUES ('KLD-21-000226', 'Mherwen Wiel', 'Calumba', 'Romero', '', '2000-04-10', '24', 'Male', 'Single', '+63 912 376 9544', 'Cavite', 'City of Dasmariñas', 'San Luis I', 'B98 L100 Emerald St.', '4114', 'mwcromero@kld.edu.ph', '3rd Year', 'KLD-IICS-283480269', 'KLD-IICS-283480269-20241376210857', 'Dasmarinas II Central School', 'Dasmarinas East National High School', 'KLD-21-000226', '', '0', '2024-04-27 03:11:21');
 INSERT INTO `student_tbl` VALUES ('KLD-21-000398', 'Erwin', 'Josue', 'Petil', '', '1998-08-24', '26', 'Male', 'Single', '+63 755 990 8944', 'Cavite', 'City of Dasmariñas', 'Salawag', 'B24 L56 Sunflower St. Golden City Subdivision', '4114', 'ejpetil@kld.edu.ph', '3rd Year', 'KLD-IOPE-1887072785', 'KLD-IOPE-1887072785-20241265462343', 'Salawag Elementary School', 'Congressional High School', 'KLD-21-000398', '', '0', '2024-04-27 03:16:05');
 
 -- Table structure for table `subject_course_tbl`
@@ -197,10 +202,11 @@ CREATE TABLE `subject_course_tbl` (
   `course_id` varchar(255) NOT NULL,
   `is_archive` tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (`subject_course_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- Dumping data for table `subject_course_tbl`
 INSERT INTO `subject_course_tbl` VALUES ('2', 'KLD-23-86434', 'KLD-IICS-283480269-20241376210857', 'KLD-PCIS3222-1271014603', '0');
 INSERT INTO `subject_course_tbl` VALUES ('3', 'KLD-23-86434', 'KLD-IICS-283480269-20242103153527', 'KLD-PCIS3222-1271014603', '0');
+INSERT INTO `subject_course_tbl` VALUES ('4', 'KLD-23-75890', 'KLD-IICS-283480269-20241376210857', 'KLD-GEC9100-580103182', '0');
 
 -- Table structure for table `subject_taught_tbl`
 CREATE TABLE `subject_taught_tbl` (

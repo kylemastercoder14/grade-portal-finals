@@ -10,7 +10,7 @@ class View
     public $statusSubjectTaught;
 
     public function __construct(
-        $page, 
+        $page,
         $dataArr = null,
         $unarchivedAssignAdviser = null,
         $archivedAssignAdviser = null,
@@ -18,8 +18,7 @@ class View
         $archivedClassList = null,
         $unarchivedGradeCriteria = null,
         $archivedGradeCriteria = null,
-    )
-    {
+    ) {
         $this->data = $dataArr;
         $this->active_page = $page;
         $this->assignAdviser = $unarchivedAssignAdviser;
@@ -44,7 +43,7 @@ class View
 
     public function header()
     {
-    ?>
+?>
         <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
             <div class="container-xxl">
                 <div class="navbar-brand app-brand demo d-none d-xl-flex py-2 me-4">
@@ -464,9 +463,10 @@ class View
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $assignAdvisers = $this->assignAdviser;
+                                            $assignAdvisers = array_unique($this->assignAdviser, SORT_REGULAR);
                                             if (!$assignAdvisers) {
                                             ?>
+
                                                 <tr>
                                                     <td colspan="5">
                                                         <h4 class="text-center text-danger mt-2">No data found yet!</h4>
@@ -474,6 +474,7 @@ class View
                                                 </tr>
                                                 <?php
                                             } else {
+
                                                 foreach ($assignAdvisers as $assignAdviser => $data) {
                                                     $dateString = $data['date_added'];
                                                     $timestamp = strtotime($dateString);
@@ -484,17 +485,20 @@ class View
                                                         <td><?= $data['section_name'] ?></td>
                                                         <td><?= $formattedDate ?></td>
                                                         <td>
-                                                            <a class="btn btn-success" href="class-list.php?section_id=<?= $data['section_id'] ?>&program_id=<?= $data['program_id'] ?>&year_level=<?= $data['year_level'] ?>">View Class List</a>
+                                                            <a class="btn btn-success" href="class-list.php?section_id=<?= $data['section_id'] ?>&program_id=<?= $data['program_id'] ?>&year_level=<?= $data['year_level'] ?>&course_id=<?= $data['course_id'] ?>">View Class List</a>
                                                         </td>
                                                     </tr>
                                             <?php
                                                 }
                                             }
+
+
                                             ?>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
+                            
                             <!-- Program Table -->
                         </div>
                         <!--/ Content -->
@@ -554,61 +558,63 @@ class View
                                 </h5>
                             </div>
                             <!-- Program Table -->
+                            <?php
+                            $gradeCriteria = $this->gradeCriteria;
+                            $others = $gradeCriteria['others'];
+                            ?>
                             <div class="card">
                                 <div class="card-body table-responsive">
-                                    <table id="advisoryDatatable" class="table display compact">
-                                        <form action="action.php" method="POST">
-                                        <thead>
-                                            <?php
-                                            $gradeCriteria = $this->gradeCriteria;
-                                            $others = $gradeCriteria['others'];
-                                            ?>
-                                            <tr>
-                                                <th>Student ID</th>
-                                                <th>Name</th>
-                                                <th>Quizzes</th>
-                                                <th>Assignments</th>
-                                                <th>Seatwork</th>
-                                                <th>Examination</th>
-                                                <?= $others != null ? "" : "<th>Others</th>" ?>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            $classLists = $this->classList;
-                                            if (!$classLists) {
-                                            ?>
+                                    <form id="gradeForm" action="save_data.php?course_id=<?= $_GET['course_id'] ?>" method="POST"> <!-- Added an ID to the form for easier selection -->
+                                        <input type="hidden" name="grading_system_id" value="<?= $gradeCriteria['grading_system_id']; ?>"> <!-- Add a hidden input field for the grading system ID -->
+                                        <table id="advisoryDatatable" class="table display compact">
+                                            <thead>
                                                 <tr>
-                                                    <td colspan="5">
-                                                        <h4 class="text-center text-danger mt-2">No data found yet!</h4>
-                                                    </td>
+                                                    <th>Student ID</th>
+                                                    <th>Name</th>
+                                                    <th>Quizzes</th>
+                                                    <th>Assignments</th>
+                                                    <th>Seatwork</th>
+                                                    <th>Examination</th>
+                                                    <?php if ($others == null) echo "<th>Others</th>"; ?>
+                                                    <th>Action</th>
                                                 </tr>
+                                            </thead>
+                                            <tbody>
                                                 <?php
-                                            } else {
-                                                foreach ($classLists as $classList => $data) {
-                                                    $fullName = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'];
+                                                $classLists = $this->classList;
+                                                if (!$classLists) {
+                                                    echo '<tr><td colspan="7"><h4 class="text-center text-danger mt-2">No data found yet!</h4></td></tr>';
+                                                } else {
+                                                    foreach ($classLists as $classList => $data) {
+                                                        $fullName = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'];
                                                 ?>
-                                                    <tr>
-                                                        <td style="min-width: 300px"><?= $data['student_id'] ?></td>
-                                                        <td style="min-width: 300px"><?= $fullName ?></td>
-                                                        <td><input type="text" class="form-control" name="quizzes" placeholder="<?= $gradeCriteria['quizzes'] . "%" ?>"></td>
-                                                        <td><input type="text" class="form-control" name="assignment" placeholder="<?= $gradeCriteria['assignment'] . "%" ?>"></td>
-                                                        <td><input type="text" class="form-control" name="seatwork" placeholder="<?= $gradeCriteria['seatwork'] . "%" ?>"></td>
-                                                        <td><input type="text" class="form-control" name="examination" placeholder="<?= $gradeCriteria['examination'] . "%" ?>"></td>
-                                                        <?= $others != null ? "" : '<td><input type="text" name="others" class="form-control" placeholder="'.$gradeCriteria['others'].'"></td>' ?>
-                                                        
-                                                    </tr>
-                                            <?php
+                                                        <tr>
+                                                            <td style="min-width: 300px"><?= $data['student_id'] ?></td>
+                                                            <input type="hidden"  class="form-control" name="student_id[]" value="<?= $data['student_id'] ?>">
+                                                            <td style="min-width: 300px"><?= $fullName ?></td>
+                                                            <td><input type="text" class="form-control" name="quiz[]" placeholder="<?= $gradeCriteria['quizzes'] . "%" ?>"></td>
+                                                            <td><input type="text" class="form-control" name="assignment[]" placeholder="<?= $gradeCriteria['assignment'] . "%" ?>"></td>
+                                                            <td><input type="text" class="form-control" name="seatwork[]" placeholder="<?= $gradeCriteria['seatwork'] . "%" ?>"></td>
+                                                            <td><input type="text" class="form-control" name="examination[]" placeholder="<?= $gradeCriteria['examination'] . "%" ?>"></td>
+                                                            <?php if ($others == null) echo '<td><input type="text" name="other[]" class="form-control" placeholder="' . $gradeCriteria['others'] . '"></td>'; ?>
+                                                            <td><button class="btn btn-success submit-grade-btn" type="submit" name="submit_grade">Submit Grade</button></td>
+
+                                                        </tr>
+                                                <?php
+                                                    }
                                                 }
-                                            }
-                                            ?>
-                                        </tbody>
-                                        </form>
-                                    </table>
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                        <button class="btn btn-primary submit-all-grades-btn" type="submit" name="submit_all_grades">Submit All Grades</button> <!-- Changed type to "button" -->
+
+                                    </form>
                                 </div>
                             </div>
+
                             <!-- Program Table -->
                         </div>
+
                         <!--/ Content -->
                         <!-- Footer -->
                         <?php $this->navbar(); ?>
@@ -637,7 +643,8 @@ class View
                 <i class="ti ti-headset ti-sm"></i>
             </a>
         </div>
-    <?php
+<?php
     }
 }
+
 ?>
