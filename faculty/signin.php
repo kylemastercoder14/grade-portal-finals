@@ -2,9 +2,10 @@
 
 include "includes/includes.php";
 session_start();
-$control = new Control($_SESSION['id'], 'advisor');
+$control = new Control(1,'signin');
 
 ?>
+
 
 <!DOCTYPE html>
 
@@ -15,7 +16,7 @@ $control = new Control($_SESSION['id'], 'advisor');
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
   <title>KLD Grades Portal - eCOG</title>
-  
+
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="assets/images/logo.png" />
 
@@ -38,17 +39,15 @@ $control = new Control($_SESSION['id'], 'advisor');
   <link rel="stylesheet" href="assets/vendor/libs/node-waves/node-waves.css" />
   <link rel="stylesheet" href="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
   <link rel="stylesheet" href="assets/vendor/libs/typeahead-js/typeahead.css" />
+  <link rel="stylesheet" href="assets/vendor/libs/apex-charts/apex-charts.css" />
+  <link rel="stylesheet" href="assets/vendor/libs/swiper/swiper.css" />
   <link rel="stylesheet" href="assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
   <link rel="stylesheet" href="assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
-  <link rel="stylesheet" href="assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
-  <link rel="stylesheet" href="assets/vendor/libs/select2/select2.css" />
-  <link rel="stylesheet" href="assets/vendor/libs/@form-validation/form-validation.css" />
-  <link rel="stylesheet" href="assets/vendor/libs/bs-stepper/bs-stepper.css" />
-  <link rel="stylesheet" href="assets/vendor/libs/flatpickr/flatpickr.css" />
-  <link rel="stylesheet" href="assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css" />
+  <link rel="stylesheet" href="assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css" />
   <link rel="stylesheet" href="assets/css/toastify.min.css" />
-  <link rel="stylesheet" href="assets/css/virtual-select.min.css">
-  <link rel="stylesheet" href="assets/css/dataTables.bootstrap5.css" />
+
+  <!-- Page CSS -->
+  <link rel="stylesheet" href="assets/vendor/css/pages/cards-advance.css" />
 
   <!-- Helpers -->
   <script src="assets/vendor/js/helpers.js"></script>
@@ -57,10 +56,10 @@ $control = new Control($_SESSION['id'], 'advisor');
 
 <body>
 
-  <?php $control->advisor(); ?>
-  <!-- Core JS -->
+  <?php $control->signin(); ?>
   <!-- Core JS -->
   <!-- build:js assets/vendor/js/core.js -->
+
   <script src="assets/vendor/libs/jquery/jquery.js"></script>
   <script src="assets/vendor/libs/popper/popper.js"></script>
   <script src="assets/vendor/js/bootstrap.js"></script>
@@ -74,41 +73,30 @@ $control = new Control($_SESSION['id'], 'advisor');
   <!-- endbuild -->
 
   <!-- Vendors JS -->
+  <script src="assets/vendor/libs/apex-charts/apexcharts.js"></script>
+  <script src="assets/vendor/libs/swiper/swiper.js"></script>
   <script src="assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
-  <script src="assets/vendor/libs/select2/select2.js"></script>
-  <script src="assets/vendor/libs/cleavejs/cleave.js"></script>
-  <script src="assets/vendor/libs/cleavejs/cleave-phone.js"></script>
-  <script src="assets/vendor/libs/select2/select2.js"></script>
-  <script src="assets/vendor/libs/@form-validation/popular.js"></script>
-  <script src="assets/vendor/libs/@form-validation/bootstrap5.js"></script>
-  <script src="assets/vendor/libs/@form-validation/auto-focus.js"></script>
-  <script src="assets/vendor/libs/bs-stepper/bs-stepper.js"></script>
-  <script src="assets/vendor/libs/flatpickr/flatpickr.js"></script>
-  <script src="assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js"></script>
-  <script src="assets/js/virtual-select.min.js"></script>
 
   <!-- Main JS -->
   <script src="assets/js/main.js"></script>
-
-  <!-- Page JS -->
-  <script src="assets/js/modal-create-student.js"></script>
-  <script src="assets/js/forms-pickers.js"></script>
-  <script src="assets/js/forms-extras.js"></script>
   <script src="assets/js/toastify.min.js"></script>
-  <script src="assets/js/dataTables.bootstrap5.js"></script>
-  <script src="assets/js/dataTables.js"></script>
-  
 
   <script>
-    new DataTable('#advisoryDatatable', {
-      lengthMenu: [
-        [5, 10, 25, 50, -1],
-        [5, 10, 25, 50, 'All']
-      ],
-      paging: true
-    });
+    <?php
+    $messageStatus = $control->callStatusMessage($_GET['message']);
+    ?>
+    Toastify({
+      text: "<?php echo $messageStatus['message'] ?>",
+      duration: 3000,
+      gravity: "top",
+      position: "right",
+      stopOnFocus: true,
+      style: {
+        background: "<?php echo $messageStatus['status'] ?>",
+      },
+      onClick: function() {}
+    }).showToast();
   </script>
-
 </body>
 
 </html>

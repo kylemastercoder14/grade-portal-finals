@@ -1,8 +1,9 @@
 <?php
 
 include "includes/includes.php";
+session_start();
 // kailangan parehas ang second argument nito sa table name ng database
-$control = new Control(1, 'class_list');
+$control = new Control($_SESSION['id'], 'class_list');
 
 ?>
 
@@ -98,17 +99,7 @@ $control = new Control(1, 'class_list');
     <script src="assets/js/dataTables.js"></script>
 
     <script>
-        new DataTable('#studentDatatable', {
-            lengthMenu: [
-                [5, 10, 25, 50, -1],
-                [5, 10, 25, 50, 'All']
-            ],
-            paging: true
-        });
-    </script>
-
-    <script>
-        function getSections() {
+        function getSectionsClassList() {
             var programId = document.getElementById("programId").value;
             var yearLevel = document.getElementById("yearLevel").value;
 
@@ -124,21 +115,31 @@ $control = new Control(1, 'class_list');
             xhttp.send();
         }
 
-        function getSections2() {
-            var programId2 = document.getElementById("programId2").value;
-            var yearLevel2 = document.getElementById("yearLevel2").value;
+        function getSectionsClassList2() {
+            var programId = document.getElementById("programId2").value;
+            var yearLevel = document.getElementById("yearLevel2").value;
 
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     // Update the section dropdown with new options
-                    var sectionDropdown2 = document.getElementById("sectionId2");
-                    sectionDropdown2.innerHTML = this.responseText;
+                    var sectionDropdown = document.getElementById("sectionId2");
+                    sectionDropdown.innerHTML = this.responseText;
                 }
             };
-            xhttp.open("GET", "fetch_sections.php?program_id=" + programId2 + "&year_level=" + yearLevel2, true);
+            xhttp.open("GET", "fetch_sections.php?program_id=" + programId + "&year_level=" + yearLevel, true);
             xhttp.send();
         }
+    </script>
+
+    <script>
+        new DataTable('#studentDatatable', {
+            lengthMenu: [
+                [5, 10, 25, 50, -1],
+                [5, 10, 25, 50, 'All']
+            ],
+            paging: true
+        });
     </script>
 
     <script>

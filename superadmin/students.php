@@ -183,35 +183,19 @@ $control = new Control($_SESSION['id'], 'student');
     </script>
 
     <script>
-        function getSections() {
-            var programId = document.getElementById("programId").value;
-            var yearLevel = document.getElementById("yearLevel").value;
+        function getSectionsStudents() {
+            var programId = document.getElementById("programId3").value;
+            var yearLevel = document.getElementById("yearLevel3").value;
 
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     // Update the section dropdown with new options
-                    var sectionDropdown = document.getElementById("sectionId");
+                    var sectionDropdown = document.getElementById("sectionId3");
                     sectionDropdown.innerHTML = this.responseText;
                 }
             };
             xhttp.open("GET", "fetch_sections.php?program_id=" + programId + "&year_level=" + yearLevel, true);
-            xhttp.send();
-        }
-
-        function getSections2() {
-            var programId2 = document.getElementById("programId2").value;
-            var yearLevel2 = document.getElementById("yearLevel2").value;
-
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    // Update the section dropdown with new options
-                    var sectionDropdown2 = document.getElementById("sectionId2");
-                    sectionDropdown2.innerHTML = this.responseText;
-                }
-            };
-            xhttp.open("GET", "fetch_sections.php?program_id=" + programId2 + "&year_level=" + yearLevel2, true);
             xhttp.send();
         }
     </script>

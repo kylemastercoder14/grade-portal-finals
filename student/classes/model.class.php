@@ -14,7 +14,7 @@ class Model extends Dbconfig
     }
     protected function readById($id)
     {
-        $sql = "SELECT * FROM student_tbl WHERE student_id = ?";
+        $sql = "SELECT * FROM student_tbl INNER JOIN program_tbl ON student_tbl.program_id = program_tbl.program_id WHERE student_id = ?";
         $stmt = $this->db()->prepare($sql);
         $stmt->execute([$id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -57,7 +57,7 @@ class Model extends Dbconfig
 
         if ($result) {
             session_start();
-            $_SESSION['id'] = $result['id'];
+            $_SESSION['id'] = $result['student_id'];
             header("Location: index.php");
         } else {
             header("Location: signin.php");
@@ -74,5 +74,19 @@ class Model extends Dbconfig
         if(!isset($sessionId)) {
             header("Location: signin.php");
         }
+    }
+
+    protected function gradesById($id)
+    {
+        $sql = "SELECT * FROM enrollment_tbl INNER JOIN student_tbl ON enrollment_tbl.student_id = student_tbl.student_id INNER JOIN course_tbl ON enrollment_tbl.course_id = course_tbl.course_id WHERE enrollment_tbl.student_id = ?";
+        $stmt = $this->db()->prepare($sql);
+        $stmt->execute([$id]);
+        $data = $stmt->fetchAll();
+
+        return $data;
+    }
+    public function getGradesById($id)
+    {
+        return $this->gradesById($id);
     }
 }

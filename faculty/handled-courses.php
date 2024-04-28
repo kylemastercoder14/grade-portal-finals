@@ -2,7 +2,7 @@
 
 include "includes/includes.php";
 session_start();
-$control = new Control($_SESSION['id'], 'advisor');
+$control = new Control($_SESSION['id'], 'subject_taught');
 
 ?>
 
@@ -15,7 +15,7 @@ $control = new Control($_SESSION['id'], 'advisor');
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
   <title>KLD Grades Portal - eCOG</title>
-  
+
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="assets/images/logo.png" />
 
@@ -57,7 +57,7 @@ $control = new Control($_SESSION['id'], 'advisor');
 
 <body>
 
-  <?php $control->advisor(); ?>
+  <?php $control->subjectTaught(); ?>
   <!-- Core JS -->
   <!-- Core JS -->
   <!-- build:js assets/vendor/js/core.js -->
@@ -97,10 +97,9 @@ $control = new Control($_SESSION['id'], 'advisor');
   <script src="assets/js/toastify.min.js"></script>
   <script src="assets/js/dataTables.bootstrap5.js"></script>
   <script src="assets/js/dataTables.js"></script>
-  
 
   <script>
-    new DataTable('#advisoryDatatable', {
+    new DataTable('#handledCoursesDatatable', {
       lengthMenu: [
         [5, 10, 25, 50, -1],
         [5, 10, 25, 50, 'All']

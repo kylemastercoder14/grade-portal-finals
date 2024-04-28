@@ -1,8 +1,9 @@
 <?php
 
 include "includes/includes.php";
+session_start();
 // kailangan parehas ang second argument nito sa table name ng database
-$control = new Control(1, 'grading_system');
+$control = new Control($_SESSION['id'], 'grading_system');
 
 ?>
 

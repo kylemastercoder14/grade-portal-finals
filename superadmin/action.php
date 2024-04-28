@@ -111,7 +111,7 @@ if (isset($_POST['add_program'])) {
         'zip_code' => $_POST['zip_code'],
         'kld_email' => $_POST['kld_email'],
         'program_id' => $_POST['program_id'],
-        'password' => $_POST['student_id'],
+        'password' => $_POST['advisor_id'],
     );
 
     $model->callInsertAdvisor($data, $currentPage);

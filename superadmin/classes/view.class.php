@@ -119,7 +119,7 @@ class View
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Are you sure u want to logout?
+                        Are you sure you want to logout?
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <a href="logout.php" class="btn btn-danger">Logout</a>
@@ -424,7 +424,7 @@ class View
             <div class="modal-dialog modal-dialog-centered">
                 <form action="action.php" method="POST" class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Backup Database</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -1064,11 +1064,11 @@ class View
             <div class="modal-dialog modal-dialog-centered">
                 <form action="action.php" method="POST" class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Archive Data</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Are you sure u want to archived this data?
+                        Are you sure you want to archived this data?
                         <div>
                             <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
                             <input type="hidden" name="archiveProgramId" id="archiveProgramId">
@@ -1519,6 +1519,7 @@ class View
                             <div class="col-12 col-md-12">
                                 <label class="form-label">Pre-requisite Subject (optional) <a href="#" class="text-danger fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="If there is no prerequisite, leave it blank">(?)</a></label>
                                 <select name="pre_requisite" class="form-select">
+                                    <option value="" selected>Select pre-requisite subject</option>
                                     <?php
                                     $subjectSelect = $this->subject;
                                     foreach ($subjectSelect as $subjectItem => $data) {
@@ -1623,7 +1624,7 @@ class View
                                     <form method="GET" action="?year_level=$year_level&program_id=$program_id&section_id=$section_id" class="row mb-3">
                                         <div class="col-md-3">
                                             <label class="form-label">Year Level <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="yearLevel" name="year_level" onchange="getSections()">
+                                            <select class="form-select" id="yearLevel2" name="year_level" onchange="getSectionsStudents()">
                                                 <option value="1st Year">1st Year</option>
                                                 <option value="2nd Year">2nd Year</option>
                                                 <option value="3rd Year">3rd Year</option>
@@ -1632,7 +1633,7 @@ class View
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label">Program <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="programId" name="program_id" onchange="getSections()">
+                                            <select class="form-select" id="programId2" name="program_id" onchange="getSectionsStudents()">
                                                 <?php
                                                 $programs = $this->program;
                                                 foreach ($programs as $program => $data) {
@@ -1645,7 +1646,7 @@ class View
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label">Section <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="sectionId" name="section_id">
+                                            <select class="form-select" id="sectionId2" name="section_id">
                                                 <?php
                                                 $sections = $this->section;
                                                 foreach ($sections as $section => $data) {
@@ -1910,7 +1911,7 @@ class View
                                             </div>
                                             <div class="col-md-12 mb-2" id="hideYearlevel">
                                                 <label class="form-label">Year Level <span class="text-danger">*</span></label>
-                                                <select class="form-select" id="yearLevel2" name="year_level" onchange="getSections2()">
+                                                <select class="form-select" id="yearLevel3" name="year_level" onchange="getSectionsStudents()">
                                                     <option value="1st Year">1st Year</option>
                                                     <option value="2nd Year">2nd Year</option>
                                                     <option value="3rd Year">3rd Year</option>
@@ -1919,7 +1920,7 @@ class View
                                             </div>
                                             <div id="programFull" class="col-md-6 mb-2">
                                                 <label class="form-label">Program <span class="text-danger">*</span></label>
-                                                <select id="programId2" class="form-select" name="program_id" onchange="getSections2()">
+                                                <select id="programId3" class="form-select" name="program_id" onchange="getSectionsStudents()">
                                                     <?php
                                                     $programs = $this->program;
                                                     foreach ($programs as $program => $data) {
@@ -1932,7 +1933,7 @@ class View
                                             </div>
                                             <div class="col-md-6 mb-2" id="hideSection">
                                                 <label class="form-label">Section <span class="text-danger">*</span></label>
-                                                <select id="sectionId2" class="form-select" name="section_id">
+                                                <select id="sectionId3" class="form-select" name="section_id">
                                                     <option value="">Choose a section</option>
                                                     <?php
                                                     $sections = $this->section;
@@ -2367,7 +2368,7 @@ class View
                                     <form method="GET" action="?year_level=$year_level&program_id=$program_id&section_id=$section_id" class="row mb-3">
                                         <div class="col-md-3">
                                             <label class="form-label">Year Level <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="yearLevel" name="year_level" onchange="getSections()">
+                                            <select class="form-select" id="yearLevel" name="year_level" onchange="getSectionsClassList()">
                                                 <option value="1st Year">1st Year</option>
                                                 <option value="2nd Year">2nd Year</option>
                                                 <option value="3rd Year">3rd Year</option>
@@ -2376,7 +2377,7 @@ class View
                                         </div>
                                         <div class="col-md-3">
                                             <label class="form-label">Program <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="programId" name="program_id" onchange="getSections()">
+                                            <select class="form-select" id="programId" name="program_id" onchange="getSectionsClassList()">
                                                 <?php
                                                 $programs = $this->program;
                                                 foreach ($programs as $program => $data) {
@@ -2521,238 +2522,6 @@ class View
         </div>
 
         <!-- Add Student Modal -->
-        <div class="modal fade" id="addStudent" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-centered modal-simple modal-upgrade-plan">
-                <div class="modal-content p-3 p-md-5">
-                    <div class="modal-body p-2">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <div class="text-center">
-                            <h3 class="mb-2">Add Student Information</h3>
-                        </div>
-                        <div id="wizard-create-app" class="bs-stepper vertical mt-2 shadow-none">
-                            <div class="bs-stepper-header border-0 p-1">
-                                <div class="step" data-target="#personal">
-                                    <button type="button" class="step-trigger">
-                                        <span class="bs-stepper-circle"><i class="ti ti-user ti-sm"></i></span>
-                                        <span class="bs-stepper-label">
-                                            <span class="bs-stepper-title text-uppercase">Personal</span>
-                                        </span>
-                                    </button>
-                                </div>
-                                <div class="line"></div>
-                                <div class="step" data-target="#educational">
-                                    <button type="button" class="step-trigger">
-                                        <span class="bs-stepper-circle"><i class="ti ti-notebook ti-sm"></i></span>
-                                        <span class="bs-stepper-label">
-                                            <span class="bs-stepper-title text-uppercase">Educational</span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="bs-stepper-content p-1">
-                                <form method="POST" action="action.php">
-                                    <!-- Personal -->
-                                    <div id="personal" class="content pt-3 pt-lg-0">
-                                        <input type="hidden" value="<?= $this->active_page ?>" name="current_page">
-                                        <div class="row">
-                                            <div class="col-md-12 mb-2">
-                                                <label class="form-label">Curriculum <span class="text-danger">*</span></label>
-                                                <div class="d-flex align-items-center gap-3">
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <input id="oldCurriculum" type="checkbox" class="form-check" value="Old" checked />
-                                                        <span>Old</span>
-                                                    </div>
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <input id="newCurriculum" type="checkbox" class="form-check" value="New" />
-                                                        <span>New</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 mb-2">
-                                                <label class="form-label">First Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="firstname" placeholder="Enter first name" required />
-                                            </div>
-                                            <div class="col-md-3 mb-2">
-                                                <label class="form-label">Middle Name</label>
-                                                <input type="text" class="form-control" placeholder="Enter middle name" name="middlename" />
-                                            </div>
-                                            <div class="col-md-3 mb-2">
-                                                <label class="form-label">Last Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter last name" name="lastname" required />
-                                            </div>
-                                            <div class="col-md-3 mb-2">
-                                                <label class="form-label">Suffix</label>
-                                                <input type="text" class="form-control" name="suffix" placeholder="JR, SR, III" />
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="birthdate" id="flatpickr-date" placeholder="YYYY-MM-DD" required />
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <label class="form-label">Age <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="age" placeholder="Enter age" required />
-                                            </div>
-                                            <div class="col-md-4 mb-2">
-                                                <label class="form-label">Gender <span class="text-danger">*</span></label>
-                                                <select class="form-select" name="gender" required>
-                                                    <option value="" selected>Choose gender</option>
-                                                    <option value="Male">Male</option>
-                                                    <option value="Female">Female</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4 mb-2">
-                                                <label class="form-label">Civil Status <span class="text-danger">*</span></label>
-                                                <select class="form-select" name="civil_status" required>
-                                                    <option value="" selected>Choose civil status</option>
-                                                    <option value="Single">Single</option>
-                                                    <option value="Married">Married</option>
-                                                    <option value="Widowed">Widowed</option>
-                                                    <option value="Separated">Separated</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-4 mb-2">
-                                                <label class="form-label">Contact Number <span class="text-danger">*</span></label>
-                                                <input type="text" id="prefix-mask" class="form-control prefix-mask" name="contact_number" placeholder="Enter contact number" required />
-                                            </div>
-                                            <div class="col-md-4 mb-2">
-                                                <label class="form-label">Province <span class="text-danger">*</span></label>
-                                                <select class="form-select" id="province" required></select>
-                                                <input type="hidden" id="provinceName" name="province">
-                                            </div>
-                                            <div class="col-md-4 mb-2">
-                                                <label class="form-label">City <span class="text-danger">*</span></label>
-                                                <select class="form-select" id="city" required></select>
-                                                <input type="hidden" id="cityName" name="city">
-                                            </div>
-                                            <div class="col-md-4 mb-2">
-                                                <label class="form-label">Barangay <span class="text-danger">*</span></label>
-                                                <select class="form-select" id="barangay" required></select>
-                                                <input type="hidden" id="barangayName" name="barangay">
-                                            </div>
-                                            <div class="col-md-9 mb-2">
-                                                <label class="form-label">House No./Unit/Bldg/Street <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="house_no" placeholder="House No./Unit/Bldg/Street" required />
-                                            </div>
-                                            <div class="col-md-3 mb-2">
-                                                <label class="form-label">Zip Code <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="zip_code" placeholder="Enter zip code" required />
-                                            </div>
-                                            <div class="col-12 d-flex justify-content-between mt-4">
-                                                <button class="btn btn-label-secondary btn-prev" disabled> <i class="ti ti-arrow-left ti-xs me-sm-1 me-0"></i>
-                                                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
-                                                </button>
-                                                <button class="btn btn-primary btn-next"><span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span> <i class="ti ti-arrow-right ti-xs"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Educational -->
-                                    <div id="educational" class="content pt-3 pt-lg-0">
-                                        <div class="row">
-                                            <div class="col-md-12 mb-2">
-                                                <label class="form-label">Student Number <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="student_id" placeholder="Enter student number" required />
-                                            </div>
-                                            <div class="col-md-12 mb-2">
-                                                <label class="form-label">KLD Email <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="kld_email" placeholder="Enter KLD email" required />
-                                            </div>
-                                            <div class="col-md-12 mb-2" id="hideYearlevel">
-                                                <label class="form-label">Year Level <span class="text-danger">*</span></label>
-                                                <select class="form-select" id="yearLevel" name="year_level" onchange="getSections()">
-                                                    <option value="1st Year">1st Year</option>
-                                                    <option value="2nd Year">2nd Year</option>
-                                                    <option value="3rd Year">3rd Year</option>
-                                                    <option value="4th Year">4th Year</option>
-                                                </select>
-                                            </div>
-                                            <div id="programFull" class="col-md-6 mb-2">
-                                                <label class="form-label">Program <span class="text-danger">*</span></label>
-                                                <select id="programId" class="form-select" name="program_id" onchange="getSections()">
-                                                    <?php
-                                                    $programs = $this->program;
-                                                    foreach ($programs as $program => $data) {
-                                                    ?>
-                                                        <option value="<?= $data['program_id'] ?>"><?= $data['program_name'] ?></option>
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6 mb-2" id="hideSection">
-                                                <label class="form-label">Section <span class="text-danger">*</span></label>
-                                                <select id="sectionId" class="form-select" name="section_id">
-                                                    <option value="">Choose a section</option>
-                                                    <?php
-                                                    $sections = $this->section;
-                                                    foreach ($sections as $section => $data) {
-                                                    ?>
-                                                        <option value="<?= $data['section_id'] ?>"><?= $data['section_name'] ?></option>
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <label class="form-label">Elementary School <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="elementary" placeholder="Enter elementary school" required />
-                                            </div>
-                                            <div class="col-md-6 mb-2">
-                                                <label class="form-label">High School <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="highschool" placeholder="Enter high school" required />
-                                            </div>
-                                            <div class="col-12 d-flex justify-content-between mt-4">
-                                                <button class="btn btn-success" type="submit" name="add_student"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Submit</span></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Add Student Modal -->
-
-        <!-- Edit Student Modal -->
-        <div class="modal fade" id="editSection" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-simple modal-edit-user modal-dialog-centered">
-                <div class="modal-content p-3 p-md-5">
-                    <div class="modal-body">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <div class="text-center mb-4">
-                            <h3 class="mb-2">Update Section Information</h3>
-                        </div>
-
-                        <form class="row g-3" method="POST">
-                            <div class="col-12 col-md-12">
-                                <label class="form-label">Year Level</label>
-                                <select class="form-select">
-                                    <option value="" selected>Choose year level</option>
-                                </select>
-                            </div>
-                            <div class="col-12 col-md-12">
-                                <label class="form-label">Program</label>
-                                <select class="form-select">
-                                    <option value="" selected>Choose program</option>
-                                </select>
-                            </div>
-                            <div class="col-12 col-md-12">
-                                <label class="form-label">Section</label>
-                                <input type="text" class="form-control" placeholder="Enter section" required />
-                            </div>
-                            <div class="col-12 text-center">
-                                <button type="submit" class="btn btn-success me-sm-3 me-1">Save Changes</button>
-                                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Student Modal -->
         <div class="modal fade" id="assignSectionModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-xl modal-dialog-centered modal-simple modal-upgrade-plan">
                 <div class="modal-content p-3 p-md-5">
@@ -2766,7 +2535,7 @@ class View
                             <div class="row">
                                 <div class="col-md-3">
                                     <label class="form-label">Year Level <span class="text-danger">*</span></label>
-                                    <select class="form-select" id="yearLevel2" name="year_level2" onchange="getSections2()">
+                                    <select class="form-select" id="yearLevel2" name="year_level2" onchange="getSectionsClassList2()">
                                         <option value="1st Year">1st Year</option>
                                         <option value="2nd Year">2nd Year</option>
                                         <option value="3rd Year">3rd Year</option>
@@ -2775,7 +2544,7 @@ class View
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Program <span class="text-danger">*</span></label>
-                                    <select class="form-select" id="programId2" name="program_id2" onchange="getSections2()">
+                                    <select class="form-select" id="programId2" name="program_id2" onchange="getSectionsClassList2()">
                                         <?php
                                         $programs = $this->program;
                                         foreach ($programs as $program => $data) {
@@ -2811,12 +2580,6 @@ class View
             </div>
         </div>
         <!-- Add Student Modal -->
-
-        <!-- Edit Program Modal -->
-
-        <!-- Edit Student Modal -->
-
-        <!-- Edit Student Modal -->
     <?php
     }
     public function subjectTaughtContent()
@@ -2874,7 +2637,7 @@ class View
                                             ?>
                                                 <tr>
                                                     <td colspan="5">
-                                                        <h4 class="text-center text-danger mt-2">No student found yet!</h4>
+                                                        <h4 class="text-center text-danger mt-2">No data found yet!</h4>
                                                     </td>
                                                 </tr>
                                                 <?php
@@ -3777,7 +3540,7 @@ class View
                 updated on your educational journey.
             </p>
             <form action="action.php" method="POST">
-                <h3 class="fw-bold mb-0">Welcome, KLD Admin! 👋</h3>
+                <h3 class="fw-bold mb-0">Welcome, KLD Faculty! 👋</h3>
                 <span>Sign in first to get started.</span>
                 <div class="form-group mb-3 mt-2">
                     <label class="form-label">Username</label>

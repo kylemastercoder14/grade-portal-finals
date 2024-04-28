@@ -11,12 +11,14 @@ class Control {
         $this->model = new Model();
         $data_arr = $this->model->getById($id);
 
+        $grades_arr = $this->model->getGradesById($id);
+
         $sessionKicker = $this->model->sessionKicker($id);
         
         $this->view = new View(
             $data_arr, 
-            $page, 
-            
+            $page,
+            $grades_arr
         );
 
     }

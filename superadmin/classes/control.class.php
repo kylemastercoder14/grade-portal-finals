@@ -156,16 +156,6 @@ class Control
         $this->view->signinContent();
     }
 
-    public function controlCallHelper()
-    {
-        $this->model->callHelperFilter();
-    }
-
-    public function controlAllCallHelper()
-    {
-        $this->model->callAllHelperFilter();
-    }
-
     public function controlCallHelperFilterTeacherCourse()
     {
         $this->model->callHelperFilterTeacherCourse();

@@ -2,7 +2,7 @@
 
 include "includes/includes.php";
 session_start();
-$control = new Control('KLD-23-75890', 'advises');
+$control = new Control($_SESSION['id'], 'advises');
 
 ?>
 
@@ -15,6 +15,9 @@ $control = new Control('KLD-23-75890', 'advises');
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
   <title>KLD Grades Portal - eCOG</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="assets/images/logo.png" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com/" />

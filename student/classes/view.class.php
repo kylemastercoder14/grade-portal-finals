@@ -2,16 +2,18 @@
 include('includes/includes.php');
 class View
 {
-    private $data;
+    private $data, $gradesByStudent;
     public $active_page;
     public $statusDashboard;
 
     public function __construct(
         $data_arr = null,
         $page,
+        $gradesByStudent = null
     ) {
         $this->data = $data_arr;
         $this->active_page = $page;
+        $this->gradesByStudent = $gradesByStudent;
 
         switch ($this->active_page) {
             case 'dashboard':
@@ -23,6 +25,24 @@ class View
     public function header()
     {
 ?>
+        <!-- LOGOUT MODAL -->
+        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <form action="action.php" method="POST" class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Log out</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to logout?
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <a href="logout.php" class="btn btn-danger">Logout</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
             <div class="container-xxl">
                 <div class="navbar-brand app-brand demo d-none d-xl-flex py-2 me-4">
@@ -268,8 +288,8 @@ class View
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <span class="fw-medium d-block"><?php echo $this->data['firstname']; ?></span>
-                                                <small class="text-muted"><?php echo  $this->data['firstname']; ?></small>
+                                                <span class="fw-medium d-block"><?php echo $this->data['firstname'] . " " . $this->data['middlename'] . " " . $this->data['lastname'] . " " . $this->data['suffix']; ?></span>
+                                                <small class="text-muted"><?php echo  $this->data['program_name']; ?></small>
                                                 <!-- role dapat  -->
                                             </div>
                                         </div>
@@ -297,7 +317,7 @@ class View
                                     <div class="dropdown-divider"></div>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="logout.php">
+                                    <a data-bs-toggle="modal" data-bs-target="#logoutModal" class="dropdown-item" href="#">
                                         <i class="ti ti-logout me-2 ti-sm"></i>
                                         <span class="align-middle">Log Out</span>
                                     </a>
@@ -586,46 +606,105 @@ class View
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                                <th>Academic Year</th>
-                                                <th>Semester</th>
                                                 <th>Course Title</th>
-                                                <th>Grade</th>
+                                                <th>Course Code</th>
                                                 <th>Units</th>
+                                                <th>Grade</th>
+                                                <th>Transmuted Grade</th>
                                                 <th>Remarks</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>2023 - 2024</td>
-                                                <td>2nd Semester</td>
-                                                <td>Evaluation of Business Performance</td>
-                                                <td>1.25</td>
-                                                <td>3</td>
-                                                <td><span class="badge text-bg-success">PASSED</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td>IT Outsourcing and Offshoring</td>
-                                                <td>3.50</td>
-                                                <td>3</td>
-                                                <td><span class="badge text-bg-danger">FAILED</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td>Capstone Project 1</td>
-                                                <td>1.00</td>
-                                                <td>3</td>
-                                                <td><span class="badge text-bg-success">PASSED</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><span class="badge text-bg-success">1.25</span></td>
-                                                <td></td>
-                                            </tr>
+                                            <?php
+                                            $grades = $this->gradesByStudent;
+                                            $total_units = 0;
+                                            $total_grade_points = 0;
+
+                                            if (!$grades) {
+                                                echo '<td colspan="6"><h4 class="text-center text-danger mt-2">No data found yet!</h4></td>';
+                                            } else {
+                                                foreach ($grades as $grade => $data) {
+                                                    $grade_percentage = $data['grade'];
+                                                    $course_units = $data['course_unit'];
+                                                    $grade_points = $grade_percentage * $course_units;
+                                                    $total_units += $course_units;
+                                                    $total_grade_points += $grade_points;
+                                            ?>
+                                                    <tr>
+                                                        <td><?= $data['course_name'] ?></td>
+                                                        <td><?= $data['course_code'] ?></td>
+                                                        <td><?= $course_units ?></td>
+                                                        <td><?= $grade_percentage . "%" ?></td>
+                                                        <td>
+                                                            <?php
+                                                            if ($grade_percentage >= 99.0) {
+                                                                echo "1.00";
+                                                            } else if ($grade_percentage >= 96.0) {
+                                                                echo "1.25";
+                                                            } else if ($grade_percentage >= 93.0) {
+                                                                echo "1.50";
+                                                            } else if ($grade_percentage >= 90.0) {
+                                                                echo "1.75";
+                                                            } else if ($grade_percentage >= 87.0) {
+                                                                echo "2.00";
+                                                            } else if ($grade_percentage >= 84.0) {
+                                                                echo "2.25";
+                                                            } else if ($grade_percentage >= 81.0) {
+                                                                echo "2.50";
+                                                            } else if ($grade_percentage >= 78.0) {
+                                                                echo "2.75";
+                                                            } else if ($grade_percentage >= 75.0) {
+                                                                echo "3.00";
+                                                            } else {
+                                                                echo "5.00";
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                        <td><span class="badge <?= $grade_percentage <= 70 ? "text-bg-danger" : "text-bg-success" ?>"><?= $grade_percentage <= 70 ? "FAILED" : "PASSED" ?></span></td>
+                                                    </tr>
+                                                <?php
+                                                }
+                                                $gwa = $total_grade_points / $total_units;
+                                                ?>
+                                                <tr>
+                                                    <th><b>Grade Weighted Average:</b></th>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <th><b><?= $gwa . "%" ?></b></th>
+                                                    <th>
+                                                        <b>
+                                                            <?php
+                                                            if ($gwa >= 98) {
+                                                                echo "1.00";
+                                                            } else if ($gwa >= 95.0) {
+                                                                echo "1.25";
+                                                            } else if ($gwa >= 90.0) {
+                                                                echo "1.50";
+                                                            } else if ($gwa >= 87.0) {
+                                                                echo "1.75";
+                                                            } else if ($gwa >= 85.0) {
+                                                                echo "2.00";
+                                                            } else if ($gwa >= 83.0) {
+                                                                echo "2.25";
+                                                            } else if ($gwa >= 80.0) {
+                                                                echo "2.50";
+                                                            } else if ($gwa >= 78.0) {
+                                                                echo "2.75";
+                                                            } else if ($gwa >= 75.0) {
+                                                                echo "3.00";
+                                                            } else if ($gwa >= 70.0) {
+                                                                echo "4.00";
+                                                            } else {
+                                                                echo "5.00";
+                                                            }
+                                                            ?>
+                                                        </b>
+                                                    </th>
+                                                    <td><span class="badge <?= $gwa <= 70 ? "text-bg-danger" : "text-bg-success" ?>"><?= $gwa <= 70 ? "FAILED" : "PASSED" ?></span></td>
+                                                </tr>
+                                            <?php
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
                                 </div>

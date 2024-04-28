@@ -1,7 +1,7 @@
 <?php
 
 include "includes/includes.php";
-$control = new Control(1, 'index');
+$control = new Control(1, 'signin');
 
 ?>
 

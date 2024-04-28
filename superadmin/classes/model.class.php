@@ -27,8 +27,9 @@ class Model extends Dbconfig
     }
 
     // session kicker
-    public function sessionKicker($sessionId) {
-        if(!isset($sessionId)) {
+    public function sessionKicker($sessionId)
+    {
+        if (!isset($sessionId)) {
             header("Location: signin.php");
         }
     }
@@ -77,22 +78,26 @@ class Model extends Dbconfig
 
     public function statusMessage($decode)
     {
-        if ($decode === '0') {
-            return ['message' => 'Data already exist.', 'status' => '#bb2124'];
-        } else if ($decode === '1') {
-            return ['message' => 'Inserted successfully.', 'status' => '#22bb33'];
-        } else if ($decode === '2') {
-            return ['message' => 'Updated successfully.', 'status' => '#22bb33'];
-        } else if ($decode === '3') {
-            return ['message' => 'Archived successfully.', 'status' => '#22bb33'];
-        } else if($decode === '4'){
-            return ['message' => 'Retrived successfully.', 'status' => '#22bb33'];
-        }else if($decode === '5'){
-            return ['message' => 'Incorrect credentials.', 'status' => '#bb2124'];
-        }else {
-            return ['message' => 'Something went wrong. Please try again later.', 'status' => '#bb2124'];
+        switch ($decode) {
+            case '0':
+                return ['message' => 'Data already exists.', 'status' => '#bb2124'];
+            case '1':
+                return ['message' => 'Inserted successfully.', 'status' => '#22bb33'];
+            case '2':
+                return ['message' => 'Updated successfully.', 'status' => '#22bb33'];
+            case '3':
+                return ['message' => 'Archived successfully.', 'status' => '#22bb33'];
+            case '4':
+                return ['message' => 'Retrieved successfully.', 'status' => '#22bb33'];
+            case '5':
+                return ['message' => 'Incorrect credentials.', 'status' => '#bb2124'];
+            case '6':
+                return ['message' => 'No data found on this filter.', 'status' => '#bb2124'];
+            default:
+                return ['message' => 'Something went wrong. Please try again later.', 'status' => '#bb2124'];
         }
     }
+
     // call sa action
     public function callInsertProgram($data, $currentPage)
     {
@@ -195,7 +200,7 @@ class Model extends Dbconfig
 
     protected function readSection($condition)
     {
-        $sql = "SELECT * FROM section_tbl WHERE is_archive = ?";
+        $sql = "SELECT * FROM section_tbl WHERE is_archive = ? ORDER BY section_name ASC";
         $stmt = $this->db()->prepare($sql);
         $stmt->execute([$condition]); // 0 is NOT  archive
         $data = $stmt->fetchAll();
@@ -289,7 +294,7 @@ class Model extends Dbconfig
 
             header("Location: programs.php?message=2");
         } else {
-            header("Location: programs.php?message=5");
+            header("Location: programs.php?message=6");
         }
     }
     public function callArchiveProgram($data, $currentPage)
@@ -331,90 +336,6 @@ class Model extends Dbconfig
     {
         return $this->readSectionById($id);
     }
-    protected function filterSectionByProgram($program_id, $year_level)
-    {
-
-        $sql = "SELECT * FROM section_tbl WHERE program_id = ? AND year_level = ? ORDER BY section_name ASC";
-        $stmt = $this->db()->prepare($sql);
-        $stmt->execute([$program_id, $year_level]);
-
-        $sections = $stmt->fetchAll();
-
-        if ($sections) {
-            echo '<option value=""></option>';
-            // Output options for section dropdown
-            foreach ($sections as $section) {
-                echo "<option value='" . $section['section_id'] . "'>" . $section['section_name'] . "</option>";
-            }
-        } else {
-            echo "<option value=''>No sections found</option>";
-        }
-    }
-    protected function callFilterSectionByProgram()
-    {
-        if (isset($_GET['program_id'], $_GET['year_level'])) {
-            $program_id = $_GET['program_id'];
-            $year_level = $_GET['year_level'];
-            $this->filterSectionByProgram($program_id, $year_level);
-        } else {
-            // Handle case where program_id is not provided
-            echo "<option value=''>Select a program and year level first</option>";
-        }
-    }
-    public function callHelperFilter()
-    {
-        $this->callFilterSectionByProgram();
-    }
-    protected function filterAllSectionByProgram($advisor_id)
-    {
-        $sql = "SELECT * FROM advisor_tbl WHERE advisor_id = ? ORDER BY advisor_id ASC";
-        $stmt = $this->db()->prepare($sql);
-        $stmt->execute([$advisor_id]);
-
-        $advisor = $stmt->fetch();
-
-        if ($advisor) {
-            $program_id = $advisor['program_id'];
-            $sql2 = "SELECT * FROM section_tbl WHERE program_id = ? ORDER BY section_name ASC";
-            $stmt2 = $this->db()->prepare($sql2);
-            $stmt2->execute([$program_id]);
-
-            $sections = $stmt2->fetchAll();
-
-            // Start building the select dropdown options
-            $options = "";
-            foreach ($sections as $section) {
-                // Append each option to the $options variable
-                $options .= "<option value='" . $section['section_id'] . "'>" . $section['section_name'] . "</option>";
-            }
-
-            // Now, echo the select dropdown with the options
-            if (!empty($options)) {
-                echo "<select id='multiple-select' multiple name='course_ids' placeholder='Select Course Name' data-search='true'>";
-                echo $options;
-                echo "</select>";
-            } else {
-                echo "<select id='multiple-select' multiple name='course_ids' placeholder='Select Course Name' data-search='true'>";
-                echo "<option value=''>No sections found</option>";
-                echo "</select>";
-            }
-        } else {
-            echo "<select id='multiple-select' multiple name='course_ids' placeholder='Select Course Name' data-search='true'>";
-            echo "<option value=''>No advisor found</option>";
-            echo "</select>";
-        }
-    }
-    protected function callFilterAllSectionByProgram()
-    {
-        if (isset($_GET['advisor_id'])) {
-            $advisor_id = $_GET['advisor_id'];
-            $this->filterAllSectionByProgram($advisor_id);
-        }
-    }
-    public function callAllHelperFilter()
-    {
-        $this->callFilterAllSectionByProgram();
-    }
     protected function filterStudents($program_id = null, $year_level = null, $section_id = null)
     {
         if ($section_id == null) {
@@ -454,10 +375,10 @@ class Model extends Dbconfig
                 if ($result) {
                     return $result;
                 } else {
-                    header("Location: ?message=5");
+                    header("Location: ".$_SERVER['PHP_SELF']."?message=6");
                 }
             } else {
-                header("Location: ?message=5");
+                header("Location: ".$_SERVER['PHP_SELF']."?message=6");
             }
         }
     }
@@ -513,10 +434,10 @@ class Model extends Dbconfig
                     // If no data exists, insert the course_id
                     $stmtInsert->execute([$advisor_id, $courseId]);
                     // Set success message
-                    header("Location: ?message=1");
+                    header("Location: subject-taught.php?message=1");
                 } else {
                     // Set success message
-                    header("Location: ?message=0");
+                    header("Location: subject-taught.php?message=0");
                 }
             }
         }
@@ -551,10 +472,10 @@ class Model extends Dbconfig
                     // If no data exists, insert the sectionId
                     $stmtInsert->execute([$advisor_id, $sectionId]);
                     // Set success message
-                    header("Location: ?message=1");
+                    header("Location: assign-adviser.php?message=1");
                 } else {
                     // Set success message
-                    header("Location: ?message=0");
+                    header("Location: assign-adviser.php?message=0");
                 }
             }
         }
@@ -674,10 +595,10 @@ class Model extends Dbconfig
                     // If no data exists, insert the course_id
                     $stmtInsert->execute([$advisor_id, $sectionId, $course_id]);
                     // Set success message
-                    header("Location: ?message=1");
+                    header("Location: assign-subject-teacher.php?message=1");
                 } else {
                     // Set success message
-                    header("Location: ?message=0");
+                    header("Location: assign-subject-teacher.php?message=0");
                 }
             }
         }
@@ -696,10 +617,10 @@ class Model extends Dbconfig
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($result) {
-            header("Location: ?message=0");
+            header("Location: grading-criteria.php?message=0");
         } else {
             $this->insert($data, $current_page);
-            header("Location: ?message=1");
+            header("Location: grading-criteria.php?message=1");
         }
     }
     public function callInsertGradingCriteria($data, $current_page)
@@ -716,10 +637,10 @@ class Model extends Dbconfig
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($result) {
-            header("Location: ?message=0");
+            header("Location: semester.php?message=0");
         } else {
             $this->insert($data, $current_page);
-            header("Location: ?message=1");
+            header("Location: semester.php?message=1");
         }
     }
     public function callInsertSemester($data, $current_page)
