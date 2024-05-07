@@ -3540,7 +3540,7 @@ class View
                 updated on your educational journey.
             </p>
             <form action="action.php" method="POST">
-                <h3 class="fw-bold mb-0">Welcome, KLD Faculty! 👋</h3>
+                <h3 class="fw-bold mb-0">Welcome, KLD Admin! 👋</h3>
                 <span>Sign in first to get started.</span>
                 <div class="form-group mb-3 mt-2">
                     <label class="form-label">Username</label>

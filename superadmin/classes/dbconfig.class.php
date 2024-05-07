@@ -75,7 +75,7 @@ class Dbconfig
                 } else {
                     throw new Exception("Backup failed or produced an empty file.");
                 }
-            } catch (Exception $e) {
+            } catch (Exception $e) { 
                 // Handle backup error
                 echo 'Backup failed: ' . $e->getMessage();
                 return false;

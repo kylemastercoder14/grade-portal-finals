@@ -97,10 +97,6 @@ $control = new Control($_SESSION['id'], 'advises');
   <script src="assets/js/toastify.min.js"></script>
   <script src="assets/js/dataTables.bootstrap5.js"></script>
   <script src="assets/js/dataTables.js"></script>
-  
-
-
-
 
   <script>
     new DataTable('#advisoryDatatable', {

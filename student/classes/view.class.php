@@ -624,7 +624,7 @@ class View
                                                 echo '<td colspan="6"><h4 class="text-center text-danger mt-2">No data found yet!</h4></td>';
                                             } else {
                                                 foreach ($grades as $grade => $data) {
-                                                    $grade_percentage = $data['grade'];
+                                                    $grade_percentage = number_format((double)$data['grade'], 2);
                                                     $course_units = $data['course_unit'];
                                                     $grade_points = $grade_percentage * $course_units;
                                                     $total_units += $course_units;
@@ -670,7 +670,7 @@ class View
                                                     <th><b>Grade Weighted Average:</b></th>
                                                     <td></td>
                                                     <td></td>
-                                                    <th><b><?= $gwa . "%" ?></b></th>
+                                                    <th><b><?= number_format((double)$gwa, 2) . "%" ?></b></th>
                                                     <th>
                                                         <b>
                                                             <?php

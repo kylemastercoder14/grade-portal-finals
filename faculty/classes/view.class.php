@@ -855,7 +855,7 @@ class View
                                                 <?php
                                                 $classLists = $this->classList;
                                                 if (!$classLists) {
-                                                    echo '<tr><td colspan="7"><h4 class="text-center text-danger mt-2">No data found yet!</h4></td></tr>';
+                                                    echo '<h4 class="text-center text-danger mt-2">No data found yet!</h4>';
                                                 } else {
                                                     foreach ($classLists as $classList => $data) {
                                                         $fullName = $data['firstname'] . " " . $data['middlename'] . " " . $data['lastname'] . " " . $data['suffix'];
